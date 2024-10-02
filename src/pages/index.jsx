@@ -1,16 +1,37 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { List, Page, Icon, useNavigate } from "zmp-ui";
-import UserCard from "../components/user-card";
-import { Link } from "react-router-dom";
 import Logo from "../img/logo.png";
-import Background from "../img/bg.png";
-import Background_city from "../img/bg_city.png";
 import Background_ct from "../img/bg_city.jpg";
+import api from "../components/api";
+import { getUserInfo } from "zmp-sdk/apis";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const pageStyle = {
     backgroundImage: `url(${Background_ct})`,
+  };
+  useEffect(() => {
+    getUserInfo({
+      success: (data) => {
+        console.log(data);
+        api
+          .post("/zlogin/", {
+            zalo_id: data.userInfo.id,
+          })
+          .then((response) => {
+            console.log(response.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+      },
+      fail: (error) => {
+        console.log(error);
+      },
+    });
+  }, []);
+  const handleStart = () => {
+    navigate("/home", { animate: true, direction: "forward" });
   };
   return (
     <div className="start-page" style={pageStyle}>
@@ -34,7 +55,9 @@ const HomePage = () => {
         </ul>
       </div>
       <div className="flex mt-3">
-        <button className="start-btn">Bắt đầu</button>
+        <button className="start-btn" onClick={handleStart}>
+          Bắt đầu
+        </button>
       </div>
       <div className="hint">Phiên bản 1.1.58-2482. Zalo-mini-app</div>
     </div>
