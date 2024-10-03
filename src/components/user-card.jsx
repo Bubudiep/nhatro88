@@ -1,25 +1,20 @@
 import React from "react";
-import { Avatar, Box, Text } from "zmp-ui";
-import { useRecoilValue } from "recoil";
-import { userState } from "../state";
-
-const UserCard = () => {
-  const { userInfo } = useRecoilValue(userState);
-
+import bg_night from "../img/bg_city.png";
+import bg_day from "../img/bg_day.png";
+const UserCard = ({ user }) => {
+  const hour = new Date().getHours();
+  const pageStyle = {
+    backgroundImage: `url(${hour > 16 ? bg_night : bg_day})`,
+  };
   return (
-    <Box flex>
-      <Avatar
-        story="default"
-        online
-        src={userInfo.avatar.startsWith("http") ? userInfo.avatar : undefined}
-      >
-        {userInfo.avatar}
-      </Avatar>
-      <Box ml={4}>
-        <Text.Title>{userInfo.name}</Text.Title>
-        <Text>{userInfo.id}</Text>
-      </Box>
-    </Box>
+    <div className="user-card" style={pageStyle}>
+      <div className="user-info">
+        <div className="avatar">
+          <img src={user.zalo.userInfo.avatar} />
+        </div>
+        <div className="name">{user.zalo.userInfo.name}</div>
+      </div>
+    </div>
   );
 };
 

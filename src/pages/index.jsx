@@ -1,37 +1,65 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, useContext } from "react";
 import { List, Page, Icon, useNavigate } from "zmp-ui";
 import Logo from "../img/logo.png";
 import Background_ct from "../img/bg_city.jpg";
 import api from "../components/api";
+import app from "../components/all";
 import { getUserInfo } from "zmp-sdk/apis";
+import { UserContext } from "../context/UserContext";
 
 const HomePage = () => {
+  const { user, setUser } = useContext(UserContext); // Lấy context
   const navigate = useNavigate();
   const pageStyle = {
     backgroundImage: `url(${Background_ct})`,
   };
-  useEffect(() => {
+  const handleStart = () => {
     getUserInfo({
       success: (data) => {
-        console.log(data);
         api
           .post("/zlogin/", {
             zalo_id: data.userInfo.id,
           })
           .then((response) => {
-            console.log(response.data);
+            setUser((prevUser) => ({
+              zalo: data.userInfo,
+              app: response.data, // Cập nhật user.app
+            }));
+            navigate("/", {
+              replace: true,
+              animate: true,
+              direction: "forward",
+            });
           })
           .catch((error) => {
-            console.error("Error fetching data:", error);
+            api
+              .post("/register/", {
+                zalo_id: data.userInfo.id,
+                username: data.userInfo.id,
+                password: app.random(10),
+                zalo_name: data.userInfo.name,
+                email: data.userInfo.id + "@gmail.com",
+              })
+              .then((response) => {
+                setUser((prevUser) => ({
+                  zalo: data.userInfo,
+                  app: response.data, // Cập nhật user.app
+                }));
+                navigate("/", {
+                  replace: true,
+                  animate: true,
+                  direction: "forward",
+                });
+              })
+              .catch((error) => {
+                console.error("Error fetching data:", error);
+              });
           });
       },
       fail: (error) => {
         console.log(error);
       },
     });
-  }, []);
-  const handleStart = () => {
-    navigate("/home", { animate: true, direction: "forward" });
   };
   return (
     <div className="start-page" style={pageStyle}>

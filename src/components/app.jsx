@@ -4,6 +4,8 @@ import { App, ZMPRouter, AnimationRoutes, SnackbarProvider } from "zmp-ui";
 import { RecoilRoot } from "recoil";
 import HomePage from "../pages";
 import Home from "../pages/home";
+import { UserProvider } from "../context/UserContext";
+import PrivateRoute from "./PrivateRoute"; // Import PrivateRoute
 
 const MyApp = () => {
   return (
@@ -11,10 +13,15 @@ const MyApp = () => {
       <App>
         <SnackbarProvider>
           <ZMPRouter>
-            <AnimationRoutes>
-              <Route path="/" element={<HomePage></HomePage>}></Route>
-              <Route path="/home" element={<Home></Home>}></Route>
-            </AnimationRoutes>
+            <UserProvider>
+              <AnimationRoutes>
+                <Route
+                  path="/"
+                  element={<PrivateRoute element={Home} />}
+                ></Route>
+                <Route path="/start" element={<HomePage />}></Route>
+              </AnimationRoutes>
+            </UserProvider>
           </ZMPRouter>
         </SnackbarProvider>
       </App>
