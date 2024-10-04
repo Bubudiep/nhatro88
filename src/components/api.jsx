@@ -32,4 +32,70 @@ api.interceptors.response.use(
   }
 );
 
-export default api;
+// Hàm GET kèm theo token
+const get = async (url, token) => {
+  try {
+    const response = await api.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Thêm token vào header Authorization
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data", error);
+    throw error;
+  }
+};
+
+// Hàm POST kèm theo token
+const post = async (url, data, token) => {
+  try {
+    const response = await api.post(url, data, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Thêm token vào header Authorization
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error posting data", error);
+    throw error;
+  }
+};
+
+// Hàm PATCH kèm theo token
+const patch = async (url, data, token) => {
+  try {
+    const response = await api.patch(url, data, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Thêm token vào header Authorization
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error patching data", error);
+    throw error;
+  }
+};
+
+// Hàm DELETE kèm theo token
+const deleteRequest = async (url, token) => {
+  try {
+    const response = await api.delete(url, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Thêm token vào header Authorization
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting data", error);
+    throw error;
+  }
+};
+
+// Xuất các phương thức
+export default {
+  get,
+  post,
+  patch,
+  delete: deleteRequest,
+};

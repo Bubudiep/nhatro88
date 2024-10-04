@@ -20,7 +20,7 @@ const PrivateRoute = ({ element: Component }) => {
           .then((response) => {
             const userData = {
               zalo: data,
-              app: response.data,
+              app: response,
             };
             setUser(userData); // Lưu user vào state
             setLoading(false); // Kết thúc trạng thái loading
@@ -53,7 +53,7 @@ const PrivateRoute = ({ element: Component }) => {
   return (
     <>
       {/* Loading screen */}
-      <div className={`loading-screen ${!showLoading && "hide"}`}>
+      <div className={`loading-screen z-[1001] ${!showLoading && "hide"}`}>
         <div className="loading-box active">
           <div className="loading-start">
             <div className="user-card loading">

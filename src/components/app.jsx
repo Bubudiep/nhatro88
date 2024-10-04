@@ -6,6 +6,7 @@ import HomePage from "../pages";
 import Home from "../pages/home";
 import { UserProvider } from "../context/UserContext";
 import PrivateRoute from "./PrivateRoute"; // Import PrivateRoute
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const MyApp = () => {
   return (

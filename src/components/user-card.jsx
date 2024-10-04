@@ -6,7 +6,9 @@ const UserCard = ({ user }) => {
         <div className="avatar">
           <img src={user.zalo.userInfo.avatar} />
         </div>
-        <div className="name">{user.zalo.userInfo.name}</div>
+        <div className="msg">
+          Chào buổi sáng, <div className="name">{user.zalo.userInfo.name}</div>
+        </div>
       </div>
     </div>
   );
