@@ -13,6 +13,7 @@ const HomePage = () => {
   const pageStyle = {
     backgroundImage: `url(${Background_ct})`,
   };
+  console.log("Start");
   const handleStart = () => {
     getUserInfo({
       success: (data) => {
@@ -21,10 +22,10 @@ const HomePage = () => {
             zalo_id: data.userInfo.id,
           })
           .then((response) => {
-            setUser((prevUser) => ({
+            setUser({
               zalo: data.userInfo,
-              app: response.data, // Cập nhật user.app
-            }));
+              app: response, // Cập nhật user.app
+            });
             navigate("/", {
               replace: true,
               animate: true,
@@ -41,10 +42,11 @@ const HomePage = () => {
                 email: data.userInfo.id + "@gmail.com",
               })
               .then((response) => {
-                setUser((prevUser) => ({
+                console.log(response);
+                setUser({
                   zalo: data.userInfo,
-                  app: response.data, // Cập nhật user.app
-                }));
+                  app: response, // Cập nhật user.app
+                });
                 navigate("/", {
                   replace: true,
                   animate: true,
@@ -83,7 +85,12 @@ const HomePage = () => {
         </ul>
       </div>
       <div className="flex mt-3">
-        <button className="start-btn" onClick={handleStart}>
+        <button
+          className="start-btn"
+          onClick={() => {
+            handleStart();
+          }}
+        >
           Bắt đầu
         </button>
       </div>

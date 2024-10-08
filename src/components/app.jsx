@@ -7,6 +7,7 @@ import Home from "../pages/home";
 import { UserProvider } from "../context/UserContext";
 import PrivateRoute from "./PrivateRoute"; // Import PrivateRoute
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import NhatroHome from "../pages/home/trangchu/NhatroDashboard";
 
 const MyApp = () => {
   return (
@@ -16,10 +17,7 @@ const MyApp = () => {
           <ZMPRouter>
             <UserProvider>
               <AnimationRoutes>
-                <Route
-                  path="/"
-                  element={<PrivateRoute element={Home} />}
-                ></Route>
+                <Route path="/" element={<Home />}></Route>
                 <Route path="/start" element={<HomePage />}></Route>
               </AnimationRoutes>
             </UserProvider>
