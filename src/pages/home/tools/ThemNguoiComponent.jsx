@@ -3,7 +3,6 @@ import api from "zmp-sdk";
 
 const ThemNguoiComponent = ({ onClose }) => {
   const [isClosing, setIsClosing] = useState(false);
-  const videoRef = useRef < HTMLVideoElement > null;
 
   const handleClose = () => {
     setIsClosing(true);
@@ -85,6 +84,12 @@ const ThemNguoiComponent = ({ onClose }) => {
                   <input type="text" placeholder="số căn cước..." />
                 </td>
               </tr>
+              <tr>
+                <td>Ngày sinh</td>
+                <td>
+                  <input type="date" placeholder="số căn cước..." />
+                </td>
+              </tr>
             </tbody>
           </table>
           <div className="h3">Thông tin phòng</div>
@@ -94,7 +99,7 @@ const ThemNguoiComponent = ({ onClose }) => {
                 <td>Tầng</td>
                 <td>
                   <select>
-                    <option>Chọn một tầng</option>
+                    <option>Chọn tầng</option>
                   </select>
                 </td>
               </tr>
@@ -102,23 +107,23 @@ const ThemNguoiComponent = ({ onClose }) => {
                 <td>Phòng</td>
                 <td>
                   <select>
-                    <option>Chọn một phòng</option>
+                    <option>Chọn phòng</option>
                   </select>
+                </td>
+              </tr>
+              <tr>
+                <td>Tiền cọc trước</td>
+                <td>
+                  <div className="flex relative justify-end items-center">
+                    <input type="number" defaultValue={1000000} />
+                    <div className="unit">VNĐ</div>
+                  </div>
                 </td>
               </tr>
               <tr>
                 <td>Ngày bắt đầu vào ở</td>
                 <td>
                   <input type="date" />
-                </td>
-              </tr>
-              <tr>
-                <td>Tiền cọc</td>
-                <td>
-                  <div className="flex relative justify-end items-center">
-                    <input type="number" defaultValue={1000000} />
-                    <div className="unit">VNĐ</div>
-                  </div>
                 </td>
               </tr>
             </tbody>
