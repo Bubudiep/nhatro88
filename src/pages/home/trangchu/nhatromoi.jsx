@@ -36,22 +36,23 @@ const Nhatromoi = ({ user, updateNhatro }) => {
           <div className="hintbox">
             <div className="light">Nhà trọ 88</div> là một phần mềm được phát
             triển bởi <div className="light">HMH Group</div> nhằm mang lại lợi
-            ích thiết thực trong việc quán lý, cho thuê nhà ở
+            ích thiết thực trong việc quản lý và cho thuê nhà ở.
           </div>
           <div className="logo">Lợi ích mang lại?</div>
           <div className="message">
             <ul>
-              <li>1. Dễ dàng quản lý số phòng đang cho thuê và phòng trống</li>
-              <li>2. Báo cáo lợi nhuận hàng tháng và dự kiến</li>
-              <li>3. Tạo hóa đơn và yêu cầu gia hạn</li>
-              <li>4. Dễ dàng kiểm soát ngày bắt đầu đến ở và trả phòng</li>
-              <li>5. Quản lý thu chi hiệu quả</li>
-              <li>6. Tạo thông báo, nội quy chung để cư dân dễ dàng nắm bắt</li>
-              <li>7. Công khai và minh bạch</li>
+              <li>1. Tính công khai và minh bạch</li>
+              <li>2. Tối ưu hóa quy trình quản lý nhà trọ</li>
+              <li>3. Báo cáo và dự kiến lợi nhuận hàng tháng</li>
+              <li>4. Kiểm soát ra vào thông minh</li>
+              <li>5. Quản lý thu chi thông minh, hiệu quả</li>
+              <li>....</li>
             </ul>
           </div>
         </div>
-        <div className="logo">Bắt đầu bằng tên một nhà trọ</div>
+        <div className="text-[18px] font-medium">
+          Bắt đầu bằng tên một nhà trọ
+        </div>
         <div className="tools-container">
           <div className="options main">
             <input
@@ -63,7 +64,7 @@ const Nhatromoi = ({ user, updateNhatro }) => {
         </div>
         <div className="tools-container">
           <div className="options main">
-            <button className="add" onClick={handleSubmit}>
+            <button className="add text-[18px]" onClick={handleSubmit}>
               Bắt đầu
             </button>
           </div>

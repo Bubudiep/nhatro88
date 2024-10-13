@@ -69,7 +69,7 @@ const HomePage = () => {
         <img src={Logo} />
         <div className="name">Nhà trọ 88</div>
       </div>
-      <div className="sologan">Tìm, quản lý nhà trọ dễ dàng, thông minh!</div>
+      <div className="sologan">Quản lý nhà trọ dễ dàng, thông minh!</div>
       <div className="box-details">
         <ul>
           <li>Tìm phòng trọ phù hợp xung quanh bạn.</li>

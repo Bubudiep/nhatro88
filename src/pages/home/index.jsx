@@ -15,7 +15,7 @@ const Home = () => {
   const updateNhatro = () => {
     setLoading(true); // Bắt đầu loading
     api
-      .get("/nhatro/", user.app.access_token)
+      .get("/my_nhatro/", user.app.access_token)
       .then((response) => {
         const nhatroData = response.results ?? [];
         user.nhatro = nhatroData;
@@ -24,6 +24,7 @@ const Home = () => {
       })
       .catch((error) => {
         console.error("Lỗi khi lấy thông tin nhà trọ:", error);
+        navigate("/start");
       })
       .finally(() => {
         // Đợi 1 giây trước khi kết thúc loading
@@ -40,13 +41,15 @@ const Home = () => {
   }, [user]);
 
   return (
-    <div className="main-view">
+    <div className={`main-view ${nhatro.length == 0 ? "start" : ""}`}>
       <div className="sliders">
         <img src={banner_1} alt="Banner" />
       </div>
       <div className="main-container">
         {loading ? ( // Kiểm tra trạng thái loading
-          <div>Loading...</div> // Hiển thị loading
+          <div className="first-loading">
+            <div className="loading-spinner"></div> {/* Thay thành spinner */}
+          </div> // Hiển thị loading
         ) : nhatro.length > 0 ? (
           <Nhatro user={user} />
         ) : (

@@ -3,75 +3,69 @@ import house from "../../../img/house_mini.png";
 import bedroom from "../../../img/bedroom.png";
 import ratings from "../../../img/ratings.png";
 import exit_room from "../../../img/exit_room.png";
-import soon from "../../../img/nhatro/wearther/sun.png";
-import moon from "../../../img/nhatro/wearther/moon.png";
-import caicua from "../../../img/nhatro/2005314.png";
 import leave from "../../../img/leave.png";
 import money from "../../../img/banknotes_12748234.png";
 
-const Db_box = ({ user }) => {
+const dashboardItems = [
+  {
+    title: "Danh sách Nhà",
+    name: "nhatro",
+    value: (user) => user?.nhatro?.length || 0,
+    img: house,
+  },
+  {
+    title: "Tổng số phòng",
+    name: "phongtro",
+    value: 0,
+    img: bedroom,
+  },
+  {
+    title: "Đang ở",
+    name: "phongtro_on",
+    value: 0,
+    img: ratings,
+  },
+  {
+    title: "Phòng trống",
+    name: "phongtro_off",
+    value: 0,
+    img: exit_room,
+  },
+  {
+    title: "Nợ tháng trước",
+    name: "tienphong_no",
+    value: 0,
+    img: leave,
+  },
+  {
+    title: "Tạm tính",
+    name: "tienphong",
+    value: 0,
+    img: money,
+  },
+];
+
+const Db_box = ({ user, handleShow }) => {
   return (
     <div className="dashboard-container snap">
-      <div className="dashboard-item nhatro">
-        <div className="logo">
-          <img src={house} />
+      {dashboardItems.map((item, index) => (
+        <div
+          className="dashboard-item nhatro"
+          key={index}
+          onClick={() => handleShow(item?.name)}
+        >
+          <div className="logo">
+            <img src={item.img} alt={item.title} />
+          </div>
+          <div className="data">
+            <div className="title">{item.title}</div>
+            <div className="value">
+              {typeof item.value === "function" ? item.value(user) : item.value}
+            </div>
+            <div className="description"></div>
+          </div>
         </div>
-        <div className="data">
-          <div className="title">Nhà trọ</div>
-          <div className="value">{user?.nhatro?.length}</div>
-          <div className="description"></div>
-        </div>
-      </div>
-      <div className="dashboard-item nhatro">
-        <div className="logo">
-          <img src={bedroom} />
-        </div>
-        <div className="data">
-          <div className="title">Số phòng</div>
-          <div className="value">{user?.nhatro?.length * 10}</div>
-          <div className="description"></div>
-        </div>
-      </div>
-      <div className="dashboard-item nhatro">
-        <div className="logo">
-          <img src={ratings} />
-        </div>
-        <div className="data">
-          <div className="title">Đang ở</div>
-          <div className="value">{user?.nhatro?.length * 10}</div>
-          <div className="description"></div>
-        </div>
-      </div>
-      <div className="dashboard-item nhatro">
-        <div className="logo">
-          <img src={exit_room} />
-        </div>
-        <div className="data">
-          <div className="title">Phòng trống</div>
-          <div className="value">{user?.nhatro?.length}</div>
-          <div className="description"></div>
-        </div>
-      </div>
-      <div className="dashboard-item nhatro">
-        <div className="logo">
-          <img src={leave} />
-        </div>
-        <div className="data">
-          <div className="title">Nợ tháng trước</div>
-          <div className="value">5,260,000</div>
-          <div className="description"></div>
-        </div>
-      </div>
-      <div className="dashboard-item nhatro">
-        <div className="logo">
-          <img src={money} />
-        </div>
-        <div className="data">
-          <div className="title">Tạm tính</div>
-          <div className="value">15,620,000</div>
-          <div className="description"></div>
-        </div>
-      </div>
+      ))}
     </div>
   );
 };
