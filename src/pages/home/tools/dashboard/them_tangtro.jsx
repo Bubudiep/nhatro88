@@ -37,6 +37,7 @@ const ThemTangtro = ({ user, onClose, updateNhatro }) => {
           user.app.access_token
         );
         updateNhatro(true);
+        setIsSuccess(true);
       } catch (e) {
         console.error(e);
         setErrorMessage(

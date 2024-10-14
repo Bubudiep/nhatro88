@@ -105,6 +105,14 @@ body {
   width: -webkit-gill-availble;
   justify-content: center;
 }
+.loading-spinner-in {
+  border: 4px solid rgba(0, 0, 0, 0.1); /* Màu nền của spinner */
+  border-left-color: #09f; /* Màu quay */
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  animation: spin 1s linear infinite;
+}
 .loading-spinner {
   border: 4px solid rgba(0, 0, 0, 0.1); /* Màu nền của spinner */
   border-left-color: #09f; /* Màu quay */
@@ -654,6 +662,7 @@ body {
     opacity: 0;
     bottom: 0;
     position: fixed;
+    width: 100vw;
     .tools-container {
       display: flex;
       justify-content: space-between;
@@ -882,14 +891,21 @@ body {
         gap: 8px;
         .add-box {
           display: flex;
+          flex: 1;
           justify-content: center;
           align-items: center;
           gap: 10px;
-          height: 40px;
+          height: 48px;
           border-radius: 8px;
           padding: 5px 12px;
           color: #fff;
           background-color: #0099ff;
+        }
+        &.back {
+          .add-box {
+            color: #919191;
+            background-color: transparent !important;
+          }
         }
       }
       .success-message {
@@ -972,18 +988,20 @@ body {
                   height: 20px;
                 }
               }
-              .no-width {
-                select,
-                input {
-                  width: auto;
-                }
-                select {
-                  padding: 6px 4px;
-                  font-size: 0.9rem;
-                }
-              }
             }
           }
+        }
+      }
+      .no-width {
+        select,
+        input {
+          height: 45px;
+          border-radius: 8px;
+          width: auto;
+          border: 1px solid #ccc;
+        }
+        select {
+          padding: 6px 4px;
         }
       }
       .start-btn {
@@ -1306,8 +1324,8 @@ body {
     .logo {
       width: 60px;
       display: flex;
+      padding-top: 10px;
       justify-content: center;
-      align-items: center;
       .img {
         width: 50px;
         height: 50px;
@@ -1350,20 +1368,9 @@ body {
           border: 1px solid #a0aec0;
           border-radius: 4px;
           gap: 5px;
-          padding: 0px 4px;
+          padding: 3px 5px;
           color: #a0aec0;
           overflow: hidden;
-          .icon {
-            align-items: center;
-            display: flex;
-          }
-          .value {
-            align-items: center;
-            display: flex;
-            border-left: 1px solid #a0aec0;
-            background-color: #fff;
-            padding: 3px 4px;
-          }
         }
       }
       .i-info {
@@ -1374,9 +1381,18 @@ body {
           color: #0082ec;
           font-size: 16px;
           font-weight: 500;
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          .tang {
+            font-size: 13px;
+            border-radius: 6px;
+            padding: 1px 5px;
+            background-color: #a5b2b9;
+            color: #fff;
+          }
         }
         .name {
-          padding: 0px 0px 0px 5px;
         }
         .value {
           display: flex;
@@ -1485,12 +1501,19 @@ button {
 .fade-in {
   animation: fadeInUp 0.3s ease forwards;
 }
+.fade-in-5 {
+  animation: fadeInUp 0.5s ease-in-out;
+}
 
 /* Hiệu ứng fade-out bay lên trên */
 .fade-out {
   animation: fadeOutUp 0.3s ease forwards;
 }
 
+/* Hiệu ứng fade-out bay lên trên */
+.fade-out-down {
+  animation: fadeOutDown 0.3s ease forwards;
+}
 /* Định nghĩa animation cho fade-in */
 @keyframes fadeInUp {
   0% {
@@ -1514,6 +1537,16 @@ button {
     opacity: 0;
   }
 }
+@keyframes fadeOutDown {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+}
 .transition-container {
   width: -webkit-fill-available;
   transition: height 0.3s ease-in-out; /* Thêm transition cho height */
@@ -1525,4 +1558,47 @@ button {
   justify-content: center;
   font-size: 16px;
   color: red;
+}
+.form-phongtro {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  flex-direction: column;
+  gap: 5px;
+  button {
+    border: hidden;
+    padding: 5px;
+    height: 50px;
+    font-weight: 500;
+    background-color: #d8dfe6;
+  }
+  table {
+    width: 100%;
+    font-size: 18px;
+    tr {
+      td {
+        white-space: nowrap;
+        padding: 6px;
+        &:first-child {
+          font-weight: 500;
+        }
+        &:last-child {
+          text-align: right;
+        }
+        input[type="text"] {
+          border: 1px solid #999;
+          padding: 10px 6px;
+          border-radius: 6px;
+          width: -webkit-fill-available;
+        }
+        input[type="number"] {
+          width: 50px;
+          border: 1px solid #999;
+          padding: 10px 6px;
+          text-align: center;
+          border-radius: 6px;
+        }
+      }
+    }
+  }
 }

@@ -9,8 +9,9 @@ const ThemNguoiComponent = ({ user, onClose }) => {
   const [isClosing, setIsClosing] = useState(false);
   const [today, setToday] = useState("");
   const [formData, setFormData] = useState({
-    tang: "",
-    phong: "",
+    tro: selectedNhatro,
+    tang: selectedTang,
+    phong: selectedPhong,
     hoTen: "",
     cccd: "",
     ngaySinh: "",
@@ -93,68 +94,71 @@ const ThemNguoiComponent = ({ user, onClose }) => {
         </div>
         <div className="title">Thêm người vào ở</div>
         <div className="body-container">
-          <div className="h3">
-            <div className="actions">
-              <button className="scan" onClick={handleScanQR}>
-                <i className="fa-solid fa-qrcode"></i>Quét mã căn cước công dân
-              </button>
-            </div>
+          <div className="flex gap-1 no-width">
+            <select
+              value={selectedNhatro}
+              onChange={(e) => {
+                setSelectedNhatro(e.target.value);
+                setSelectedTang(""); // Reset tầng khi chọn nhà trọ khác
+                setSelectedPhong(""); // Reset phòng khi chọn nhà trọ khác
+              }}
+            >
+              {user?.nhatro.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.tenTro}
+                </option>
+              ))}
+            </select>
+            {getTangOptions().length > 0 && (
+              <select
+                value={selectedTang}
+                name="tang"
+                onChange={(e) => {
+                  handleChange(e);
+                  setSelectedTang(e.target.value);
+                  setSelectedPhong(""); // Reset phòng khi chọn tầng khác
+                }}
+                disabled={!selectedNhatro} // Không cho chọn tầng nếu chưa chọn nhà trọ
+              >
+                <option>Chọn tầng</option>
+                {getTangOptions().map((tang, index) => (
+                  <option key={index} value={tang.id}>
+                    {tang.tenTang}
+                  </option>
+                ))}
+              </select>
+            )}
+            {getPhongOptions().length > 0 && (
+              <select
+                name="phong"
+                value={selectedPhong}
+                onChange={(e) => {
+                  handleChange(e);
+                  setSelectedPhong(e.target.value);
+                }}
+                disabled={!selectedTang} // Không cho chọn phòng nếu chưa chọn tầng
+              >
+                <option value={""}>Chọn phòng</option>
+                {getPhongOptions().map((phong, index) => (
+                  <option key={index} value={phong.id}>
+                    {phong.soPhong}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
-          <table>
-            <tbody>
-              <tr>
-                <td colSpan={2}>
-                  <div className="flex flex-1 gap-1 no-width">
-                    <select
-                      value={selectedNhatro}
-                      onChange={(e) => {
-                        setSelectedNhatro(e.target.value);
-                        setSelectedTang(""); // Reset tầng khi chọn nhà trọ khác
-                        setSelectedPhong(""); // Reset phòng khi chọn nhà trọ khác
-                      }}
-                    >
-                      {user?.nhatro.map((item) => (
-                        <option key={item.id} value={item.id}>
-                          {item.tenTro}
-                        </option>
-                      ))}
-                    </select>
-                    {getTangOptions().length > 0 && (
-                      <select
-                        value={selectedTang}
-                        onChange={(e) => {
-                          setSelectedTang(e.target.value);
-                          setSelectedPhong(""); // Reset phòng khi chọn tầng khác
-                        }}
-                        disabled={!selectedNhatro} // Không cho chọn tầng nếu chưa chọn nhà trọ
-                      >
-                        <option>Chọn tầng</option>
-                        {getTangOptions().map((tang, index) => (
-                          <option key={index} value={tang.id}>
-                            {tang.tenTang}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                    {getPhongOptions().length > 0 && (
-                      <select
-                        value={selectedPhong}
-                        onChange={(e) => setSelectedPhong(e.target.value)}
-                        disabled={!selectedTang} // Không cho chọn phòng nếu chưa chọn tầng
-                      >
-                        <option value={""}>Chọn phòng</option>
-                        {getPhongOptions().map((phong, index) => (
-                          <option key={index} value={phong.id}>
-                            {phong.soPhong}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  </div>
-                </td>
-              </tr>
-              {selectedPhong ? (
-                <>
+          {selectedPhong ? (
+            <>
+              <div className="h3">
+                <div className="actions">
+                  <button className="scan" onClick={handleScanQR}>
+                    <i className="fa-solid fa-qrcode"></i>Quét mã căn cước công
+                    dân
+                  </button>
+                </div>
+              </div>
+              <table>
+                <tbody>
                   <tr>
                     <td>Họ tên</td>
                     <td>
@@ -171,7 +175,7 @@ const ThemNguoiComponent = ({ user, onClose }) => {
                     <td>CCCD</td>
                     <td>
                       <input
-                        type="text"
+                        type="number"
                         name="cccd"
                         value={formData.cccd}
                         onChange={handleChange}
@@ -215,56 +219,22 @@ const ThemNguoiComponent = ({ user, onClose }) => {
                       />
                     </td>
                   </tr>
-                </>
-              ) : (
-                <>
-                  <tr>
-                    <td colSpan={2}>
-                      <div className="flex items-center justify-center p-2">
-                        Chọn nhà trọ
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colSpan={2}>
-                      <div className="flex items-center justify-center p-2">
-                        <i className="fa-solid fa-arrow-down"></i>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colSpan={2}>
-                      <div className="flex items-center justify-center p-2">
-                        Chọn tầng trọ
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colSpan={2}>
-                      <div className="flex items-center justify-center p-2">
-                        <i className="fa-solid fa-arrow-down"></i>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colSpan={2}>
-                      <div className="flex items-center justify-center p-2">
-                        Chọn phòng trọ
-                      </div>
-                    </td>
-                  </tr>
-                </>
-              )}
-            </tbody>
-          </table>
-          <div className="start-btn">
-            <button
-              disabled={selectedPhong ? false : true}
-              onClick={handleSubmit}
-            >
-              Thêm vào trọ
-            </button>
-          </div>
+                </tbody>
+              </table>
+              <div className="start-btn">
+                <button
+                  disabled={selectedPhong ? false : true}
+                  onClick={handleSubmit}
+                >
+                  Thêm vào trọ
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-1 items-center justify-center text-[#999] text-lg">
+              Chọn một phòng trọ để thêm người mới vào
+            </div>
+          )}
         </div>
       </div>
     </div>

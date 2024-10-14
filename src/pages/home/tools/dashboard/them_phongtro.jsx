@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const ThemPhongtro = ({ user, onClose, themPhongtro }) => {
-  const [selectedNhatro, setSelectedNhatro] = useState("");
+  const [selectedNhatro, setSelectedNhatro] = useState(user.nhatro[0].id);
   const [selectedTang, setSelectedTang] = useState("");
   const [tenPhong, setTenPhong] = useState("");
   const [giaPhong, setGiaPhong] = useState("");

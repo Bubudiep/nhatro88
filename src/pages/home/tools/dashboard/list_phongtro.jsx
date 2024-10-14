@@ -156,7 +156,10 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
                       className={`details ${item.isActive ? "active" : "stop"}`}
                     >
                       <div className="i-info">
-                        <div className="name i-title">{item.soPhong}</div>
+                        <div className="name i-title">
+                          {item.soPhong}
+                          <div className="tang">{item.tenTang}</div>
+                        </div>
                         <div className="value giaphong">
                           {item.giaPhong} VNĐ
                         </div>
@@ -164,7 +167,7 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
                       {item.Nguoitro.length === 0 ? (
                         <div className="i-null">
                           <div className="logo">
-                            <i class="fa-solid fa-door-closed"></i>
+                            <i className="fa-solid fa-door-closed"></i>
                           </div>
                           <div className="message">Chưa có ai ở!</div>
                         </div>
@@ -183,18 +186,9 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
                         </>
                       )}
                       <div className="i-details">
-                        <div className="items">
-                          <div className="icon">Wifi</div>
-                          <div className="value">Có</div>
-                        </div>
-                        <div className="items">
-                          <div className="icon">Điều hòa</div>
-                          <div className="value">Có</div>
-                        </div>
-                        <div className="items">
-                          <div className="icon">Nóng lạnh</div>
-                          <div className="value">Có</div>
-                        </div>
+                        <div className="items">Có Wifi</div>
+                        <div className="items">Có Điều hòa</div>
+                        <div className="items">Có Nóng lạnh</div>
                       </div>
                     </div>
                     <div className="view">
