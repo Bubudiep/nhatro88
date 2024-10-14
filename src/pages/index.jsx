@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useContext } from "react";
+import React, { Suspense, useEffect, useContext, useState } from "react";
 import { List, Page, Icon, useNavigate } from "zmp-ui";
 import Logo from "../img/logo.png";
 import Background_ct from "../img/bg_city.jpg";
@@ -8,6 +8,8 @@ import { getUserInfo } from "zmp-sdk/apis";
 import { UserContext } from "../context/UserContext";
 
 const HomePage = () => {
+  const [loading, setLoading] = useState(null);
+  const [message, setMassage] = useState(null);
   const { user, setUser } = useContext(UserContext); // Lấy context
   const navigate = useNavigate();
   const pageStyle = {
@@ -15,6 +17,7 @@ const HomePage = () => {
   };
   console.log("Start");
   const handleStart = () => {
+    setLoading(true);
     getUserInfo({
       success: (data) => {
         api
@@ -54,6 +57,8 @@ const HomePage = () => {
                 });
               })
               .catch((error) => {
+                setLoading(false);
+                setMassage("Lỗi kết nối máy chủ! Vui lòng thử lại sau!");
                 console.error("Error fetching data:", error);
               });
           });
@@ -84,6 +89,11 @@ const HomePage = () => {
           <li>Nhắc nhở thông minh khi đến kỳ hạn đóng tiền phòng.</li>
         </ul>
       </div>
+      {loading ? (
+        <div className="loading-spinner"></div>
+      ) : (
+        message && <div className="error-message">{message}</div>
+      )}
       <div className="flex mt-3">
         <button
           className="start-btn"

@@ -14,7 +14,6 @@ import ListPhongtro from "../tools/dashboard/list_phongtro";
 import ListTienphong from "../tools/dashboard/list_tienphong";
 
 const Nhatro = ({ user }) => {
-  console.log(user);
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [alertData, setAlertData] = useState(null); // Trạng thái để lưu thông tin alert
@@ -81,9 +80,8 @@ const Nhatro = ({ user }) => {
     );
   };
   const handleUserUpdate = (updatedUser) => {
-    // Cập nhật thông tin người dùng
-    user = updatedUser; // Cách này không thay đổi giá trị ban đầu, xem lưu ý bên dưới
-    // Nếu cần, bạn có thể sử dụng useState để lưu thông tin người dùng và cập nhật giao diện
+    console.log(updatedUser);
+    user.nhatro = updatedUser;
   };
   const renderComponent = () => {
     switch (selectedComponent) {
@@ -128,7 +126,10 @@ const Nhatro = ({ user }) => {
         );
       case "themNguoi":
         return (
-          <ThemNguoiComponent onClose={() => setSelectedComponent(null)} />
+          <ThemNguoiComponent
+            user={user}
+            onClose={() => setSelectedComponent(null)}
+          />
         );
       case "chuyenRa":
         return <ChuyenRaComponent onClose={() => setSelectedComponent(null)} />;

@@ -64,7 +64,6 @@ const ThemPhongtro = ({ user, onClose, themPhongtro }) => {
                       setSelectedTang(""); // Reset tầng khi chọn nhà trọ khác
                     }}
                   >
-                    <option value="">Chọn nhà trọ</option>
                     {user?.nhatro.map((item) => (
                       <option key={item.id} value={item.id}>
                         {item.tenTro}
@@ -82,10 +81,9 @@ const ThemPhongtro = ({ user, onClose, themPhongtro }) => {
                       onChange={(e) => setSelectedTang(e.target.value)}
                       disabled={!selectedNhatro} // Không cho chọn tầng nếu chưa chọn nhà trọ
                     >
-                      <option value="">Chọn tầng trọ</option>
                       {getTangOptions().map((tang, index) => (
                         <option key={index} value={tang.id}>
-                          {tang.ten}
+                          {tang.tenTang}
                         </option>
                       ))}
                     </select>

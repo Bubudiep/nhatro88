@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import ThemPhongtro from "./them_phongtro"; // Import component ThemPhongtro
 import ThemTangtro from "./them_tangtro";
+import api from "../../../../components/api";
 
 const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
-  const [user2, setUser2] = useState(user);
   const [isClosing, setIsClosing] = useState(false);
   const [isAdding, setIsAdding] = useState(false); // Trạng thái cho việc thêm phòng trọ
   const [selectedNhatro, setSelectedNhatro] = useState("all");
@@ -40,12 +40,6 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
     }, 300);
   };
 
-  const handleUpdateUser = (newUserData) => {
-    if (onUserUpdate) {
-      onUserUpdate(newUserData);
-    }
-  };
-
   const filterPhongtro = (nhatro) => {
     if (selectedNhatro === "all") {
       return nhatro.reduce((acc, tro) => {
@@ -71,10 +65,7 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
     api
       .get("/my_nhatro/", user.app.access_token)
       .then((response) => {
-        setUser2((old) => ({
-          ...old,
-          nhatro: response.results,
-        }));
+        onUserUpdate(response.results);
       })
       .catch((error) => {
         console.error("Lỗi khi lấy thông tin nhà trọ:", error);
@@ -161,28 +152,48 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
               <div className="list_item_big">
                 {filterPhongtro(user?.nhatro).map((item) => (
                   <div key={item.id} className="nhatro-item">
-                    <div className="logo">0 VNĐ</div>
                     <div
                       className={`details ${item.isActive ? "active" : "stop"}`}
                     >
                       <div className="i-info">
                         <div className="name i-title">{item.soPhong}</div>
-                        <div className="value">
-                          {item.isActive ? (
-                            <div className="status active">Hoạt động</div>
-                          ) : (
-                            <div className="status stop">Tạm dừng</div>
-                          )}
+                        <div className="value giaphong">
+                          {item.giaPhong} VNĐ
                         </div>
                       </div>
-                      <div className="i-info">
-                        <div className="name">Đang dùng</div>
-                        <div className="value">???</div>
-                      </div>
-                      <div className="i-info">
-                        <div className="name">Ngày bắt đầu</div>
-                        <div className="value">
-                          <div className="bold">00/00/00</div>
+                      {item.Nguoitro.length === 0 ? (
+                        <div className="i-null">
+                          <div className="logo">
+                            <i class="fa-solid fa-door-closed"></i>
+                          </div>
+                          <div className="message">Chưa có ai ở!</div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="i-info">
+                            <div className="name">Đang ở</div>
+                            <div className="value">???</div>
+                          </div>
+                          <div className="i-info">
+                            <div className="name">Ngày bắt đầu</div>
+                            <div className="value">
+                              <div className="bold">00/00/00</div>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                      <div className="i-details">
+                        <div className="items">
+                          <div className="icon">Wifi</div>
+                          <div className="value">Có</div>
+                        </div>
+                        <div className="items">
+                          <div className="icon">Điều hòa</div>
+                          <div className="value">Có</div>
+                        </div>
+                        <div className="items">
+                          <div className="icon">Nóng lạnh</div>
+                          <div className="value">Có</div>
                         </div>
                       </div>
                     </div>

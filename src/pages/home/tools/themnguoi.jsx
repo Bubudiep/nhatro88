@@ -2,8 +2,10 @@ import React, { useRef, useState, useEffect } from "react";
 import api from "zmp-sdk";
 import localApi from "../../../components/api";
 
-const ThemNguoiComponent = ({ onClose }) => {
-  console.log(localApi);
+const ThemNguoiComponent = ({ user, onClose }) => {
+  const [selectedNhatro, setSelectedNhatro] = useState(user?.nhatro[0]?.id);
+  const [selectedTang, setSelectedTang] = useState("");
+  const [selectedPhong, setSelectedPhong] = useState(""); // Thêm trạng thái cho phòng
   const [isClosing, setIsClosing] = useState(false);
   const [today, setToday] = useState("");
   const [formData, setFormData] = useState({
@@ -64,6 +66,24 @@ const ThemNguoiComponent = ({ onClose }) => {
     // Sau khi thu thập thông tin, bạn có thể gửi formData lên API
   };
 
+  // Lấy danh sách tầng dựa vào nhà trọ đã chọn
+  const getTangOptions = () => {
+    if (!selectedNhatro) return [];
+    const nhatroSelected = user.nhatro.find(
+      (item) => item.id === parseInt(selectedNhatro)
+    );
+    return nhatroSelected ? nhatroSelected.Thongtin : [];
+  };
+
+  // Lấy danh sách phòng dựa vào tầng đã chọn
+  const getPhongOptions = () => {
+    if (!selectedTang) return [];
+    const tangSelected = getTangOptions().find(
+      (tang) => tang.id === parseInt(selectedTang)
+    );
+    return tangSelected ? tangSelected.Chitiet : [];
+  };
+
   return (
     <div className={`bottom-box-white-bg ${isClosing ? "hide-out" : ""}`}>
       <div className="detectOut" onClick={handleClose} />
@@ -83,99 +103,167 @@ const ThemNguoiComponent = ({ onClose }) => {
           <table>
             <tbody>
               <tr>
-                <td>Tầng</td>
-                <td>
-                  <select
-                    name="tang"
-                    value={formData.tang}
-                    onChange={handleChange}
-                  >
-                    <option value="">Chọn tầng</option>
-                    <option value="1">Tầng 1</option>
-                    <option value="2">Tầng 2</option>
-                    {/* Thêm các tầng khác */}
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td>Phòng</td>
-                <td>
-                  <select
-                    name="phong"
-                    value={formData.phong}
-                    onChange={handleChange}
-                  >
-                    <option value="">Chọn phòng</option>
-                    <option value="101">Phòng 101</option>
-                    <option value="102">Phòng 102</option>
-                    {/* Thêm các phòng khác */}
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td>Họ tên</td>
-                <td>
-                  <input
-                    type="text"
-                    name="hoTen"
-                    value={formData.hoTen}
-                    onChange={handleChange}
-                    placeholder="Họ và tên..."
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>CCCD</td>
-                <td>
-                  <input
-                    type="text"
-                    name="cccd"
-                    value={formData.cccd}
-                    onChange={handleChange}
-                    placeholder="Số căn cước..."
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Ngày sinh</td>
-                <td>
-                  <input
-                    type="date"
-                    name="ngaySinh"
-                    value={formData.ngaySinh}
-                    onChange={handleChange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Tiền cọc trước</td>
-                <td>
-                  <div className="flex relative justify-end items-center">
-                    <input
-                      type="number"
-                      name="tienCoc"
-                      value={formData.tienCoc}
-                      onChange={handleChange}
-                    />
-                    <div className="unit">VNĐ</div>
+                <td colSpan={2}>
+                  <div className="flex flex-1 gap-1 no-width">
+                    <select
+                      value={selectedNhatro}
+                      onChange={(e) => {
+                        setSelectedNhatro(e.target.value);
+                        setSelectedTang(""); // Reset tầng khi chọn nhà trọ khác
+                        setSelectedPhong(""); // Reset phòng khi chọn nhà trọ khác
+                      }}
+                    >
+                      {user?.nhatro.map((item) => (
+                        <option key={item.id} value={item.id}>
+                          {item.tenTro}
+                        </option>
+                      ))}
+                    </select>
+                    {getTangOptions().length > 0 && (
+                      <select
+                        value={selectedTang}
+                        onChange={(e) => {
+                          setSelectedTang(e.target.value);
+                          setSelectedPhong(""); // Reset phòng khi chọn tầng khác
+                        }}
+                        disabled={!selectedNhatro} // Không cho chọn tầng nếu chưa chọn nhà trọ
+                      >
+                        <option>Chọn tầng</option>
+                        {getTangOptions().map((tang, index) => (
+                          <option key={index} value={tang.id}>
+                            {tang.tenTang}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                    {getPhongOptions().length > 0 && (
+                      <select
+                        value={selectedPhong}
+                        onChange={(e) => setSelectedPhong(e.target.value)}
+                        disabled={!selectedTang} // Không cho chọn phòng nếu chưa chọn tầng
+                      >
+                        <option value={""}>Chọn phòng</option>
+                        {getPhongOptions().map((phong, index) => (
+                          <option key={index} value={phong.id}>
+                            {phong.soPhong}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                   </div>
                 </td>
               </tr>
-              <tr>
-                <td>Ngày bắt đầu vào ở</td>
-                <td>
-                  <input
-                    type="date"
-                    name="ngayBatDau"
-                    value={formData.ngayBatDau}
-                    onChange={handleChange}
-                  />
-                </td>
-              </tr>
+              {selectedPhong ? (
+                <>
+                  <tr>
+                    <td>Họ tên</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="hoTen"
+                        value={formData.hoTen}
+                        onChange={handleChange}
+                        placeholder="Họ và tên..."
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>CCCD</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="cccd"
+                        value={formData.cccd}
+                        onChange={handleChange}
+                        placeholder="Số căn cước..."
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Ngày sinh</td>
+                    <td>
+                      <input
+                        type="date"
+                        name="ngaySinh"
+                        value={formData.ngaySinh}
+                        onChange={handleChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Tiền cọc trước</td>
+                    <td>
+                      <div className="flex relative justify-end items-center">
+                        <input
+                          type="number"
+                          name="tienCoc"
+                          value={formData.tienCoc}
+                          onChange={handleChange}
+                        />
+                        <div className="unit">VNĐ</div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Ngày bắt đầu vào ở</td>
+                    <td>
+                      <input
+                        type="date"
+                        name="ngayBatDau"
+                        value={formData.ngayBatDau}
+                        onChange={handleChange}
+                      />
+                    </td>
+                  </tr>
+                </>
+              ) : (
+                <>
+                  <tr>
+                    <td colSpan={2}>
+                      <div className="flex items-center justify-center p-2">
+                        Chọn nhà trọ
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan={2}>
+                      <div className="flex items-center justify-center p-2">
+                        <i className="fa-solid fa-arrow-down"></i>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan={2}>
+                      <div className="flex items-center justify-center p-2">
+                        Chọn tầng trọ
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan={2}>
+                      <div className="flex items-center justify-center p-2">
+                        <i className="fa-solid fa-arrow-down"></i>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan={2}>
+                      <div className="flex items-center justify-center p-2">
+                        Chọn phòng trọ
+                      </div>
+                    </td>
+                  </tr>
+                </>
+              )}
             </tbody>
           </table>
           <div className="start-btn">
-            <button onClick={handleSubmit}>Thêm vào trọ</button>
+            <button
+              disabled={selectedPhong ? false : true}
+              onClick={handleSubmit}
+            >
+              Thêm vào trọ
+            </button>
           </div>
         </div>
       </div>

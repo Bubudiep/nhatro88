@@ -16,19 +16,57 @@ const dashboardItems = [
   {
     title: "Tổng số phòng",
     name: "phongtro",
-    value: 0,
+    value: (user) =>
+      user?.nhatro.reduce((total, item) => {
+        return (
+          total +
+          item.Thongtin.reduce(
+            (subTotal, thongtin) => subTotal + thongtin.Chitiet.length,
+            0
+          )
+        );
+      }, 0),
     img: bedroom,
   },
   {
     title: "Đang ở",
     name: "phongtro_on",
-    value: 0,
+    value: (user) =>
+      user?.nhatro.reduce((total, item) => {
+        return (
+          total +
+          item.Thongtin.reduce((total, thongtinItem) => {
+            return (
+              total +
+              thongtinItem.Chitiet.reduce((chitietTotal, chitietItem) => {
+                const onlineCount = chitietItem.Nguoitro.length;
+                return chitietTotal + onlineCount;
+              }, 0)
+            );
+          }, 0)
+        );
+      }, 0),
     img: ratings,
   },
   {
     title: "Phòng trống",
     name: "phongtro_off",
-    value: 0,
+    value: (user) =>
+      user?.nhatro.reduce((total, item) => {
+        return (
+          total +
+          item.Thongtin.reduce((total, thongtinItem) => {
+            return (
+              total +
+              thongtinItem.Chitiet.reduce((chitietTotal, chitietItem) => {
+                return (
+                  chitietTotal + (chitietItem.Nguoitro.length === 0 ? 1 : 0)
+                );
+              }, 0)
+            );
+          }, 0)
+        );
+      }, 0),
     img: exit_room,
   },
   {

@@ -39,7 +39,10 @@ const ThemTangtro = ({ user, onClose, updateNhatro }) => {
         updateNhatro(true);
       } catch (e) {
         console.error(e);
-        setErrorMessage("Có lỗi xảy ra khi thêm tầng. Vui lòng thử lại.");
+        setErrorMessage(
+          e?.response?.data?.Error ??
+            "Có lỗi xảy ra khi thêm tầng. Vui lòng thử lại."
+        );
       } finally {
         setLoading(false); // Kết thúc trạng thái chờ
       }
