@@ -30,7 +30,7 @@ const dashboardItems = [
   },
   {
     title: "Đang ở",
-    name: "phongtro_on",
+    name: "nguoitro",
     value: (user) =>
       user?.nhatro.reduce((total, item) => {
         return (

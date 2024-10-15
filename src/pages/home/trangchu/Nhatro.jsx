@@ -12,6 +12,7 @@ import PChitiet from "../tools/popup/P_chitiet";
 import ListNhatro from "../tools/dashboard/list_nhatro";
 import ListPhongtro from "../tools/dashboard/list_phongtro";
 import ListTienphong from "../tools/dashboard/list_tienphong";
+import ListNguoitro from "../tools/dashboard/list_nguoitro";
 
 const Nhatro = ({ user }) => {
   const [selectedComponent, setSelectedComponent] = useState(null);
@@ -95,6 +96,15 @@ const Nhatro = ({ user }) => {
               }
               setSelectedComponent(null);
             }}
+          />
+        );
+      case "nguoitro":
+        return (
+          <ListNguoitro
+            option={selectedOption}
+            user={user}
+            onUserUpdate={handleUserUpdate}
+            onClose={() => setSelectedComponent(null)}
           />
         );
       case "nhatro":
