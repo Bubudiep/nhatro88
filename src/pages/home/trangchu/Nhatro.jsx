@@ -129,6 +129,7 @@ const Nhatro = ({ user }) => {
           <ThemNguoiComponent
             user={user}
             onClose={() => setSelectedComponent(null)}
+            onUserUpdate={handleUserUpdate}
           />
         );
       case "chuyenRa":

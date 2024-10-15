@@ -2,19 +2,23 @@ import React, { useRef, useState, useEffect } from "react";
 import api from "zmp-sdk";
 import localApi from "../../../components/api";
 
-const ThemNguoiComponent = ({ user, onClose }) => {
+const ThemNguoiComponent = ({ user, onClose, onUserUpdate }) => {
+  const [errorMessage, setErrorMessage] = useState("");
   const [selectedNhatro, setSelectedNhatro] = useState(user?.nhatro[0]?.id);
   const [selectedTang, setSelectedTang] = useState("");
   const [selectedPhong, setSelectedPhong] = useState(""); // Thêm trạng thái cho phòng
   const [isClosing, setIsClosing] = useState(false);
   const [today, setToday] = useState("");
   const [formData, setFormData] = useState({
+    fromQR: false,
     tro: selectedNhatro,
     tang: selectedTang,
     phong: selectedPhong,
     hoTen: "",
+    sdt: "",
     cccd: "",
     ngaySinh: "",
+    quequan: "",
     tienCoc: 1000000,
     ngayBatDau: "",
   });
@@ -44,6 +48,10 @@ const ThemNguoiComponent = ({ user, onClose }) => {
             success: (data) => {
               const { content } = data;
               if (content) {
+                setFormData((prevData) => ({
+                  ...prevData,
+                  fromQR: true,
+                }));
                 console.log(content);
               }
             },
@@ -61,9 +69,29 @@ const ThemNguoiComponent = ({ user, onClose }) => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Kiểm tra dữ liệu vừa nhập
     console.log("Dữ liệu người vừa nhập:", formData);
+    if (
+      !formData.hoTen ||
+      !formData.cccd ||
+      !formData.ngaySinh ||
+      !formData.tang ||
+      !formData.phong ||
+      !formData.tro
+    ) {
+      setErrorMessage("Chưa nhập đầy đủ thông tin");
+      return false;
+    }
+    const create_nguoi = await localApi
+      .post("/them-nguoi/", formData, user?.app?.access_token)
+      .then((response) => {
+        console.log(response);
+        onUserUpdate(response);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi lấy thông tin nhà trọ:", error);
+      });
     // Sau khi thu thập thông tin, bạn có thể gửi formData lên API
   };
 
@@ -101,6 +129,10 @@ const ThemNguoiComponent = ({ user, onClose }) => {
                 setSelectedNhatro(e.target.value);
                 setSelectedTang(""); // Reset tầng khi chọn nhà trọ khác
                 setSelectedPhong(""); // Reset phòng khi chọn nhà trọ khác
+                setFormData((prevData) => ({
+                  ...prevData,
+                  tro: e.target.value, // Cập nhật giá trị tro trong formData
+                }));
               }}
             >
               {user?.nhatro.map((item) => (
@@ -117,6 +149,10 @@ const ThemNguoiComponent = ({ user, onClose }) => {
                   handleChange(e);
                   setSelectedTang(e.target.value);
                   setSelectedPhong(""); // Reset phòng khi chọn tầng khác
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    tang: e.target.value, // Cập nhật giá trị tro trong formData
+                  }));
                 }}
                 disabled={!selectedNhatro} // Không cho chọn tầng nếu chưa chọn nhà trọ
               >
@@ -172,6 +208,18 @@ const ThemNguoiComponent = ({ user, onClose }) => {
                     </td>
                   </tr>
                   <tr>
+                    <td>Điện thoại</td>
+                    <td>
+                      <input
+                        type="number"
+                        name="sdt"
+                        value={formData.sdt}
+                        onChange={handleChange}
+                        placeholder="Số điện thoại..."
+                      />
+                    </td>
+                  </tr>
+                  <tr>
                     <td>CCCD</td>
                     <td>
                       <input
@@ -180,6 +228,18 @@ const ThemNguoiComponent = ({ user, onClose }) => {
                         value={formData.cccd}
                         onChange={handleChange}
                         placeholder="Số căn cước..."
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Quê quán</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="quequan"
+                        value={formData.quequan}
+                        onChange={handleChange}
+                        placeholder="Quê quán..."
                       />
                     </td>
                   </tr>
@@ -221,6 +281,9 @@ const ThemNguoiComponent = ({ user, onClose }) => {
                   </tr>
                 </tbody>
               </table>
+              {errorMessage && (
+                <div className="error-message">{errorMessage}</div>
+              )}
               <div className="start-btn">
                 <button
                   disabled={selectedPhong ? false : true}
