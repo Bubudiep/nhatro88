@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import api from "../../../../components/api";
 const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
   const [isClosing, setIsClosing] = useState(false);
   const [isUpdate, setIsUpdate] = useState(null);
@@ -9,45 +9,81 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
   const handleClose = () => {
     setIsClosing(true);
     setTimeout(() => {
-      onClose(); // Gọi onClose mà không cần truyền tham số alert
-    }, 300); // Thời gian trễ phải tương ứng với thời gian của animation
+      onClose();
+    }, 300);
   };
 
-  // Hàm cập nhật thông tin người dùng (nếu cần)
   const handleUpdateUser = (newUserData) => {
     if (onUserUpdate) {
-      onUserUpdate(newUserData); // Gọi hàm callback để cập nhật người dùng
+      onUserUpdate(newUserData);
     }
   };
 
-  // Hàm hiển thị dữ liệu nhà trọ để cập nhật
   const handleUpdateTro = (e) => {
     const updateData = user.nhatro.find((nhatro) => nhatro.id === e);
     setSlideDanhsach("slideOut");
     setTimeout(() => {
       setSlideNhatro("slideIn");
       setIsUpdate(updateData);
-    }, 200); // Đặt thời gian trễ là 300ms
+    }, 200);
   };
+
   const handleBack = () => {
     setSlideNhatro("slideOut2");
     setTimeout(() => {
       setSlideDanhsach("slideIn2");
       setIsUpdate(null);
-    }, 200); // Đặt thời gian trễ là 300ms
+    }, 200);
   };
-  // Hàm xử lý khi bấm "Lưu lại"
+
   const handleSave = () => {
-    // Chuẩn bị dữ liệu mới sau khi người dùng thay đổi
-    const updatedTro = {
-      ...isUpdate,
-      chungchu: document.querySelector('input[name="chungchu"]').checked,
-      dieuhoa: document.querySelector('input[name="dieuhoa"]').checked,
-      nonglanh: document.querySelector('input[name="nonglanh"]').checked,
-      wifi: document.querySelector('input[name="wifi"]').checked,
+    if (!isUpdate) return;
+
+    // Dữ liệu cũ (dữ liệu trước khi cập nhật)
+    const oldData = user.nhatro.find((nhatro) => nhatro.id === isUpdate.id);
+
+    // Dữ liệu mới lấy từ các trường nhập
+    const newData = {
+      tenTro: isUpdate.tenTro,
+      tienrac: document.querySelector('input[name="tienrac"]').value,
+      tiennuoc: document.querySelector('input[name="tiennuoc"]').value,
+      tiendien: document.querySelector('input[name="tiendien"]').value,
+      giaphongThapnhat: document.querySelector('input[name="giaphongThapnhat"]')
+        .value,
+      giaphongCaonhat: document.querySelector('input[name="giaphongCaonhat"]')
+        .value,
+      chungchu:
+        document.querySelector('select[name="chungchu"]').value === "Có",
+      dieuhoa: document.querySelector('select[name="dieuhoa"]').value === "Có",
+      nonglanh:
+        document.querySelector('select[name="nonglanh"]').value === "Có",
+      wifi: document.querySelector('select[name="wifi"]').value === "Có",
     };
-    console.log("Cập nhật thông tin nhà trọ: ", updatedTro);
-    setIsUpdate(false);
+
+    // So sánh dữ liệu mới với dữ liệu cũ
+    const updatedFields = {};
+    for (let key in newData) {
+      if (newData[key] !== oldData[key]) {
+        updatedFields[key] = newData[key]; // Lưu lại các trường đã thay đổi
+      }
+    }
+
+    if (Object.keys(updatedFields).length > 0) {
+      // Nếu có sự thay đổi thì gửi request PATCH
+      api
+        .patch(`/api/nhatro/${isUpdate.id}/`, updatedFields)
+        .then((response) => {
+          console.log("Cập nhật thành công", response.data);
+          // Cập nhật dữ liệu mới vào danh sách user.nhatro
+          handleUpdateUser(response.data);
+          handleBack(); // Quay lại danh sách
+        })
+        .catch((error) => {
+          console.error("Lỗi khi cập nhật:", error);
+        });
+    } else {
+      console.log("Không có sự thay đổi nào để cập nhật.");
+    }
   };
 
   return (
@@ -73,7 +109,11 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
                       <td>Tiền rác</td>
                       <td>
                         <div className="flex relative justify-end items-center">
-                          <input type="number" value={isUpdate.tienrac ?? 0} />
+                          <input
+                            type="number"
+                            name="tienrac"
+                            defaultValue={isUpdate.tienrac ?? 0}
+                          />
                           <div className="unit">1 tháng</div>
                         </div>
                       </td>
@@ -82,7 +122,11 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
                       <td>Tiền nước</td>
                       <td>
                         <div className="flex relative justify-end items-center">
-                          <input type="number" value={isUpdate.tiennuoc ?? 0} />
+                          <input
+                            type="number"
+                            name="tiennuoc"
+                            defaultValue={isUpdate.tiennuoc ?? 0}
+                          />
                           <div className="unit">1 khối</div>
                         </div>
                       </td>
@@ -91,7 +135,11 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
                       <td>Tiền điện</td>
                       <td>
                         <div className="flex relative justify-end items-center">
-                          <input type="number" value={isUpdate.tiendien ?? 0} />
+                          <input
+                            type="number"
+                            name="tiendien"
+                            defaultValue={isUpdate.tiendien ?? 0}
+                          />
                           <div className="unit">1 số</div>
                         </div>
                       </td>
@@ -102,7 +150,8 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
                         <div className="flex relative justify-end items-center">
                           <input
                             type="number"
-                            value={isUpdate.giaphongThapnhat ?? 0}
+                            name="giaphongThapnhat"
+                            defaultValue={isUpdate.giaphongThapnhat ?? 0}
                           />
                           <div className="unit">vnđ</div>
                         </div>
@@ -114,7 +163,8 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
                         <div className="flex relative justify-end items-center">
                           <input
                             type="number"
-                            value={isUpdate.giaphongCaonhat ?? 0}
+                            name="giaphongCaonhat"
+                            defaultValue={isUpdate.giaphongCaonhat ?? 0}
                           />
                           <div className="unit">vnđ</div>
                         </div>
@@ -123,36 +173,52 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
                     <tr>
                       <td>Chung chủ</td>
                       <td>
-                        <select>
-                          <option selected={isUpdate.chungchu}>Có</option>
-                          <option selected={!isUpdate.chungchu}>Không</option>
+                        <select name="chungchu">
+                          <option value="Có" selected={isUpdate.chungchu}>
+                            Có
+                          </option>
+                          <option value="Không" selected={!isUpdate.chungchu}>
+                            Không
+                          </option>
                         </select>
                       </td>
                     </tr>
                     <tr>
                       <td>Điều hòa</td>
                       <td>
-                        <select>
-                          <option selected={isUpdate.dieuhoa}>Có</option>
-                          <option selected={!isUpdate.dieuhoa}>Không</option>
+                        <select name="dieuhoa">
+                          <option value="Có" selected={isUpdate.dieuhoa}>
+                            Có
+                          </option>
+                          <option value="Không" selected={!isUpdate.dieuhoa}>
+                            Không
+                          </option>
                         </select>
                       </td>
                     </tr>
                     <tr>
                       <td>Nóng lạnh</td>
                       <td>
-                        <select>
-                          <option selected={isUpdate.nonglanh}>Có</option>
-                          <option selected={!isUpdate.nonglanh}>Không</option>
+                        <select name="nonglanh">
+                          <option value="Có" selected={isUpdate.nonglanh}>
+                            Có
+                          </option>
+                          <option value="Không" selected={!isUpdate.nonglanh}>
+                            Không
+                          </option>
                         </select>
                       </td>
                     </tr>
                     <tr>
                       <td>Wifi</td>
                       <td>
-                        <select>
-                          <option selected={isUpdate.wifi}>Có</option>
-                          <option selected={!isUpdate.wifi}>Không</option>
+                        <select name="wifi">
+                          <option value="Có" selected={isUpdate.wifi}>
+                            Có
+                          </option>
+                          <option value="Không" selected={!isUpdate.wifi}>
+                            Không
+                          </option>
                         </select>
                       </td>
                     </tr>
