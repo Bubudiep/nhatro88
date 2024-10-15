@@ -161,7 +161,7 @@ const Nhatro = ({ user }) => {
           <Alert_box alerts={alerts} handleAlert={handleAlertSelect} />
         </div>
         <Db_box user={user} handleShow={handleDashboard} />
-        <div className="tool-container">
+        <div className="tool-container snap">
           <div
             className="items"
             onClick={() => handleComponentSelect("themNguoi")}

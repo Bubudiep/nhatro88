@@ -1514,6 +1514,21 @@ button {
 .fade-out-down {
   animation: fadeOutDown 0.3s ease forwards;
 }
+.slider {
+  width: -webkit-fill-available;
+}
+.slideOut {
+  animation: fadeOutLeft 0.3s ease forwards;
+}
+.slideIn {
+  animation: fadeinLeft 0.3s ease forwards;
+}
+.slideOut2 {
+  animation: fadeOutRight 0.3s ease forwards;
+}
+.slideIn2 {
+  animation: fadeinRight 0.3s ease forwards;
+}
 /* Định nghĩa animation cho fade-in */
 @keyframes fadeInUp {
   0% {
@@ -1527,6 +1542,46 @@ button {
 }
 
 /* Định nghĩa animation cho fade-out */
+@keyframes fadeinRight {
+  0% {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+@keyframes fadeOutRight {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+}
+@keyframes fadeinLeft {
+  0% {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+@keyframes fadeOutLeft {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+}
 @keyframes fadeOutUp {
   0% {
     transform: translateY(0);

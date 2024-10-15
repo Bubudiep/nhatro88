@@ -3,6 +3,8 @@ import React, { useState } from "react";
 const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
   const [isClosing, setIsClosing] = useState(false);
   const [isUpdate, setIsUpdate] = useState(null);
+  const [slideDanhsach, setSlideDanhsach] = useState("");
+  const [slideNhatro, setSlideNhatro] = useState("");
 
   const handleClose = () => {
     setIsClosing(true);
@@ -21,9 +23,19 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
   // Hàm hiển thị dữ liệu nhà trọ để cập nhật
   const handleUpdateTro = (e) => {
     const updateData = user.nhatro.find((nhatro) => nhatro.id === e);
-    setIsUpdate(updateData);
+    setSlideDanhsach("slideOut");
+    setTimeout(() => {
+      setSlideNhatro("slideIn");
+      setIsUpdate(updateData);
+    }, 200); // Đặt thời gian trễ là 300ms
   };
-
+  const handleBack = () => {
+    setSlideNhatro("slideOut2");
+    setTimeout(() => {
+      setSlideDanhsach("slideIn2");
+      setIsUpdate(null);
+    }, 200); // Đặt thời gian trễ là 300ms
+  };
   // Hàm xử lý khi bấm "Lưu lại"
   const handleSave = () => {
     // Chuẩn bị dữ liệu mới sau khi người dùng thay đổi
@@ -34,16 +46,7 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
       nonglanh: document.querySelector('input[name="nonglanh"]').checked,
       wifi: document.querySelector('input[name="wifi"]').checked,
     };
-
-    // Gọi API để lưu lại thông tin đã cập nhật (nếu có)
     console.log("Cập nhật thông tin nhà trọ: ", updatedTro);
-
-    // Ví dụ gọi API (nếu bạn có API thực tế để cập nhật):
-    // axios.post('/api/update/nhatro', updatedTro)
-    //   .then(response => console.log('Cập nhật thành công', response))
-    //   .catch(error => console.error('Cập nhật thất bại', error));
-
-    // Sau khi lưu thành công, quay lại danh sách nhà trọ
     setIsUpdate(false);
   };
 
@@ -56,8 +59,8 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
         </div>
 
         {isUpdate ? (
-          <>
-            <div className="title">Cập nhật {isUpdate.tenTro}</div>
+          <div className={`slider ${slideNhatro}`}>
+            <div className="title">{isUpdate.tenTro}</div>
             <div className="body-container">
               <div className="form-update flex flex-col gap-1 flex-1">
                 <table>
@@ -68,88 +71,110 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
                     </tr>
                     <tr>
                       <td>Tiền rác</td>
-                      <td>{isUpdate.tienrac ?? 0} vnđ</td>
+                      <td>
+                        <div className="flex relative justify-end items-center">
+                          <input type="number" value={isUpdate.tienrac ?? 0} />
+                          <div className="unit">1 tháng</div>
+                        </div>
+                      </td>
                     </tr>
                     <tr>
                       <td>Tiền nước</td>
-                      <td>{isUpdate.tiennuoc ?? 0} vnđ (1 khối)</td>
+                      <td>
+                        <div className="flex relative justify-end items-center">
+                          <input type="number" value={isUpdate.tiennuoc ?? 0} />
+                          <div className="unit">1 khối</div>
+                        </div>
+                      </td>
                     </tr>
                     <tr>
                       <td>Tiền điện</td>
-                      <td>{isUpdate.tiendien ?? 0} vnđ (1 số)</td>
+                      <td>
+                        <div className="flex relative justify-end items-center">
+                          <input type="number" value={isUpdate.tiendien ?? 0} />
+                          <div className="unit">1 số</div>
+                        </div>
+                      </td>
                     </tr>
                     <tr>
                       <td>Giá phòng thấp nhất</td>
-                      <td>{isUpdate.giaphongThapnhat}</td>
+                      <td>
+                        <div className="flex relative justify-end items-center">
+                          <input
+                            type="number"
+                            value={isUpdate.giaphongThapnhat ?? 0}
+                          />
+                          <div className="unit">vnđ</div>
+                        </div>
+                      </td>
                     </tr>
                     <tr>
                       <td>Giá phòng cao nhất</td>
-                      <td>{isUpdate.giaphongCaonhat}</td>
+                      <td>
+                        <div className="flex relative justify-end items-center">
+                          <input
+                            type="number"
+                            value={isUpdate.giaphongCaonhat ?? 0}
+                          />
+                          <div className="unit">vnđ</div>
+                        </div>
+                      </td>
                     </tr>
                     <tr>
                       <td>Chung chủ</td>
                       <td>
-                        <input
-                          type="checkbox"
-                          name="chungchu"
-                          defaultChecked={isUpdate.chungchu}
-                        />
+                        <select>
+                          <option selected={isUpdate.chungchu}>Có</option>
+                          <option selected={!isUpdate.chungchu}>Không</option>
+                        </select>
                       </td>
                     </tr>
                     <tr>
                       <td>Điều hòa</td>
                       <td>
-                        <input
-                          type="checkbox"
-                          name="dieuhoa"
-                          defaultChecked={isUpdate.dieuhoa}
-                        />
+                        <select>
+                          <option selected={isUpdate.dieuhoa}>Có</option>
+                          <option selected={!isUpdate.dieuhoa}>Không</option>
+                        </select>
                       </td>
                     </tr>
                     <tr>
                       <td>Nóng lạnh</td>
                       <td>
-                        <input
-                          type="checkbox"
-                          name="nonglanh"
-                          defaultChecked={isUpdate.nonglanh}
-                        />
+                        <select>
+                          <option selected={isUpdate.nonglanh}>Có</option>
+                          <option selected={!isUpdate.nonglanh}>Không</option>
+                        </select>
                       </td>
                     </tr>
                     <tr>
                       <td>Wifi</td>
                       <td>
-                        <input
-                          type="checkbox"
-                          name="wifi"
-                          defaultChecked={isUpdate.wifi}
-                        />
+                        <select>
+                          <option selected={isUpdate.wifi}>Có</option>
+                          <option selected={!isUpdate.wifi}>Không</option>
+                        </select>
                       </td>
                     </tr>
                   </tbody>
                 </table>
                 <div className="mt-auto">
-                  <div className="add" onClick={handleSave}>
-                    <div className="add-box">
-                      <div className="text">Lưu lại</div>
-                    </div>
-                  </div>
-                  <div
-                    className="add back"
-                    onClick={() => {
-                      setIsUpdate(false);
-                    }}
-                  >
+                  <div className="add back" onClick={handleBack}>
                     <div className="add-box">
                       <div className="text">Quay lại</div>
+                    </div>
+                  </div>
+                  <div className="add" onClick={handleSave}>
+                    <div className="add-box">
+                      <div className="text">Lưu cài đặt</div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </>
+          </div>
         ) : (
-          <>
+          <div className={`slider ${slideDanhsach}`}>
             <div className="title">Danh sách nhà trọ</div>
             <div className="body-container">
               <div className="list_item_big">
@@ -245,7 +270,7 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
                 </div>
               </div>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>
