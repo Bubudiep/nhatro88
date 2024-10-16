@@ -4,11 +4,11 @@ import localApi from "../../../components/api";
 
 const ThemNguoiComponent = ({ user, onClose, onUserUpdate }) => {
   const [errorMessage, setErrorMessage] = useState("");
+  const [isAdded, setIsAdded] = useState(true);
   const [selectedNhatro, setSelectedNhatro] = useState(user?.nhatro[0]?.id);
   const [selectedTang, setSelectedTang] = useState("");
   const [selectedPhong, setSelectedPhong] = useState(""); // Thêm trạng thái cho phòng
   const [isClosing, setIsClosing] = useState(false);
-  const [today, setToday] = useState("");
   const [formData, setFormData] = useState({
     fromQR: false,
     tro: selectedNhatro,
@@ -16,23 +16,13 @@ const ThemNguoiComponent = ({ user, onClose, onUserUpdate }) => {
     phong: selectedPhong,
     hoTen: "",
     sdt: "",
+    gioitinh: "",
     cccd: "",
     ngaySinh: "",
     quequan: "",
     tienCoc: 1000000,
-    ngayBatDau: "",
+    ngayBatDau: new Date().toISOString().split("T")[0],
   });
-
-  useEffect(() => {
-    const currentDate = new Date();
-    const formattedDate = currentDate.toISOString().split("T")[0]; // Định dạng YYYY-MM-DD
-    setToday(formattedDate);
-    setFormData((prevData) => ({
-      ...prevData,
-      ngayBatDau: formattedDate,
-    }));
-  }, []);
-
   const handleClose = () => {
     setIsClosing(true);
     setTimeout(() => {
@@ -48,11 +38,19 @@ const ThemNguoiComponent = ({ user, onClose, onUserUpdate }) => {
             success: (data) => {
               const { content } = data;
               if (content) {
-                setFormData((prevData) => ({
-                  ...prevData,
-                  fromQR: true,
-                }));
-                console.log(content);
+                const cccd_data = content.split("|");
+                if (cccd_data.length >= 6) {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    fromQR: true,
+                    hoTen: cccd_data[2],
+                    cccd: cccd_data[0],
+                    ngaySinh: cccd_data[3],
+                    gioitinh: cccd_data[4],
+                    quequan: cccd_data[5],
+                  }));
+                  console.log(content);
+                }
               }
             },
           });
@@ -88,6 +86,7 @@ const ThemNguoiComponent = ({ user, onClose, onUserUpdate }) => {
       .then((response) => {
         console.log(response);
         onUserUpdate(response);
+        setIsAdded(true);
       })
       .catch((error) => {
         console.error("Lỗi khi lấy thông tin nhà trọ:", error);
@@ -183,7 +182,27 @@ const ThemNguoiComponent = ({ user, onClose, onUserUpdate }) => {
               </select>
             )}
           </div>
-          {selectedPhong ? (
+          {isAdded ? (
+            <>
+              <div className="success-message flex-1 items-center justify-center text-[#999] text-lg">
+                <div className="logo">
+                  <i className="fa-solid fa-check"></i>
+                </div>
+                <div className="text">Thêm thành công!</div>
+              </div>
+              <div className="start-btn">
+                <button
+                  className="back"
+                  onClick={() => {
+                    setIsAdded(false);
+                  }}
+                >
+                  Quay lại
+                </button>
+                {/* <button>Xem danh sách người ở trọ</button> */}
+              </div>
+            </>
+          ) : selectedPhong ? (
             <>
               <div className="h3">
                 <div className="actions">
@@ -204,6 +223,18 @@ const ThemNguoiComponent = ({ user, onClose, onUserUpdate }) => {
                         value={formData.hoTen}
                         onChange={handleChange}
                         placeholder="Họ và tên..."
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Giới tính</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="gioitinh"
+                        value={formData.gioitinh}
+                        onChange={handleChange}
+                        placeholder="Nam/Nữ..."
                       />
                     </td>
                   </tr>

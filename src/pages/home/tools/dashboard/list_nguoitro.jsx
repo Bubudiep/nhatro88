@@ -14,51 +14,6 @@ const ListNguoitro = ({ option, onClose, user, onUserUpdate }) => {
       onClose();
     }, 300);
   };
-
-  const handleAddPhongtro = () => {
-    setIsTransitioning(true); // Bắt đầu hiệu ứng chuyển tiếp
-    setTimeout(() => {
-      setIsAdding("Tro"); // Chuyển sang chế độ thêm phòng sau hiệu ứng
-      setIsTransitioning(false);
-    }, 300); // Thời gian delay phù hợp với hiệu ứng
-  };
-  const handleThemtang = () => {
-    setIsTransitioning(true); // Bắt đầu hiệu ứng chuyển tiếp
-    setTimeout(() => {
-      setIsAdding("Tang"); // Chuyển sang chế độ thêm phòng sau hiệu ứng
-      setIsTransitioning(false);
-    }, 300); // Thời gian delay phù hợp với hiệu ứng
-  };
-
-  const handleGoBack = () => {
-    setIsTransitioning(true); // Bắt đầu hiệu ứng quay lại
-    setTimeout(() => {
-      setIsAdding(false); // Quay lại danh sách phòng sau hiệu ứng
-      setIsTransitioning(false);
-    }, 300);
-  };
-
-  const filterPhongtro = (nhatro) => {
-    if (selectedNhatro === "all") {
-      return nhatro.reduce((acc, tro) => {
-        tro.Thongtin.forEach((tang) => {
-          acc.push(...tang.Chitiet);
-        });
-        return acc;
-      }, []);
-    }
-
-    return nhatro.reduce((acc, tro) => {
-      if (tro.id == selectedNhatro) {
-        tro.Thongtin.forEach((tang) => {
-          if (!selectedTang || tang.id == selectedTang) {
-            acc.push(...tang.Chitiet);
-          }
-        });
-      }
-      return acc;
-    }, []);
-  };
   const filterNguoitro = (nhatro) => {
     if (selectedNhatro === "all") {
       const allnguoitro = nhatro.reduce((acc, tro) => {
@@ -144,7 +99,6 @@ const ListNguoitro = ({ option, onClose, user, onUserUpdate }) => {
                   );
                 })}
               </select>
-              {/* Select để chọn tầng, chỉ hiển thị khi đã chọn 1 nhà trọ */}
               {selectedNhatro !== "all" && (
                 <select
                   value={selectedTang}
@@ -168,42 +122,47 @@ const ListNguoitro = ({ option, onClose, user, onUserUpdate }) => {
               )}
             </div>
             <div className="list_item_big">
-              {filterNguoitro(user?.nhatro).map((item) => (
-                <div key={item.id} className="nhatro-item">
-                  <div
-                    className={`details ${item.isOnline ? "active" : "stop"}`}
-                  >
-                    <div className="i-info">
-                      <div className="name i-title">
-                        {item?.ThongtinNguoiTro?.hoTen}
-                        <div className="tang">
+              {filterNguoitro(user?.nhatro).length > 0 ? (
+                filterNguoitro(user?.nhatro).map((item) => (
+                  <div key={item.id} className="nhatro-item">
+                    <div
+                      className={`details ${item.isOnline ? "active" : "stop"}`}
+                    >
+                      <div className="i-info">
+                        <div className="name i-title">
+                          {item?.ThongtinNguoiTro?.hoTen}
+                        </div>
+                        <div className="value giaphong">400,000 VNĐ</div>
+                      </div>
+                      <div className="i-info">
+                        <div className="name">
                           {item.SoPhong} - {item.SoTang}
                         </div>
+                        <div className="value">3 ngày</div>
                       </div>
-                      <div className="value giaphong">400,000 VNĐ</div>
+                      <div className="i-info">
+                        <div className="name">Tạm trú</div>
+                        <div className="value">Chưa đăng ký</div>
+                      </div>
+                      <div className="i-info">
+                        <div className="name">Tiền cọc lần đầu</div>
+                        <div className="value">500,000 vnđ</div>
+                      </div>
+                      <div className="i-info">
+                        <div className="name">Thanh toán lần cuối</div>
+                        <div className="value">{item?.ngayBatdauO}</div>
+                      </div>
                     </div>
-                    <div className="i-info">
-                      <div className="name">Đã đăng ký tạm trú</div>
-                      <div className="value"></div>
-                    </div>
-                    <div className="i-info">
-                      <div className="name">Số ngày đã ở</div>
-                      <div className="value">3 ngày</div>
-                    </div>
-                    <div className="i-info">
-                      <div className="name">Tiền cọc lần đầu</div>
-                      <div className="value">500,000 vnđ</div>
-                    </div>
-                    <div className="i-info">
-                      <div className="name">Thanh toán lần cuối</div>
-                      <div className="value">{item?.ngayBatdauO}</div>
+                    <div className="view">
+                      <i className="fa-solid fa-chevron-right"></i>
                     </div>
                   </div>
-                  <div className="view">
-                    <i className="fa-solid fa-chevron-right"></i>
-                  </div>
+                ))
+              ) : (
+                <div className="flex flex-1 pt-10 items-center justify-center text-[#999] text-lg">
+                  Nhà trọ của bạn đang không có ai ở!
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
