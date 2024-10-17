@@ -18,6 +18,33 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
     }, 300);
   };
   const filterPhongtro = (nhatro) => {
+    if (option == "off") {
+      if (selectedNhatro === "all") {
+        return nhatro.reduce((acc, tro) => {
+          tro.Thongtin.forEach((tang) => {
+            acc.push(
+              ...tang.Chitiet.filter((chitiet) => chitiet.Nguoitro.length == 0)
+            );
+          });
+          return acc;
+        }, []);
+      }
+
+      return nhatro.reduce((acc, tro) => {
+        if (tro.id == selectedNhatro) {
+          tro.Thongtin.forEach((tang) => {
+            if (!selectedTang || tang.id == selectedTang) {
+              acc.push(
+                ...tang.Chitiet.filter(
+                  (chitiet) => chitiet.Nguoitro.length == 0
+                )
+              );
+            }
+          });
+        }
+        return acc;
+      }, []);
+    }
     if (selectedNhatro === "all") {
       return nhatro.reduce((acc, tro) => {
         tro.Thongtin.forEach((tang) => {
