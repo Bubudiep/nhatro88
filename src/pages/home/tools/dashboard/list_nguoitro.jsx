@@ -135,22 +135,38 @@ const ListNguoitro = ({ option, onClose, user, onUserUpdate }) => {
                         <div className="value giaphong">400,000 VNĐ</div>
                       </div>
                       <div className="i-info">
-                        <div className="name">
+                        <div className="name font-medium text-[14px]">
+                          <i className="fa-solid fa-house-user"></i>
                           {item.SoPhong} - {item.SoTang}
                         </div>
                         <div className="value">3 ngày</div>
                       </div>
                       <div className="i-info">
-                        <div className="name">Tạm trú</div>
-                        <div className="value">Chưa đăng ký</div>
+                        <div className="name font-medium text-[14px]">
+                          <i className="fa-solid fa-mobile-screen"></i>
+                          Liên hệ
+                        </div>
+                        <div className="flex gap-2 items-center value font-medium text-[14px] text-[#8f9fb4]">
+                          {item.ThongtinNguoiTro.sdt}
+                        </div>
                       </div>
-                      <div className="i-info">
-                        <div className="name">Tiền cọc lần đầu</div>
-                        <div className="value">500,000 vnđ</div>
-                      </div>
-                      <div className="i-info">
-                        <div className="name">Thanh toán lần cuối</div>
-                        <div className="value">{item?.ngayBatdauO}</div>
+                      <div className="i-details mt-1">
+                        <div
+                          className={`items  ${
+                            item.ThongtinNguoiTro.tamtru ? "on" : "off"
+                          }`}
+                        >
+                          {item.ThongtinNguoiTro.tamtru
+                            ? "Đã tạm trú"
+                            : "Chưa đăng ký tạm trú"}
+                        </div>
+                        <div className="items">
+                          Đã cọc{" "}
+                          {item.ThongtinNguoiTro.tiencoc.toLocaleString(
+                            "vi-VN"
+                          )}
+                          đ
+                        </div>
                       </div>
                     </div>
                     <div className="view">

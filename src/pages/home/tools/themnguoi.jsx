@@ -4,11 +4,12 @@ import localApi from "../../../components/api";
 
 const ThemNguoiComponent = ({ user, onClose, onUserUpdate }) => {
   const [errorMessage, setErrorMessage] = useState("");
-  const [isAdded, setIsAdded] = useState(true);
+  const [isAdded, setIsAdded] = useState(false);
   const [selectedNhatro, setSelectedNhatro] = useState(user?.nhatro[0]?.id);
   const [selectedTang, setSelectedTang] = useState("");
   const [selectedPhong, setSelectedPhong] = useState(""); // Thêm trạng thái cho phòng
   const [isClosing, setIsClosing] = useState(false);
+  const [loading, setLoading] = useState(false); // Trạng thái loading
   const [formData, setFormData] = useState({
     fromQR: false,
     tro: selectedNhatro,
@@ -89,6 +90,9 @@ const ThemNguoiComponent = ({ user, onClose, onUserUpdate }) => {
         setIsAdded(true);
       })
       .catch((error) => {
+        setErrorMessage(
+          error?.response?.data?.Error ?? "Lỗi khi thêm người vào nhà trọ!"
+        );
         console.error("Lỗi khi lấy thông tin nhà trọ:", error);
       });
     // Sau khi thu thập thông tin, bạn có thể gửi formData lên API
@@ -320,7 +324,13 @@ const ThemNguoiComponent = ({ user, onClose, onUserUpdate }) => {
                   disabled={selectedPhong ? false : true}
                   onClick={handleSubmit}
                 >
-                  Thêm vào trọ
+                  {loading ? (
+                    <div className="flex gap-5 justify-center items-center">
+                      <div className="loading-spinner-in"></div>Loading...
+                    </div>
+                  ) : (
+                    "Thêm vào trọ"
+                  )}
                 </button>
               </div>
             </>

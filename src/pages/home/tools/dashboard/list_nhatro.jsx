@@ -112,6 +112,7 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
 
     const newData = {
       tenTro: isUpdate.tenTro,
+      tienphong: document.querySelector('input[name="tienphong"]').value,
       tienrac: document.querySelector('input[name="tienrac"]').value,
       tiennuoc: document.querySelector('input[name="tiennuoc"]').value,
       tiendien: document.querySelector('input[name="tiendien"]').value,
@@ -248,6 +249,19 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
               <div className="form-update flex flex-col gap-1 flex-1">
                 <table>
                   <tbody>
+                    <tr>
+                      <td>Tiền phòng chung</td>
+                      <td>
+                        <div className="flex relative justify-end items-center">
+                          <input
+                            type="number"
+                            name="tienphong"
+                            defaultValue={isUpdate.tienphong ?? 0}
+                          />
+                          <div className="unit">1 tháng</div>
+                        </div>
+                      </td>
+                    </tr>
                     <tr>
                       <td>Tiền rác</td>
                       <td>
@@ -405,30 +419,26 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
                       <div className="i-info">
                         <div className="name">Giá phòng</div>
                         <div className="value">
-                          {item.giaphongThapnhat ? (
-                            item.giaphongThapnhat + " vnđ"
-                          ) : (
-                            <div className="null">0 vnđ</div>
-                          )}
-                          {" - "}
-                          {item.giaphongCaonhat ? (
-                            item.giaphongCaonhat + " vnđ"
-                          ) : (
-                            <div className="null">0 vnđ</div>
-                          )}
+                          {item.tienphong.toLocaleString("vi-VN")}đ
                         </div>
                       </div>
                       <div className="i-info">
                         <div className="name">Tiền điện</div>
-                        <div className="value">{item.tiendien}đ / 1 số</div>
+                        <div className="value">
+                          {item.tiendien.toLocaleString("vi-VN")}đ / 1 số
+                        </div>
                       </div>
                       <div className="i-info">
                         <div className="name">Tiền nước</div>
-                        <div className="value">{item.tiennuoc}đ / 1 khối</div>
+                        <div className="value">
+                          {item.tiennuoc.toLocaleString("vi-VN")}đ / 1 khối
+                        </div>
                       </div>
                       <div className="i-info">
                         <div className="name">Tiền rác</div>
-                        <div className="value">{item.tienrac}đ / tháng</div>
+                        <div className="value">
+                          {item.tienrac.toLocaleString("vi-VN")}đ / tháng
+                        </div>
                       </div>
                       <div className="i-info">
                         <div className="name">Địa chỉ</div>

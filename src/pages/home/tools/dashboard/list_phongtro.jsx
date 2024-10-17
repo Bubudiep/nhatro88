@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import api from "../../../../components/api";
+import money from "../../../../img/banknotes_12748234.png";
 
 const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
   const [isClosing, setIsClosing] = useState(false);
-  const [isAdding, setIsAdding] = useState(false); // Trạng thái cho việc thêm phòng trọ
+  const [slideMain, setSlideMain] = useState("");
+  const [slide2, setSlide2] = useState("");
+  const [editNhatro, setEditNhatro] = useState(false); // Trạng thái cho việc thêm phòng trọ
   const [selectedNhatro, setSelectedNhatro] = useState("all");
   const [selectedTang, setSelectedTang] = useState("");
   const [isTransitioning, setIsTransitioning] = useState(false); // Trạng thái hiệu ứng
@@ -14,30 +17,6 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
       onClose();
     }, 300);
   };
-
-  const handleAddPhongtro = () => {
-    setIsTransitioning(true); // Bắt đầu hiệu ứng chuyển tiếp
-    setTimeout(() => {
-      setIsAdding("Tro"); // Chuyển sang chế độ thêm phòng sau hiệu ứng
-      setIsTransitioning(false);
-    }, 300); // Thời gian delay phù hợp với hiệu ứng
-  };
-  const handleThemtang = () => {
-    setIsTransitioning(true); // Bắt đầu hiệu ứng chuyển tiếp
-    setTimeout(() => {
-      setIsAdding("Tang"); // Chuyển sang chế độ thêm phòng sau hiệu ứng
-      setIsTransitioning(false);
-    }, 300); // Thời gian delay phù hợp với hiệu ứng
-  };
-
-  const handleGoBack = () => {
-    setIsTransitioning(true); // Bắt đầu hiệu ứng quay lại
-    setTimeout(() => {
-      setIsAdding(false); // Quay lại danh sách phòng sau hiệu ứng
-      setIsTransitioning(false);
-    }, 300);
-  };
-
   const filterPhongtro = (nhatro) => {
     if (selectedNhatro === "all") {
       return nhatro.reduce((acc, tro) => {
@@ -59,15 +38,21 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
       return acc;
     }, []);
   };
-  const updateNhatro = async () => {
-    api
-      .get("/my_nhatro/", user.app.access_token)
-      .then((response) => {
-        onUserUpdate(response.results);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi lấy thông tin nhà trọ:", error);
-      });
+  const handleEditTro = (phong) => {
+    console.log(phong);
+    setSlideMain("slideOut");
+    setTimeout(() => {
+      setSlide2("slideIn");
+      setEditNhatro(phong);
+    }, 200);
+  };
+
+  const handleBack = () => {
+    setSlide2("slideOut2");
+    setTimeout(() => {
+      setSlideMain("slideIn2");
+      setEditNhatro(false);
+    }, 200);
   };
   const getTangOptions = () => {
     if (selectedNhatro === "all") return [];
@@ -84,92 +69,141 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
         <div className="top-bar">
           <div className="bar"></div>
         </div>
-        <div
-          className={`transition-container ${
-            isTransitioning ? "fade-out" : "fade-in"
-          }`}
-        >
-          <div className="title">Danh sách phòng trọ</div>
-
-          <div className="body-container">
-            <div className="filter-container">
-              <select
-                value={selectedNhatro}
-                onChange={(e) => {
-                  setSelectedNhatro(e.target.value);
-                  setSelectedTang("");
-                }}
-              >
-                <option value="all">Tất cả nhà trọ</option>
-                {user?.nhatro.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.tenTro}
-                  </option>
-                ))}
-              </select>
-              {/* Select để chọn tầng, chỉ hiển thị khi đã chọn 1 nhà trọ */}
-              {selectedNhatro !== "all" && (
+        {editNhatro ? (
+          <div
+            className={`slider flex-1 message-box fade-in-5 gap-2 flex flex-col ${slide2}`}
+          >
+            <div className="title2">
+              {editNhatro.tenTang} - {editNhatro.soPhong}
+            </div>
+            <div className="chitiet-phongtro">
+              <div className="doanhthu">
+                <div className="logo">
+                  <img src={money} />
+                </div>
+                <div className="value">+ 000đ</div>
+              </div>
+              <div className="thongtin">
+                <table>
+                  <tbody>
+                    <tr>
+                      <td>Giá phòng</td>
+                      <td>{editNhatro.giaPhong}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div className="tools-container flex">
+              <button className="no-bg" onClick={handleBack}>
+                Quay lại
+              </button>
+              <button className="add">Cập nhập thông tin</button>
+            </div>
+          </div>
+        ) : (
+          <div
+            className={`slider message-box fade-in-5 gap-2 flex flex-col ${slideMain}`}
+          >
+            <div className="title">Danh sách phòng trọ</div>
+            <div className="body-container">
+              <div className="filter-container">
                 <select
-                  value={selectedTang}
-                  onChange={(e) => setSelectedTang(e.target.value)}
+                  value={selectedNhatro}
+                  onChange={(e) => {
+                    setSelectedNhatro(e.target.value);
+                    setSelectedTang("");
+                  }}
                 >
-                  <option value="">Tất cả tầng</option>
-                  {getTangOptions().map((tang, index) => (
-                    <option key={index} value={tang.id}>
-                      {tang.tenTang}
+                  <option value="all">Tất cả nhà trọ</option>
+                  {user?.nhatro.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.tenTro}
                     </option>
                   ))}
                 </select>
-              )}
-            </div>
-            <div className="list_item_big">
-              {filterPhongtro(user?.nhatro).map((item) => (
-                <div key={item.id} className="nhatro-item">
-                  <div
-                    className={`details ${item.isActive ? "active" : "stop"}`}
+                {/* Select để chọn tầng, chỉ hiển thị khi đã chọn 1 nhà trọ */}
+                {selectedNhatro !== "all" && (
+                  <select
+                    value={selectedTang}
+                    onChange={(e) => setSelectedTang(e.target.value)}
                   >
-                    <div className="i-info">
-                      <div className="name i-title">
-                        {item.soPhong}
-                        <div className="tang">{item.tenTang}</div>
-                      </div>
-                      <div className="value giaphong">{item.giaPhong} VNĐ</div>
-                    </div>
-                    {item.Nguoitro.length === 0 ? (
-                      <div className="i-null">
-                        <div className="logo">
-                          <i className="fa-solid fa-door-closed"></i>
+                    <option value="">Tất cả tầng</option>
+                    {getTangOptions().map((tang, index) => (
+                      <option key={index} value={tang.id}>
+                        {tang.tenTang}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </div>
+              <div className="list_item_big">
+                {filterPhongtro(user?.nhatro).map((item) => (
+                  <div
+                    key={item.id}
+                    className={`nhatro-item ${
+                      item.Nguoitro.length > 0 && "money"
+                    }`}
+                  >
+                    <div
+                      className={`details ${item.isActive ? "active" : "stop"}`}
+                      onClick={() => {
+                        handleEditTro(item);
+                      }}
+                    >
+                      <div className="i-info">
+                        <div className="name i-title">
+                          {item.soPhong}
+                          <div className="tang">{item.tenTang}</div>
                         </div>
-                        <div className="message">Chưa có ai ở!</div>
-                      </div>
-                    ) : (
-                      <>
-                        <div className="i-info">
-                          <div className="name">Đang ở</div>
-                          <div className="value">???</div>
+                        <div className="value giaphong">
+                          {item.giaPhong} VNĐ
                         </div>
-                        <div className="i-info">
-                          <div className="name">Ngày bắt đầu</div>
-                          <div className="value">
-                            <div className="bold">00/00/00</div>
+                      </div>
+                      {item.Nguoitro.length === 0 ? (
+                        <div className="i-null">
+                          <div className="logo">
+                            <i className="fa-solid fa-door-closed"></i>
                           </div>
+                          <div className="message">Chưa có ai ở!</div>
                         </div>
-                      </>
-                    )}
-                    <div className="i-details">
-                      <div className="items">Có Wifi</div>
-                      <div className="items">Có Điều hòa</div>
-                      <div className="items">Có Nóng lạnh</div>
+                      ) : (
+                        <>
+                          <div className="i-info">
+                            <div className="name">Đang ở</div>
+                            <div className="value">
+                              {item.Nguoitro.length} người
+                            </div>
+                          </div>
+                          <div className="i-info">
+                            <div className="name">Ngày bắt đầu</div>
+                            <div className="value">{item.Ngaybatdau}</div>
+                          </div>
+                        </>
+                      )}
+                      <div className="i-details mt-1">
+                        <div className={`items ${item.wifi ? "on" : "off"}`}>
+                          {item.wifi ? "Có" : "Không"} Wifi
+                        </div>
+                        <div className={`items ${item.dieuhoa ? "on" : "off"}`}>
+                          {item.dieuhoa ? "Có" : "Không"} Điều hòa
+                        </div>
+                        <div
+                          className={`items ${item.nonglanh ? "on" : "off"}`}
+                        >
+                          {item.nonglanh ? "Có" : "Không"} Nóng lạnh
+                        </div>
+                      </div>
+                    </div>
+                    <div className="view">
+                      <i className="fa-solid fa-chevron-right"></i>
                     </div>
                   </div>
-                  <div className="view">
-                    <i className="fa-solid fa-chevron-right"></i>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

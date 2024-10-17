@@ -869,6 +869,99 @@ body {
     min-height: 50vh;
     animation: slideup 0.3s ease-in-out forwards;
     transition: height 0.3s ease-in-out; /* Thêm transition cho height */
+    .slider {
+      height: -webkit-fill-available;
+    }
+    .chitiet-phongtro {
+      display: flex;
+      flex-direction: column;
+      .thongtin {
+        display: flex;
+        padding: 0px 20px;
+        table {
+          font-size: 15px;
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 0px;
+          tr {
+            td {
+              padding: 4px;
+              border: 1px solid #999;
+              border-left: hidden;
+              border-top: hidden;
+              &:first-child {
+                border-left: 1px solid #999;
+                font-weight: 500;
+              }
+              &:last-child {
+                text-align: right;
+              }
+            }
+            &:first-child {
+              td {
+                border-top: 1px solid #999;
+                &:first-child {
+                  border-top-left-radius: 5px;
+                }
+                &:last-child {
+                  border-top-right-radius: 5px;
+                }
+              }
+            }
+            &:last-child {
+              td {
+                &:first-child {
+                  border-bottom-left-radius: 5px;
+                }
+                &:last-child {
+                  border-bottom-right-radius: 5px;
+                }
+              }
+            }
+          }
+        }
+      }
+      .doanhthu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        .logo {
+          display: flex;
+          justify-content: center;
+          padding: 2px;
+          img {
+            width: 30px;
+          }
+        }
+        .value {
+          padding-right: 8px;
+          font-weight: 500;
+          font-size: 15px;
+          color: #01b95d;
+        }
+      }
+    }
+    .tools-container {
+      padding: 0px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      width: -webkit-fill-available;
+      margin-top: auto;
+      padding-bottom: 6px;
+      &.flex {
+        justify-content: space-between;
+        flex-direction: row;
+      }
+      button {
+        &.no-bg {
+          border: hidden;
+          background-color: none;
+          color: #999;
+        }
+      }
+    }
     .transition-container {
       max-height: calc(90vh - 34px);
       overflow: hidden;
@@ -1059,6 +1152,17 @@ body {
       font-size: 18px;
       padding: 6px 12px;
       text-align: center;
+      font-weight: 600;
+    }
+    .title2 {
+      display: flex;
+      width: -webkit-fill-available;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 15px;
+      padding: 4px 12px;
+      text-align: center;
+      justify-content: center;
       font-weight: 600;
     }
   }
@@ -1323,6 +1427,10 @@ body {
     border: 1px solid #e1e1e1;
     border-left: hidden;
     border-right: hidden;
+    opacity: 0.5;
+    &.money {
+      opacity: 1;
+    }
     .logo {
       width: 60px;
       display: flex;
@@ -1375,6 +1483,14 @@ body {
           padding: 3px 5px;
           color: #a0aec0;
           overflow: hidden;
+          &.on {
+            border: 1px solid #01b95d;
+            color: #01b95d;
+          }
+          &.off {
+            border: 1px solid #b93501;
+            color: #b93501;
+          }
         }
       }
       .i-info {
@@ -1397,6 +1513,15 @@ body {
           }
         }
         .name {
+          display: flex;
+          gap: 2px;
+          i {
+            width: 20px;
+            font-size: 13px;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+          }
         }
         .value {
           display: flex;
