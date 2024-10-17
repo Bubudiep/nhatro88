@@ -81,13 +81,83 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
                 <div className="logo">
                   <img src={money} />
                 </div>
-                <div className="value">+ 000đ</div>
+                <div className="value">
+                  {editNhatro.giaPhong.toLocaleString("vi-VN")} VNĐ
+                </div>
+                <div className="details">
+                  <div className={`items ${editNhatro.wifi ? "on" : "off"}`}>
+                    {editNhatro.wifi ? "Có" : "Không"} Wifi
+                  </div>
+                  <div className={`items ${editNhatro.dieuhoa ? "on" : "off"}`}>
+                    {editNhatro.dieuhoa ? "Có" : "Không"} Điều hòa
+                  </div>
+                  <div
+                    className={`items ${editNhatro.nonglanh ? "on" : "off"}`}
+                  >
+                    {editNhatro.nonglanh ? "Có" : "Không"} Nóng lạnh
+                  </div>
+                </div>
               </div>
+              <div className="h2">Tình trạng</div>
               <div className="thongtin">
                 <table>
                   <tbody>
                     <tr>
-                      <td>Giá phòng</td>
+                      <td>Tình trạng</td>
+                      <td>
+                        {editNhatro.Nguoitro.length > 0
+                          ? "Đang sử dụng"
+                          : "Trống"}
+                      </td>
+                    </tr>
+                    {editNhatro.Nguoitro.length > 0 ? (
+                      <>
+                        <tr>
+                          <td>Đang ở hiện tại</td>
+                          <td>{editNhatro.Nguoitro.length} người</td>
+                        </tr>
+                        <tr>
+                          <td>Số ngày cho thuê</td>
+                          <td>{editNhatro.giaPhong}</td>
+                        </tr>
+                        <tr>
+                          <td>Dự kiến doanh thu</td>
+                          <td>{editNhatro.giaPhong}</td>
+                        </tr>
+                      </>
+                    ) : (
+                      <>
+                        <tr>
+                          <td>Số ngày trống</td>
+                          <td>0 ngày</td>
+                        </tr>
+                      </>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              <div className="h2">Thống kê</div>
+              <div className="thongtin">
+                <table>
+                  <tbody>
+                    <tr>
+                      <td>Ngày bắt đầu</td>
+                      <td>0</td>
+                    </tr>
+                    <tr>
+                      <td>Tỉ lệ lấp đầy</td>
+                      <td>0% (0/0)</td>
+                    </tr>
+                    <tr>
+                      <td>Số người từng thuê</td>
+                      <td>0</td>
+                    </tr>
+                    <tr>
+                      <td>Số hóa đơn đã xuất</td>
+                      <td>0</td>
+                    </tr>
+                    <tr>
+                      <td>Tổng doanh thu</td>
                       <td>{editNhatro.giaPhong}</td>
                     </tr>
                   </tbody>
@@ -142,7 +212,7 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
                   <div
                     key={item.id}
                     className={`nhatro-item ${
-                      item.Nguoitro.length > 0 && "money"
+                      item.Nguoitro.length > 0 ? "money" : "no-human"
                     }`}
                   >
                     <div

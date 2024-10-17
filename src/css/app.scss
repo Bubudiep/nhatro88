@@ -875,6 +875,11 @@ body {
     .chitiet-phongtro {
       display: flex;
       flex-direction: column;
+      gap: 8px;
+      .h2 {
+        padding: 0px 20px;
+        font-weight: 500;
+      }
       .thongtin {
         display: flex;
         padding: 0px 20px;
@@ -885,16 +890,16 @@ body {
           border-spacing: 0px;
           tr {
             td {
-              padding: 4px;
+              padding: 8px 4px;
               border: 1px solid #999;
               border-left: hidden;
               border-top: hidden;
               &:first-child {
                 border-left: 1px solid #999;
-                font-weight: 500;
               }
               &:last-child {
                 text-align: right;
+                width: 150px;
               }
             }
             &:first-child {
@@ -926,6 +931,24 @@ body {
         flex-direction: column;
         align-items: center;
         gap: 5px;
+        .details {
+          display: flex;
+          gap: 5px;
+          .items {
+            font-size: 13px;
+            padding: 4px 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            &.off {
+              color: #b46422;
+              border: 1px solid #b46422;
+            }
+            &.on {
+              color: #33b422;
+              border: 1px solid #33b422;
+            }
+          }
+        }
         .logo {
           display: flex;
           justify-content: center;
@@ -935,7 +958,7 @@ body {
           }
         }
         .value {
-          padding-right: 8px;
+          padding-right: 4px;
           font-weight: 500;
           font-size: 15px;
           color: #01b95d;
@@ -1427,7 +1450,9 @@ body {
     border: 1px solid #e1e1e1;
     border-left: hidden;
     border-right: hidden;
-    opacity: 0.5;
+    &.no-human {
+      opacity: 0.5;
+    }
     &.money {
       opacity: 1;
     }
