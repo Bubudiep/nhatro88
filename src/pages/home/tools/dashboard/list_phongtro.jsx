@@ -9,8 +9,6 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
   const [editNhatro, setEditNhatro] = useState(false); // Trạng thái cho việc thêm phòng trọ
   const [selectedNhatro, setSelectedNhatro] = useState("all");
   const [selectedTang, setSelectedTang] = useState("");
-  const [isTransitioning, setIsTransitioning] = useState(false); // Trạng thái hiệu ứng
-
   const handleClose = () => {
     setIsClosing(true);
     setTimeout(() => {
