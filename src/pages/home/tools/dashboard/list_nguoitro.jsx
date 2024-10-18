@@ -66,13 +66,8 @@ const ListNguoitro = ({ option, onClose, user, onUserUpdate }) => {
         <div className="top-bar">
           <div className="bar"></div>
         </div>
-        <div
-          className={`transition-container ${
-            isTransitioning ? "fade-out" : "fade-in"
-          }`}
-        >
+        <div className={`slider fade-in-5`}>
           <div className="title">Danh sách người đang ở trọ</div>
-
           <div className="body-container">
             <div className="filter-container">
               <select

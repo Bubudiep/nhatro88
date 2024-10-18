@@ -243,7 +243,7 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
             </div>
           </div>
         ) : isUpdate ? (
-          <div className={`slider ${slideNhatro}`}>
+          <div className={`slider fade-in-5 ${slideNhatro}`}>
             <div className="title">{isUpdate.tenTro}</div>
             <div className="body-container">
               <div className="form-update flex flex-col gap-1 flex-1">
@@ -371,7 +371,7 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
             </div>
           </div>
         ) : (
-          <div className={`slider ${slideDanhsach}`}>
+          <div className={`slider fade-in-5 ${slideDanhsach}`}>
             <div className="title">Danh sách nhà trọ</div>
             <div className="body-container">
               <div className="list_item_big">

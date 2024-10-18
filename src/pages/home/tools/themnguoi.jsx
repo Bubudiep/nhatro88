@@ -123,222 +123,224 @@ const ThemNguoiComponent = ({ user, onClose, onUserUpdate }) => {
         <div className="top-bar">
           <div className="bar"></div>
         </div>
-        <div className="title">Thêm người vào ở</div>
-        <div className="body-container">
-          <div className="flex gap-1 no-width">
-            <select
-              value={selectedNhatro}
-              onChange={(e) => {
-                setSelectedNhatro(e.target.value);
-                setSelectedTang(""); // Reset tầng khi chọn nhà trọ khác
-                setSelectedPhong(""); // Reset phòng khi chọn nhà trọ khác
-                setFormData((prevData) => ({
-                  ...prevData,
-                  tro: e.target.value, // Cập nhật giá trị tro trong formData
-                }));
-              }}
-            >
-              {user?.nhatro.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.tenTro}
-                </option>
-              ))}
-            </select>
-            {getTangOptions().length > 0 && (
+        <div className="slider fade-in-5">
+          <div className="title">Thêm người vào ở</div>
+          <div className="body-container">
+            <div className="flex gap-1 no-width">
               <select
-                value={selectedTang}
-                name="tang"
+                value={selectedNhatro}
                 onChange={(e) => {
-                  handleChange(e);
-                  setSelectedTang(e.target.value);
-                  setSelectedPhong(""); // Reset phòng khi chọn tầng khác
+                  setSelectedNhatro(e.target.value);
+                  setSelectedTang(""); // Reset tầng khi chọn nhà trọ khác
+                  setSelectedPhong(""); // Reset phòng khi chọn nhà trọ khác
                   setFormData((prevData) => ({
                     ...prevData,
-                    tang: e.target.value, // Cập nhật giá trị tro trong formData
+                    tro: e.target.value, // Cập nhật giá trị tro trong formData
                   }));
                 }}
-                disabled={!selectedNhatro} // Không cho chọn tầng nếu chưa chọn nhà trọ
               >
-                <option>Chọn tầng</option>
-                {getTangOptions().map((tang, index) => (
-                  <option key={index} value={tang.id}>
-                    {tang.tenTang}
+                {user?.nhatro.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.tenTro}
                   </option>
                 ))}
               </select>
-            )}
-            {getPhongOptions().length > 0 && (
-              <select
-                name="phong"
-                value={selectedPhong}
-                onChange={(e) => {
-                  handleChange(e);
-                  setSelectedPhong(e.target.value);
-                }}
-                disabled={!selectedTang} // Không cho chọn phòng nếu chưa chọn tầng
-              >
-                <option value={""}>Chọn phòng</option>
-                {getPhongOptions().map((phong, index) => (
-                  <option key={index} value={phong.id}>
-                    {phong.soPhong}
-                  </option>
-                ))}
-              </select>
-            )}
-          </div>
-          {isAdded ? (
-            <>
-              <div className="success-message flex-1 items-center justify-center text-[#999] text-lg">
-                <div className="logo">
-                  <i className="fa-solid fa-check"></i>
-                </div>
-                <div className="text">Thêm thành công!</div>
-              </div>
-              <div className="start-btn">
-                <button
-                  className="back"
-                  onClick={() => {
-                    setIsAdded(false);
+              {getTangOptions().length > 0 && (
+                <select
+                  value={selectedTang}
+                  name="tang"
+                  onChange={(e) => {
+                    handleChange(e);
+                    setSelectedTang(e.target.value);
+                    setSelectedPhong(""); // Reset phòng khi chọn tầng khác
+                    setFormData((prevData) => ({
+                      ...prevData,
+                      tang: e.target.value, // Cập nhật giá trị tro trong formData
+                    }));
                   }}
+                  disabled={!selectedNhatro} // Không cho chọn tầng nếu chưa chọn nhà trọ
                 >
-                  Quay lại
-                </button>
-                {/* <button>Xem danh sách người ở trọ</button> */}
-              </div>
-            </>
-          ) : selectedPhong ? (
-            <>
-              <div className="h3">
-                <div className="actions">
-                  <button className="scan" onClick={handleScanQR}>
-                    <i className="fa-solid fa-qrcode"></i>Quét mã căn cước công
-                    dân
-                  </button>
+                  <option>Chọn tầng</option>
+                  {getTangOptions().map((tang, index) => (
+                    <option key={index} value={tang.id}>
+                      {tang.tenTang}
+                    </option>
+                  ))}
+                </select>
+              )}
+              {getPhongOptions().length > 0 && (
+                <select
+                  name="phong"
+                  value={selectedPhong}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setSelectedPhong(e.target.value);
+                  }}
+                  disabled={!selectedTang} // Không cho chọn phòng nếu chưa chọn tầng
+                >
+                  <option value={""}>Chọn phòng</option>
+                  {getPhongOptions().map((phong, index) => (
+                    <option key={index} value={phong.id}>
+                      {phong.soPhong}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+            {isAdded ? (
+              <>
+                <div className="success-message flex-1 items-center justify-center text-[#999] text-lg">
+                  <div className="logo">
+                    <i className="fa-solid fa-check"></i>
+                  </div>
+                  <div className="text">Thêm thành công!</div>
                 </div>
-              </div>
-              <table>
-                <tbody>
-                  <tr>
-                    <td>Họ tên</td>
-                    <td>
-                      <input
-                        type="text"
-                        name="hoTen"
-                        value={formData.hoTen}
-                        onChange={handleChange}
-                        placeholder="Họ và tên..."
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Giới tính</td>
-                    <td>
-                      <input
-                        type="text"
-                        name="gioitinh"
-                        value={formData.gioitinh}
-                        onChange={handleChange}
-                        placeholder="Nam/Nữ..."
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Điện thoại</td>
-                    <td>
-                      <input
-                        type="number"
-                        name="sdt"
-                        value={formData.sdt}
-                        onChange={handleChange}
-                        placeholder="Số điện thoại..."
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>CCCD</td>
-                    <td>
-                      <input
-                        type="number"
-                        name="cccd"
-                        value={formData.cccd}
-                        onChange={handleChange}
-                        placeholder="Số căn cước..."
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Quê quán</td>
-                    <td>
-                      <input
-                        type="text"
-                        name="quequan"
-                        value={formData.quequan}
-                        onChange={handleChange}
-                        placeholder="Quê quán..."
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Ngày sinh</td>
-                    <td>
-                      <input
-                        type="date"
-                        name="ngaySinh"
-                        value={formData.ngaySinh}
-                        onChange={handleChange}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Tiền cọc trước</td>
-                    <td>
-                      <div className="flex relative justify-end items-center">
+                <div className="start-btn">
+                  <button
+                    className="back"
+                    onClick={() => {
+                      setIsAdded(false);
+                    }}
+                  >
+                    Quay lại
+                  </button>
+                  {/* <button>Xem danh sách người ở trọ</button> */}
+                </div>
+              </>
+            ) : selectedPhong ? (
+              <>
+                <div className="h3">
+                  <div className="actions">
+                    <button className="scan" onClick={handleScanQR}>
+                      <i className="fa-solid fa-qrcode"></i>Quét mã căn cước
+                      công dân
+                    </button>
+                  </div>
+                </div>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td>Họ tên</td>
+                      <td>
+                        <input
+                          type="text"
+                          name="hoTen"
+                          value={formData.hoTen}
+                          onChange={handleChange}
+                          placeholder="Họ và tên..."
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Giới tính</td>
+                      <td>
+                        <input
+                          type="text"
+                          name="gioitinh"
+                          value={formData.gioitinh}
+                          onChange={handleChange}
+                          placeholder="Nam/Nữ..."
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Điện thoại</td>
+                      <td>
                         <input
                           type="number"
-                          name="tienCoc"
-                          value={formData.tienCoc}
+                          name="sdt"
+                          value={formData.sdt}
+                          onChange={handleChange}
+                          placeholder="Số điện thoại..."
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>CCCD</td>
+                      <td>
+                        <input
+                          type="number"
+                          name="cccd"
+                          value={formData.cccd}
+                          onChange={handleChange}
+                          placeholder="Số căn cước..."
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Quê quán</td>
+                      <td>
+                        <input
+                          type="text"
+                          name="quequan"
+                          value={formData.quequan}
+                          onChange={handleChange}
+                          placeholder="Quê quán..."
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Ngày sinh</td>
+                      <td>
+                        <input
+                          type="date"
+                          name="ngaySinh"
+                          value={formData.ngaySinh}
                           onChange={handleChange}
                         />
-                        <div className="unit">VNĐ</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Tiền cọc trước</td>
+                      <td>
+                        <div className="flex relative justify-end items-center">
+                          <input
+                            type="number"
+                            name="tienCoc"
+                            value={formData.tienCoc}
+                            onChange={handleChange}
+                          />
+                          <div className="unit">VNĐ</div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Ngày bắt đầu vào ở</td>
+                      <td>
+                        <input
+                          type="date"
+                          name="ngayBatDau"
+                          value={formData.ngayBatDau}
+                          onChange={handleChange}
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                {errorMessage && (
+                  <div className="error-message">{errorMessage}</div>
+                )}
+                <div className="start-btn">
+                  <button
+                    disabled={selectedPhong ? false : true}
+                    onClick={handleSubmit}
+                  >
+                    {loading ? (
+                      <div className="flex gap-5 justify-center items-center">
+                        <div className="loading-spinner-in"></div>Loading...
                       </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Ngày bắt đầu vào ở</td>
-                    <td>
-                      <input
-                        type="date"
-                        name="ngayBatDau"
-                        value={formData.ngayBatDau}
-                        onChange={handleChange}
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              {errorMessage && (
-                <div className="error-message">{errorMessage}</div>
-              )}
-              <div className="start-btn">
-                <button
-                  disabled={selectedPhong ? false : true}
-                  onClick={handleSubmit}
-                >
-                  {loading ? (
-                    <div className="flex gap-5 justify-center items-center">
-                      <div className="loading-spinner-in"></div>Loading...
-                    </div>
-                  ) : (
-                    "Thêm vào trọ"
-                  )}
-                </button>
+                    ) : (
+                      "Thêm vào trọ"
+                    )}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-1 items-center justify-center text-[#999] text-lg">
+                Chọn một phòng trọ để thêm người mới vào
               </div>
-            </>
-          ) : (
-            <div className="flex flex-1 items-center justify-center text-[#999] text-lg">
-              Chọn một phòng trọ để thêm người mới vào
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
