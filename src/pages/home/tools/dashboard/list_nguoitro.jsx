@@ -156,11 +156,7 @@ const ListNguoitro = ({ option, onClose, user, onUserUpdate }) => {
                             : "Chưa đăng ký tạm trú"}
                         </div>
                         <div className="items">
-                          Đã cọc{" "}
-                          {item.ThongtinNguoiTro.tiencoc.toLocaleString(
-                            "vi-VN"
-                          )}
-                          đ
+                          Đã cọc {item.tiencoc.toLocaleString("vi-VN")}đ
                         </div>
                       </div>
                     </div>

@@ -41,12 +41,16 @@ const ThemNguoiComponent = ({ user, onClose, onUserUpdate }) => {
               if (content) {
                 const cccd_data = content.split("|");
                 if (cccd_data.length >= 6) {
+                  const ns = cccd_data[3];
                   setFormData((prevData) => ({
                     ...prevData,
                     fromQR: true,
                     hoTen: cccd_data[2],
                     cccd: cccd_data[0],
-                    ngaySinh: cccd_data[3],
+                    ngaySinh: `${ns.slice(4, 8)}-${ns.slice(2, 4)}-${ns.slice(
+                      0,
+                      2
+                    )}`,
                     gioitinh: cccd_data[4],
                     quequan: cccd_data[5],
                   }));
