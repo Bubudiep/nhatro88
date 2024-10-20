@@ -877,29 +877,43 @@ body {
       flex-direction: column;
       gap: 8px;
       .h2 {
-        padding: 0px 20px;
         font-weight: 500;
       }
       .thongtin {
         display: flex;
-        padding: 0px 20px;
         table {
           font-size: 15px;
           width: 100%;
           border-collapse: separate;
           border-spacing: 0px;
           tr {
+            th {
+              padding: 3px 0px;
+              font-size: 13px;
+            }
             td {
               padding: 8px 4px;
               border: 1px solid #999;
               border-left: hidden;
               border-top: hidden;
-              &:first-child {
-                border-left: 1px solid #999;
+              white-space: nowrap;
+              textarea {
+                border: hidden;
+                outline: none;
+                width: -webkit-fill-available;
+                height: -webkit-fill-available;
+                height: 40px;
               }
               &:last-child {
                 text-align: right;
                 width: 150px;
+              }
+              &:nth-last-child(2) {
+                text-align: right;
+              }
+              &:first-child {
+                border-left: 1px solid #999;
+                text-align: left;
               }
             }
             &:first-child {
@@ -921,6 +935,41 @@ body {
                 &:last-child {
                   border-bottom-right-radius: 5px;
                 }
+              }
+            }
+          }
+        }
+      }
+      .thongtin-edit {
+        display: flex;
+        table {
+          font-size: 15px;
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 0px;
+          tr {
+            th {
+              padding: 3px 0px;
+              font-size: 13px;
+            }
+            td {
+              padding: 8px 4px;
+              border: hidden;
+              border-left: hidden;
+              border-top: hidden;
+              white-space: nowrap;
+              &:last-child {
+                text-align: right;
+                width: 150px;
+                padding: 4px;
+                input {
+                  padding: 5px 8px;
+                  text-align: right;
+                  outline: none;
+                }
+              }
+              &:first-child {
+                text-align: left;
               }
             }
           }
@@ -966,7 +1015,6 @@ body {
       }
     }
     .tools-container {
-      padding: 0px 20px;
       display: flex;
       flex-direction: column;
       gap: 5px;
@@ -1103,6 +1151,9 @@ body {
                   border-radius: 12px;
                   width: 20px;
                   height: 20px;
+                }
+                &.small {
+                  width: 100px;
                 }
               }
             }
@@ -1308,6 +1359,9 @@ body {
                 border: 1px solid #999;
                 border-radius: 6px;
                 width: 150px;
+                &.small {
+                  width: 100px;
+                }
               }
             }
           }
@@ -1438,6 +1492,38 @@ body {
   100% {
     opacity: 0;
     transform: translateX(20px); /* Bay qua phải 20px */
+  }
+}
+.noiquy {
+  display: flex;
+  gap: 6px;
+  flex-direction: column;
+  .items {
+    display: flex;
+    align-items: center;
+    .text {
+      display: flex;
+      font-weight: 500;
+      width: 35px;
+      height: 35px;
+      background-color: #53607a;
+      color: #fff;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      font-size: large;
+    }
+    .value {
+      display: flex;
+      flex: 1;
+      input {
+        outline: none;
+        padding: 5px;
+        border-radius: 6px;
+        border: hidden;
+        width: -webkit-fill-available;
+      }
+    }
   }
 }
 .list_item_big {
@@ -1620,6 +1706,12 @@ button {
     border: 1px solid #2390fd;
     color: #fff;
   }
+  &.done {
+    font-size: 15px;
+    background-color: #ff8241;
+    border: 1px solid #ff8241;
+    color: #fff;
+  }
   &.scan {
     font-size: 15px;
     padding: 0px;
@@ -1649,6 +1741,11 @@ button {
   &:disabled {
     color: #9c9c9c !important;
     background-color: #cccccc !important;
+  }
+  .loading-spinner {
+    width: 25px;
+    height: 25px;
+    border-left-color: #fff;
   }
 }
 /* Hiệu ứng fade-in từ dưới bay lên */
@@ -1760,6 +1857,7 @@ button {
   width: -webkit-fill-available;
   transition: height 0.3s ease-in-out; /* Thêm transition cho height */
 }
+.error,
 .error-message {
   display: flex;
   padding: 10px;
@@ -1826,4 +1924,13 @@ button {
       }
     }
   }
+}
+.null {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: #999;
+  padding: 5px;
 }

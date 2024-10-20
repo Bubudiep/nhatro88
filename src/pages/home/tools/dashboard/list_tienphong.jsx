@@ -21,7 +21,9 @@ const ListTienphong = ({ option, onClose, user, onUserUpdate }) => {
         <div
           className={`slider flex-1 message-box fade-in-5 gap-2 flex flex-col ${slide2}`}
         >
-          <div className="title2">Doanh thu tạm tính</div>
+          <div className="title2">
+            {option == "no" ? "Danh sách nợ" : "Doanh thu tạm tính"}
+          </div>
           <div className="chitiet-phongtro"></div>
         </div>
       </div>

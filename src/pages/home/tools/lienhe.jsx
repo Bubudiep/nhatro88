@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const CaiDatComponent = ({ onClose }) => {
+const Lienhe = ({ onClose }) => {
   const [isClosing, setIsClosing] = useState(false);
 
   const handleClose = () => {
@@ -17,12 +17,11 @@ const CaiDatComponent = ({ onClose }) => {
           <div className="bar"></div>
         </div>
         <div className="slider fade-in-5">
-          <div className="title2">Cài đặt</div>
+          <div className="title2">Liên hệ và hỗ trợ</div>
           <div className="body-container"></div>
         </div>
       </div>
     </div>
   );
 };
-
-export default CaiDatComponent;
+export default Lienhe;

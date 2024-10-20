@@ -128,7 +128,7 @@ const ThemNguoiComponent = ({ user, onClose, onUserUpdate }) => {
           <div className="bar"></div>
         </div>
         <div className="slider fade-in-5">
-          <div className="title">Thêm người vào ở</div>
+          <div className="title2">Thêm người vào ở</div>
           <div className="body-container">
             <div className="flex gap-1 no-width">
               <select
@@ -185,7 +185,7 @@ const ThemNguoiComponent = ({ user, onClose, onUserUpdate }) => {
                   <option value={""}>Chọn phòng</option>
                   {getPhongOptions().map((phong, index) => (
                     <option key={index} value={phong.id}>
-                      {phong.soPhong}
+                      {phong?.soPhong} ({phong?.Dangtro?.length ?? "Trống"})
                     </option>
                   ))}
                 </select>

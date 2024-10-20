@@ -13,6 +13,8 @@ import ListNhatro from "../tools/dashboard/list_nhatro";
 import ListPhongtro from "../tools/dashboard/list_phongtro";
 import ListTienphong from "../tools/dashboard/list_tienphong";
 import ListNguoitro from "../tools/dashboard/list_nguoitro";
+import Thongbao from "../tools/thongbao";
+import Lienhe from "../tools/lienhe";
 
 const Nhatro = ({ user }) => {
   const [selectedComponent, setSelectedComponent] = useState(null);
@@ -150,6 +152,10 @@ const Nhatro = ({ user }) => {
         return <NoiQuyComponent onClose={() => setSelectedComponent(null)} />;
       case "tamTru":
         return <TamTruComponent onClose={() => setSelectedComponent(null)} />;
+      case "thongbao":
+        return <Thongbao onClose={() => setSelectedComponent(null)} />;
+      case "lienhe":
+        return <Lienhe onClose={() => setSelectedComponent(null)} />;
       case "caiDat":
         return <CaiDatComponent onClose={() => setSelectedComponent(null)} />;
       default:
@@ -220,7 +226,7 @@ const Nhatro = ({ user }) => {
           </div>
           <div
             className="items"
-            onClick={() => handleComponentSelect("caiDat")}
+            onClick={() => handleComponentSelect("thongbao")}
           >
             <div className="icons">
               <i className="fa-solid fa-bell"></i>
@@ -229,7 +235,7 @@ const Nhatro = ({ user }) => {
           </div>
           <div
             className="items"
-            onClick={() => handleComponentSelect("caiDat")}
+            onClick={() => handleComponentSelect("lienhe")}
           >
             <div className="icons">
               <i className="fa-solid fa-headset"></i>

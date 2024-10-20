@@ -16,22 +16,24 @@ const ChuyenRaComponent = ({ onClose }) => {
         <div className="top-bar">
           <div className="bar"></div>
         </div>
-        <div className="title">Chuyển ra và thanh toán</div>
-        <div className="body-container">
-          <div className="h3">
-            <div className="name">Danh sách xin ra</div>
-          </div>
-          <div className="list-group">
-            <div className="null">
-              <div className="logo"></div>
-              <div className="message">Danh sách trống</div>
+        <div className="slider fade-in-5">
+          <div className="title2">Chuyển ra và thanh toán</div>
+          <div className="body-container">
+            <div className="h3">
+              <div className="name">Danh sách xin ra</div>
             </div>
-          </div>
-          <div className="h3">Danh sách người ở</div>
-          <div className="list-group">
-            <div className="null">
-              <div className="logo"></div>
-              <div className="message">Danh sách trống</div>
+            <div className="list-group">
+              <div className="null">
+                <div className="logo"></div>
+                <div className="message">Danh sách trống</div>
+              </div>
+            </div>
+            <div className="h3">Danh sách người ở</div>
+            <div className="list-group">
+              <div className="null">
+                <div className="logo"></div>
+                <div className="message">Danh sách trống</div>
+              </div>
             </div>
           </div>
         </div>

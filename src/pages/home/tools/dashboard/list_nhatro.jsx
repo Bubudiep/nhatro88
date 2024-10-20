@@ -221,7 +221,10 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
                   ))}
                 </tbody>
               </table>
-              <button className="add-tang text-[15px]" onClick={themTangMoi}>
+              <button
+                className="add-tang text-[15px] mt-4"
+                onClick={themTangMoi}
+              >
                 Thêm tầng
               </button>
               <button className="add-tang text-[15px]" onClick={handleBack2}>
@@ -244,7 +247,7 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
           </div>
         ) : isUpdate ? (
           <div className={`slider fade-in-5 ${slideNhatro}`}>
-            <div className="title">{isUpdate.tenTro}</div>
+            <div className="title2">{isUpdate.tenTro}</div>
             <div className="body-container">
               <div className="form-update flex flex-col gap-1 flex-1">
                 <table>
@@ -372,7 +375,7 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
           </div>
         ) : (
           <div className={`slider fade-in-5 ${slideDanhsach}`}>
-            <div className="title">Danh sách nhà trọ</div>
+            <div className="title2">Danh sách nhà trọ</div>
             <div className="body-container">
               <div className="list_item_big">
                 {user?.nhatro.map((item) => (

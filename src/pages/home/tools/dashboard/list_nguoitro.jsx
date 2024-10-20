@@ -67,7 +67,7 @@ const ListNguoitro = ({ option, onClose, user, onUserUpdate }) => {
           <div className="bar"></div>
         </div>
         <div className={`slider fade-in-5`}>
-          <div className="title">Danh sách người đang ở trọ</div>
+          <div className="title2">Danh sách người đang ở trọ</div>
           <div className="body-container">
             <div className="filter-container">
               <select
