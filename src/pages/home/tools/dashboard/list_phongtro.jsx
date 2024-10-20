@@ -689,7 +689,20 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
                   </div>
                 </div>
                 {PendingThanhtoan ? (
-                  <>Đang chờ thanh toán</>
+                  <>
+                    <div className="chitiet-hoadon">
+                      <div className="h2">Chi tiết phiếu</div>
+                      <table>
+                        <tbody>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </>
                 ) : (
                   <>
                     <div className="h2">Tình trạng</div>
