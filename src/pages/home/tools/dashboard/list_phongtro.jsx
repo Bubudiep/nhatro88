@@ -105,6 +105,9 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
       setIsThanhtoan(true);
     }, 200);
   };
+  const handleTaophieu = () => {
+    console.log(editNhatro.id);
+  };
   const handleCapnhap = () => {
     setformupdates((prevState) => ({
       ...prevState,
@@ -167,6 +170,7 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
                 onUserUpdate={onUserUpdate}
                 token={user?.app?.access_token}
                 handleBack2={handleBack2}
+                handleTaophieu={handleTaophieu}
               />
             </div>
           ) : (

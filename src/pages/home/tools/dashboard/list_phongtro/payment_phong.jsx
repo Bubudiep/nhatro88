@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../../../components/api";
 
-const Payment_phong = ({ phong, onUserUpdate, token, handleBack2 }) => {
+const Payment_phong = ({
+  phong,
+  onUserUpdate,
+  token,
+  handleBack2,
+  handleTaophieu,
+}) => {
   const [Isloading, setIsloading] = useState(false);
   const [ngaybatdau, setngaybatdau] = useState(0);
   const [sodien, setsodien] = useState(phong?.sodien ?? 0);
@@ -89,7 +95,7 @@ const Payment_phong = ({ phong, onUserUpdate, token, handleBack2 }) => {
       )
       .then((response) => {
         onUserUpdate(response);
-        handleBack2();
+        handleTaophieu();
       })
       .catch((error) => {
         setErrorMes("Lỗi khi cập nhật, vui lòng thử lại sau!");
