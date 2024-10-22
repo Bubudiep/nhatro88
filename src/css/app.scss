@@ -339,7 +339,7 @@ body {
 
       .dashboard-item {
         background-color: #fff;
-        padding: 12px;
+        padding: 8px;
         border-radius: 8px;
         text-align: center;
         font-size: 18px;
@@ -348,7 +348,7 @@ body {
         align-items: center;
         .logo {
           padding: 5px;
-          width: 60px;
+          width: 50px;
           img {
             width: 100%;
           }
@@ -360,7 +360,7 @@ body {
           gap: 5px;
           width: -webkit-fill-available;
           .title {
-            font-size: 13px;
+            font-size: 0.8rem;
             font-weight: 500;
             color: #3c3f47;
           }
@@ -1045,7 +1045,7 @@ body {
       padding: 12px;
       width: -webkit-fill-available;
       gap: 12px;
-      font-size: 15px;
+      font-size: 14px;
       min-height: 50vh;
       transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out;
       .add {
@@ -1138,18 +1138,18 @@ body {
                 padding: 8px 4px;
                 border: 1px solid #999;
                 border-radius: 6px;
-                width: 150px;
+                width: 40vw;
               }
               input {
                 background-color: #fff;
                 padding: 8px 4px;
                 border: 1px solid #999;
                 border-radius: 6px;
-                width: 150px;
+                width: 40vw;
                 &[type="checkbox"] {
                   border-radius: 12px;
-                  width: 20px;
-                  height: 20px;
+                  width: 18px;
+                  height: 18px;
                 }
                 &.small {
                   width: 100px;
@@ -1609,7 +1609,7 @@ body {
         padding: 2px;
         .i-title {
           color: #0082ec;
-          font-size: 16px;
+          font-size: 14px;
           font-weight: 500;
           display: flex;
           align-items: center;
@@ -1638,7 +1638,7 @@ body {
           gap: 5px;
           &.giaphong {
             color: #63b734;
-            font-size: 1rem;
+            font-size: 14px;
             font-weight: 500;
           }
           .status {
