@@ -1535,11 +1535,57 @@ body {
     border: 1px solid #e1e1e1;
     border-left: hidden;
     border-right: hidden;
+    &:not(:last-child) {
+      border-bottom: hidden;
+    }
     &.no-human {
       opacity: 0.5;
     }
     &.money {
       opacity: 1;
+    }
+    &.layout {
+      flex-direction: column;
+      .tang_name {
+        color: #999;
+        font-weight: 500;
+      }
+      .list_phong {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        gap: 4px;
+        padding: 10px 0px;
+        .items {
+          width: 100%;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+          .status {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            box-shadow: 1px 2px 3px #0003;
+            &.online {
+              background-color: #01b95d;
+            }
+            &.offline {
+              background-color: #efefef;
+              color: #8d8d8d;
+              box-shadow: 0px -2px 3px #7b7b7b33 inset;
+            }
+          }
+          .name {
+            font-weight: 500;
+            font-size: 12px;
+          }
+        }
+      }
     }
     .logo {
       width: 60px;

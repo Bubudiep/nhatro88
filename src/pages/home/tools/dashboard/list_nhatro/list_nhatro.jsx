@@ -1,6 +1,12 @@
 import React from "react";
 
-const List_nhatro = ({ user, handleThemnhatro, handleUpdateTro }) => {
+const List_nhatro = ({
+  user,
+  handleThemnhatro,
+  handleUpdateTro,
+  handleViewnhatro,
+}) => {
+  console.log(user);
   return (
     <>
       <div className="title2">Danh sách nhà trọ</div>
@@ -10,14 +16,14 @@ const List_nhatro = ({ user, handleThemnhatro, handleUpdateTro }) => {
             <div
               key={item.id}
               className="nhatro-item"
-              onClick={() => handleUpdateTro(item.id)}
+              onClick={() => handleViewnhatro(item.id)}
             >
               <div className={`details ${item.isActive ? "active" : "stop"}`}>
                 <div className="i-info">
                   <div className="name i-title">{item.tenTro}</div>
                   <div className="value">
                     {item.isActive ? (
-                      <div className="status active">Hoạt động</div>
+                      <div className="status active">Đang hoạt động</div>
                     ) : (
                       <div className="status stop">Tạm dừng</div>
                     )}
@@ -77,35 +83,36 @@ const List_nhatro = ({ user, handleThemnhatro, handleUpdateTro }) => {
                 </div>
                 <div className="i-info">
                   <div className="i-details">
-                    <div className="items">
+                    <div className={`items ${item.wifi ? "on" : "off"}`}>
                       {item.wifi ? "Có" : "Không"} Wifi
                     </div>
-                    <div className="items">
+                    <div className={`items ${item.dieuhoa ? "on" : "off"}`}>
                       {item.dieuhoa ? "Có" : "Không"} Điều hòa
                     </div>
-                    <div className="items">
+                    <div className={`items ${item.nonglanh ? "on" : "off"}`}>
                       {item.nonglanh ? "Có" : "Không"} Nóng lạnh
                     </div>
-                    <div className="items">
-                      {item.chungchu ? "Có" : "Không"} Chung chủ
+                    <div className={`items ${!item.chungchu ? "on" : "off"}`}>
+                      {item.chungchu ? "" : "Không"} Chung chủ
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="view">
-                <i className="fa-solid fa-chevron-right"></i>
-              </div>
             </div>
           ))}
         </div>
-        <div className="add" onClick={handleThemnhatro}>
-          <div className="add-box">
-            <div className="icon">
-              <i className="fa-solid fa-plus"></i>
+        {user?.app?.level > 0 && (
+          <div className="mt-auto">
+            <div className="add" onClick={handleThemnhatro}>
+              <div className="add-box">
+                <div className="icon">
+                  <i className="fa-solid fa-plus"></i>
+                </div>
+                <div className="text">Thêm nhà trọ</div>
+              </div>
             </div>
-            <div className="text">Thêm nhà trọ</div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

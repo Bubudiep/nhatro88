@@ -4,10 +4,12 @@ import house_mini from "../../../../img/house_mini.png";
 import Add_nhatro from "./list_nhatro/add_nhatro";
 import Edit_nhatro from "./list_nhatro/edit_nhatro";
 import List_nhatro from "./list_nhatro/list_nhatro";
+import View_nhatro from "./list_nhatro/view_nhatro";
 const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
   const [isThemtro, setIsThemTro] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [isUpdate, setIsUpdate] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
   const [slideDanhsach, setSlideDanhsach] = useState("");
   const [slideNhatro, setSlideNhatro] = useState("");
   const [themtroError, setThemtroError] = useState("");
@@ -34,6 +36,15 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
       setIsUpdate(updateData);
     }, 200);
   };
+  const handleViewnhatro = (e) => {
+    const updateData = user.nhatro.find((nhatro) => nhatro.id === e);
+    setSlideDanhsach("slideOut");
+    setTimeout(() => {
+      setSlideNhatro("slideIn");
+      setIsUpdate(updateData);
+      setIsEdit(false);
+    }, 200);
+  };
 
   const handleBack = () => {
     setSlideNhatro("slideOut2");
@@ -43,7 +54,23 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
       setIsThemTro(false);
     }, 200);
   };
-
+  const handleBack2 = () => {
+    setSlideDanhsach("slideOut2");
+    setTimeout(() => {
+      setSlideNhatro("slideIn2");
+      setIsEdit(false);
+    }, 200);
+  };
+  const handleEdittro = () => {
+    setSlideNhatro("slideOut");
+    setTimeout(() => {
+      setSlideDanhsach("slideIn");
+      setIsEdit(true);
+    }, 200);
+  };
+  const handlePhongtro = (e) => {
+    console.log(e);
+  };
   return (
     <div className={`bottom-box-white-bg ${isClosing ? "hide-out" : ""}`}>
       <div className="detectOut" onClick={handleClose} />
@@ -62,20 +89,38 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
             />
           </div>
         ) : isUpdate ? (
-          <div className={`slider fade-in-5 ${slideNhatro}`}>
-            <Edit_nhatro
-              nhatro={isUpdate}
-              handleBack={handleBack}
-              onUserUpdate={onUserUpdate}
-              token={user?.app?.access_token}
-            />
-          </div>
+          isEdit ? (
+            <div className={`slider fade-in-5 ${slideDanhsach}`}>
+              <Edit_nhatro
+                nhatro={isUpdate}
+                handleBack={handleBack2}
+                onUserUpdate={onUserUpdate}
+                token={user?.app?.access_token}
+              />
+            </div>
+          ) : (
+            <div className={`slider fade-in-5 ${slideNhatro}`}>
+              <View_nhatro
+                nhatro={isUpdate}
+                handleBack={() => {
+                  setSlideNhatro("slideOut2");
+                  setTimeout(() => {
+                    setSlideDanhsach("slideIn2");
+                    setIsUpdate(null);
+                    setIsThemTro(false);
+                  }, 200);
+                }}
+                handleEdittro={handleEdittro}
+                handlePhongtro={handlePhongtro}
+              />
+            </div>
+          )
         ) : (
           <div className={`slider fade-in-5 ${slideDanhsach}`}>
             <List_nhatro
               user={user}
               handleThemnhatro={handleThemnhatro}
-              handleUpdateTro={handleUpdateTro}
+              handleViewnhatro={handleViewnhatro}
             />
           </div>
         )}

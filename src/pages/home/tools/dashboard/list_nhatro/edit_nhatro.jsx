@@ -55,6 +55,9 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
   return (
     <>
       <div className="title2">{nhatro.tenTro}</div>
+      <div className="text-[13px] text-center">
+        Ap dụng chung cho tất cả phòng trọ
+      </div>
       <div className="body-container">
         <div className="form-update flex flex-col gap-1 flex-1">
           <table>
@@ -168,11 +171,17 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
           <div className="mt-auto">
             <div className="add back" onClick={handleBack}>
               <div className="add-box">
+                <div className="icon">
+                  <i className="fa-solid fa-arrow-left"></i>
+                </div>
                 <div className="text">Quay lại</div>
               </div>
             </div>
             <div className="add" onClick={handleSave}>
               <div className="add-box">
+                <div className="icon">
+                  <i className="fa-solid fa-cloud-arrow-down"></i>
+                </div>
                 <div className="text">Lưu cài đặt</div>
               </div>
             </div>
