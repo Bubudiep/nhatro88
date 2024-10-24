@@ -5,11 +5,13 @@ import Add_nhatro from "./list_nhatro/add_nhatro";
 import Edit_nhatro from "./list_nhatro/edit_nhatro";
 import List_nhatro from "./list_nhatro/list_nhatro";
 import View_nhatro from "./list_nhatro/view_nhatro";
+import Chitiet_phong from "./list_nhatro/chitiet_phong";
 const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
   const [isThemtro, setIsThemTro] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [isUpdate, setIsUpdate] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
+  const [isChitietPhong, setIsChitietPhong] = useState(false);
   const [slideDanhsach, setSlideDanhsach] = useState("");
   const [slideNhatro, setSlideNhatro] = useState("");
   const [themtroError, setThemtroError] = useState("");
@@ -68,9 +70,6 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
       setIsEdit(true);
     }, 200);
   };
-  const handlePhongtro = (e) => {
-    console.log(e);
-  };
   return (
     <div className={`bottom-box-white-bg ${isClosing ? "hide-out" : ""}`}>
       <div className="detectOut" onClick={handleClose} />
@@ -98,6 +97,19 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
                 token={user?.app?.access_token}
               />
             </div>
+          ) : isChitietPhong ? (
+            <div className={`slider fade-in-5 ${slideDanhsach}`}>
+              <Chitiet_phong
+                phong={isChitietPhong}
+                handleBack={() => {
+                  setSlideDanhsach("slideOut2");
+                  setTimeout(() => {
+                    setSlideNhatro("slideIn2");
+                    setIsChitietPhong(false);
+                  }, 200);
+                }}
+              />
+            </div>
           ) : (
             <div className={`slider fade-in-5 ${slideNhatro}`}>
               <View_nhatro
@@ -111,7 +123,13 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
                   }, 200);
                 }}
                 handleEdittro={handleEdittro}
-                handlePhongtro={handlePhongtro}
+                handlePhongtro={(e) => {
+                  setSlideNhatro("slideOut");
+                  setTimeout(() => {
+                    setSlideDanhsach("slideIn");
+                    setIsChitietPhong(e);
+                  }, 200);
+                }}
               />
             </div>
           )

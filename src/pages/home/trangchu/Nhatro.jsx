@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import wallpp from "../../../img/nhatro/1370.jpg";
 import Alert_box from "./Alert_box";
 import Db_box from "./Db_box";
@@ -15,7 +15,14 @@ import ListTienphong from "../tools/dashboard/list_tienphong";
 import ListNguoitro from "../tools/dashboard/list_nguoitro";
 import Thongbao from "../tools/thongbao";
 import Lienhe from "../tools/lienhe";
-
+import { io } from "socket.io-client";
+const SOCKET_SERVER_URL = "http://ipays.vn:3000"; // Thay đổi URL nếu cần
+function setCookie(name, value, days) {
+  const d = new Date();
+  d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000); // Thay đổi thời gian sống của cookie
+  const expires = "expires=" + d.toUTCString(); // Thiết lập ngày hết hạn
+  document.cookie = name + "=" + value + ";" + expires + ";path=/"; // Cài đặt cookie
+}
 const Nhatro = ({ user }) => {
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -60,7 +67,6 @@ const Nhatro = ({ user }) => {
   const nhatro_style = {
     backgroundImage: `url(${wallpp})`,
   };
-
   const handleComponentSelect = (component) => {
     setSelectedComponent(component);
   };
@@ -163,6 +169,63 @@ const Nhatro = ({ user }) => {
     }
   };
 
+  // Hàm để đo lường tốc độ kết nối
+  function measureConnectionSpeed() {
+    const startTime = Date.now();
+
+    // Gửi một tin nhắn đến server để đo thời gian phản hồi
+    window.socket.emit("ping", (responseTime) => {
+      const endTime = Date.now();
+      const duration = endTime - startTime;
+
+      // Hiển thị thời gian phản hồi
+      console.log(`Tốc độ kết nối: ${duration} ms`);
+    });
+  }
+  useEffect(() => {
+    setCookie("user_name", "JohnDoe", 7);
+    const io_socket = async () => {
+      window.socket = await io(SOCKET_SERVER_URL, {
+        transports: ["websocket"],
+      });
+      window.socket.on("room_data", (data) => {
+        console.log("room_data", data);
+      });
+      window.socket.on("user online", (data) => {
+        console.log(data);
+      });
+      window.socket.on("message", async function (msg) {
+        console.log(msg);
+      });
+      window.socket.on("chat message", (data) => {
+        const { message, sender } = data;
+        console.log(sender + " :", message);
+      });
+
+      window.socket.on("user joined", (userId) => {
+        console.log("User joined", userId);
+      });
+
+      window.socket.on("user left", (userId) => {
+        console.log("User out room", userId);
+      });
+
+      window.socket.on("user disconnected", (userId) => {
+        console.log("User disconnected", userId);
+      });
+
+      // Gọi hàm ping mỗi 5 giây
+      setInterval(measureConnectionSpeed, 5000);
+    };
+
+    io_socket();
+
+    return () => {
+      if (window.socket) {
+        window.socket.disconnect();
+      }
+    };
+  }, []);
   return (
     <div className="body-container" style={nhatro_style}>
       <div className="top-container">

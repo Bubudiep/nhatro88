@@ -11,19 +11,17 @@ const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
             <div key={item.id} className="nhatro-item layout">
               <div className="tang_name">{item.tenTang}</div>
               <div className="list_phong">
-                {item.Chitiet.reverse().map((phong) => (
+                {item.Chitiet.map((phong) => (
                   <div
                     key={phong.id}
-                    className="items"
+                    className={`items ${
+                      phong.Nguoitro.length > 0 ? "online" : "offline"
+                    }`}
                     onClick={() => {
                       handlePhongtro(phong);
                     }}
                   >
-                    <div
-                      className={`status ${
-                        phong.Nguoitro.length > 0 ? "online" : "offline"
-                      }`}
-                    >
+                    <div className="status">
                       {phong.Nguoitro.length == 0 && "-"}
                     </div>
                     <div className="name">

@@ -14,7 +14,7 @@ const dashboardItems = [
     img: house,
   },
   {
-    title: "Tổng số phòng",
+    title: "Kiểm kê Phòng",
     name: "phongtro",
     value: (user) =>
       user?.nhatro.reduce((total, item) => {

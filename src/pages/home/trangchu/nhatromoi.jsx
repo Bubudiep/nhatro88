@@ -92,7 +92,7 @@ const Nhatromoi = ({ user, updateNhatro }) => {
             <div className="tools-container">
               <div className="options main">
                 <button
-                  className="add text-[18px]"
+                  className="add text-[15px]"
                   onClick={handleContinue} // Gọi hàm handleContinue
                 >
                   Tiếp tục
@@ -164,7 +164,7 @@ const Nhatromoi = ({ user, updateNhatro }) => {
             </div>
             <div className="tools-container">
               <div className="options main">
-                <button className="add text-[18px]" onClick={handleSubmit}>
+                <button className="add text-[15px]" onClick={handleSubmit}>
                   {loading ? (
                     <div className="flex gap-5 justify-center items-center">
                       <div className="loading-spinner-in"></div>Loading...

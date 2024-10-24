@@ -6,7 +6,6 @@ const List_nhatro = ({
   handleUpdateTro,
   handleViewnhatro,
 }) => {
-  console.log(user);
   return (
     <>
       <div className="title2">Danh sách nhà trọ</div>

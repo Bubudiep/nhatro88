@@ -1552,9 +1552,10 @@ body {
       }
       .list_phong {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
         gap: 4px;
         padding: 10px 0px;
+        direction: rtl; /* Đảo ngược cột */
         .items {
           width: 100%;
           text-align: center;
@@ -1571,9 +1572,6 @@ body {
             justify-content: center;
             border-radius: 8px;
             box-shadow: 1px 2px 3px #0003;
-            &.online {
-              background-color: #01b95d;
-            }
             &.offline {
               background-color: #efefef;
               color: #8d8d8d;
@@ -1583,6 +1581,14 @@ body {
           .name {
             font-weight: 500;
             font-size: 12px;
+          }
+          &.online {
+            .status {
+              background-color: #01b95d;
+            }
+            .name {
+              color: #01b95d;
+            }
           }
         }
       }
@@ -1922,7 +1928,7 @@ button {
   }
   table {
     width: 100%;
-    font-size: 18px;
+    font-size: 15px;
     tr {
       td {
         white-space: nowrap;
@@ -1934,17 +1940,19 @@ button {
           text-align: right;
         }
         input[type="text"] {
-          border: 1px solid #999;
-          padding: 10px 6px;
-          border-radius: 6px;
+          outline: none;
+          text-align: right;
+          border-bottom: 1px solid #999;
+          padding: 8px 6px;
+          max-width: 180px;
           width: -webkit-fill-available;
         }
         input[type="number"] {
+          outline: none;
           width: 50px;
-          border: 1px solid #999;
-          padding: 10px 6px;
+          border-bottom: 1px solid #999;
+          padding: 8px 6px;
           text-align: center;
-          border-radius: 6px;
         }
       }
     }
@@ -1973,7 +1981,12 @@ button {
   align-items: center;
   gap: 5px;
   color: #999;
-  padding: 5px;
+  padding: 6px;
+  .logo {
+    font-size: 30px;
+    padding: 10px 6px 6px 6px;
+    color: #c9c9c9;
+  }
 }
 .error-popup {
   position: fixed;
@@ -1994,4 +2007,96 @@ button {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   max-width: 400px;
   width: 100%;
+}
+.form-update {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.list-group {
+  border-radius: 8px;
+  border: 1px solid #d1d1d1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  .items {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px;
+    .tools {
+      width: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      .status {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 5px;
+        .logo {
+          width: 35px;
+          height: 35px;
+          background-color: #999;
+          color: #fff;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .text {
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        &.true {
+          .logo {
+            background-color: #11d14b;
+          }
+          .text {
+            color: #11d14b;
+          }
+        }
+        &.false {
+          .logo {
+            background-color: #e7945c;
+          }
+          .text {
+            color: #e7945c;
+          }
+        }
+      }
+    }
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      flex: 1;
+      padding-right: 8px;
+      .it-1 {
+        display: flex;
+        justify-content: space-between;
+        font-size: 15px;
+        font-weight: 500;
+        .icon {
+          font-size: 25px;
+          color: #0072ff;
+        }
+      }
+      .it-2 {
+        display: flex;
+        justify-content: space-between;
+        color: #999;
+        .name {
+          color: #555;
+          font-weight: 500;
+        }
+      }
+    }
+    &:not(:first-child) {
+      border-top: 1px solid #999;
+    }
+  }
 }
