@@ -3,8 +3,10 @@ import api from "../../../../components/api";
 import Update_phong from "./list_phongtro/update_phong";
 import Payment_phong from "./list_phongtro/payment_phong";
 import Details_phong from "./list_phongtro/details_phong";
+import ChitietHoadon from "./list_phongtro/chitietHoadon";
 
 const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
+  const [Hoadon, setHoadon] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [slideMain, setSlideMain] = useState("");
   const [slide2, setSlide2] = useState("");
@@ -173,9 +175,15 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
                 handleTaophieu={handleTaophieu}
               />
             </div>
+          ) : Hoadon ? (
+            <div
+              className={`slider overflow-hidden flex-1 message-box fade-in-5 gap-2 flex flex-col ${slideMain}`}
+            >
+              <ChitietHoadon hoadon={Hoadon} phong={editNhatro} />
+            </div>
           ) : (
             <div
-              className={`slider flex-1 message-box fade-in-5 gap-2 flex flex-col ${slide2}`}
+              className={`slider overflow-hidden flex-1 message-box fade-in-5 gap-2 flex flex-col ${slide2}`}
             >
               <Details_phong
                 phong={editNhatro}
@@ -185,6 +193,13 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
                 handleBack={handleBack}
                 handleThanhtoan={handleThanhtoan}
                 handleCapnhap={handleCapnhap}
+                handleHoadon={(e) => {
+                  setSlide2("slideOut");
+                  setTimeout(() => {
+                    setSlideMain("slideIn");
+                    setHoadon(e);
+                  }, 200);
+                }}
               />
             </div>
           )

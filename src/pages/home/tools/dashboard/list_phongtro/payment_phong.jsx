@@ -30,11 +30,19 @@ const Payment_phong = ({
         dbatdau = new Date(nguoi.ngayBatdauO);
       }
     });
+    phong.hoadon.forEach((hoadon) => {
+      if (dbatdau) {
+        if (new Date(hoadon.ngayKetthuc) > new Date(dbatdau)) {
+          dbatdau = new Date(hoadon.ngayKetthuc);
+        }
+      } else {
+        dbatdau = new Date(hoadon.ngayKetthuc);
+      }
+    });
     setngaybatdau(dbatdau.toISOString().split("T")[0]);
     setsongay(Math.floor((new Date() - dbatdau) / (24 * 3600000)));
   }, []);
   const handleXuathoadon = () => {
-    console.log(phong);
     setIsloading(true);
     const update = api
       .post(
@@ -65,9 +73,9 @@ const Payment_phong = ({
                   0
                 ).getDate()
             ),
-          soTienKhac: tienkhac ?? 0,
+          soTienKhac: tienkhac,
           tongTien:
-            parseInt(tienkhac ?? 0) +
+            tienkhac +
             tiennuoc * (sonuoc - phong.sonuoc) +
             tiendien * (sodien - phong.sodien) +
             Math.round(
@@ -229,31 +237,8 @@ const Payment_phong = ({
                 </tr>
                 <tr>
                   <td>Tiền khác</td>
-                  <td>
-                    <textarea
-                      type="text"
-                      value={ghichukhac}
-                      onChange={(e) => {
-                        setghichukhac(e.target.value);
-                      }}
-                      placeholder="ghi chú"
-                    />
-                  </td>
-                  <td>
-                    <div className="flex items-center">
-                      <input
-                        type="number"
-                        value={tienkhac}
-                        onChange={(e) => {
-                          settienkhac(
-                            e.target.value != "" ? e.target.value : 0
-                          );
-                        }}
-                        className="small"
-                        placeholder="0"
-                      />
-                    </div>
-                  </td>
+                  <td></td>
+                  <td>{tienkhac.toLocaleString("vi-VN")} vnđ</td>
                 </tr>
                 <tr>
                   <td colSpan={2}>
@@ -261,7 +246,7 @@ const Payment_phong = ({
                   </td>
                   <td className="font-medium text-base text-[#dd7d00]">
                     {(
-                      parseInt(tienkhac ?? 0) +
+                      tienkhac +
                       tiennuoc * (sonuoc - phong.sonuoc) +
                       tiendien * (sodien - phong.sodien) +
                       Math.round(

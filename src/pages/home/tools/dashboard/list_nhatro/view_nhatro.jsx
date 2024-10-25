@@ -22,7 +22,11 @@ const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
                     }}
                   >
                     <div className="status">
-                      {phong.Nguoitro.length == 0 && "-"}
+                      {phong.Nguoitro.length == 0 ? (
+                        <i class="fa-solid fa-door-open"></i>
+                      ) : (
+                        <i class="fa-solid fa-door-closed"></i>
+                      )}
                     </div>
                     <div className="name">
                       {phong.soPhong
@@ -35,7 +39,7 @@ const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
             </div>
           ))}
         </div>
-        <div className="mt-auto">
+        <div className="mt-auto flex justify-between pt-3">
           <div className="add back" onClick={handleBack}>
             <div className="add-box">
               <div className="icon">
@@ -49,7 +53,7 @@ const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
               <div className="icon">
                 <i className="fa-solid fa-gear"></i>
               </div>
-              <div className="text">Cài đặt chung cho {nhatro.tenTro}</div>
+              <div className="text">Cài đặt {nhatro.tenTro}</div>
             </div>
           </div>
         </div>

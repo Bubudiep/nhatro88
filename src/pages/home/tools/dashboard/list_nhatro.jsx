@@ -31,6 +31,7 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
     }, 200);
   };
   const handleUpdateTro = (e) => {
+    setNhatro_id(e);
     const updateData = user.nhatro.find((nhatro) => nhatro.id === e);
     setSlideDanhsach("slideOut");
     setTimeout(() => {
@@ -56,7 +57,7 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
       setIsThemTro(false);
     }, 200);
   };
-  const handleBack2 = () => {
+  const handleBack2 = (e) => {
     setSlideDanhsach("slideOut2");
     setTimeout(() => {
       setSlideNhatro("slideIn2");
@@ -92,7 +93,20 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
             <div className={`slider fade-in-5 ${slideDanhsach}`}>
               <Edit_nhatro
                 nhatro={isUpdate}
-                handleBack={handleBack2}
+                handleBack={(e) => {
+                  console.log(e);
+                  if (e.id) {
+                    setIsUpdate((prev) => ({
+                      ...prev,
+                      ...e,
+                    }));
+                  }
+                  setSlideDanhsach("slideOut2");
+                  setTimeout(() => {
+                    setSlideNhatro("slideIn2");
+                    setIsEdit(false);
+                  }, 200);
+                }}
                 onUserUpdate={onUserUpdate}
                 token={user?.app?.access_token}
               />
@@ -101,9 +115,12 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
             <div className={`slider fade-in-5 ${slideDanhsach}`}>
               <Chitiet_phong
                 phong={isChitietPhong}
-                handleBack={() => {
+                token={user?.app?.access_token}
+                onUserUpdate={onUserUpdate}
+                handleBack={(e) => {
                   setSlideDanhsach("slideOut2");
                   setTimeout(() => {
+                    if (e?.QRKey) setIsUpdate(e);
                     setSlideNhatro("slideIn2");
                     setIsChitietPhong(false);
                   }, 200);
@@ -114,6 +131,7 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
             <div className={`slider fade-in-5 ${slideNhatro}`}>
               <View_nhatro
                 nhatro={isUpdate}
+                token={user?.app?.access_token}
                 handleBack={() => {
                   setSlideNhatro("slideOut2");
                   setTimeout(() => {
