@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text } from "zmp-ui";
 import api from "../../../../../components/api";
 
 const Chitiet_phong = ({ phong, handleBack, token, onUserUpdate }) => {
+  console.log(phong);
   const [isLoading, setIsloading] = useState(false);
   const [giaPhong, setGiaPhong] = useState(phong.giaPhong);
   const [tiendien, settiendien] = useState(phong.tiendien);
@@ -14,6 +15,17 @@ const Chitiet_phong = ({ phong, handleBack, token, onUserUpdate }) => {
   const [nonglanh, setnonglanh] = useState(phong.nonglanh ? "Có" : "Không");
   const [dieuhoa, setdieuhoa] = useState(phong.dieuhoa ? "Có" : "Không");
   const [wifi, setwifi] = useState(phong.wifi ? "Có" : "Không");
+  useEffect(() => {
+    const handlePopState = (event) => {
+      console.log("Back");
+      handleBack();
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      history.pushState(null, "", window.location.href);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  });
   const handleSave = () => {
     if (!phong) {
       return;
@@ -285,7 +297,7 @@ const Chitiet_phong = ({ phong, handleBack, token, onUserUpdate }) => {
                 </div>
                 <div className="split" />
                 <div className="it-2">
-                  <div className="name">Số điện ban đầu</div>
+                  <div className="name">Số điện hiện tại</div>
                   <div className="value">
                     <div
                       className="input"
@@ -305,7 +317,7 @@ const Chitiet_phong = ({ phong, handleBack, token, onUserUpdate }) => {
                   </div>
                 </div>
                 <div className="it-2">
-                  <div className="name">Số nước ban đầu</div>
+                  <div className="name">Số nước hiện tại</div>
                   <div className="value">
                     <div
                       className="input"

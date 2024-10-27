@@ -1,6 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
+  useEffect(() => {
+    const handlePopState = (event) => {
+      console.log("Back");
+      handleBack();
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      history.pushState(null, "", window.location.href);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  });
   return (
     <>
       <div className="title2">{nhatro.tenTro}</div>
@@ -23,9 +34,9 @@ const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
                   >
                     <div className="status">
                       {phong.Nguoitro.length == 0 ? (
-                        <i class="fa-solid fa-door-open"></i>
+                        <i className="fa-solid fa-door-open"></i>
                       ) : (
-                        <i class="fa-solid fa-door-closed"></i>
+                        <i className="fa-solid fa-door-closed"></i>
                       )}
                     </div>
                     <div className="name">

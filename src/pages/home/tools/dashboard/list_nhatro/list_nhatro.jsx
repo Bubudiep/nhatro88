@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const List_nhatro = ({
   user,
   handleThemnhatro,
   handleUpdateTro,
   handleViewnhatro,
+  onClose,
 }) => {
+  useEffect(() => {
+    const handlePopState = (event) => {
+      console.log("Đóng");
+      onClose();
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      history.pushState(null, "", window.location.href);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
   return (
     <>
       <div className="title2">Danh sách nhà trọ</div>

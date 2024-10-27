@@ -27,43 +27,44 @@ const Nhatro = ({ user }) => {
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [alertData, setAlertData] = useState(null); // Trạng thái để lưu thông tin alert
-  const [alerts, setAlerts] = useState([
-    // Khởi tạo alerts trong trạng thái
-    {
-      id: 1,
-      iconClass: "fa-solid fa-bell fa-shake",
-      title: "Thần tài đến!!",
-      type: "normal",
-      readed: false,
-      valueLinks: [
-        { text: "Bạn có +1 người xin vào ở trọ của bạn!", link: null },
-      ],
-    },
-    {
-      id: 2,
-      iconClass: "fa-brands fa-envira fa-shake",
-      title: "Lúa về +1.536.000!!",
-      type: "dongtien",
-      readed: false,
-      valueLinks: [
-        { text: "Hải", link: "#" },
-        { text: "Phòng 03", link: "#" },
-        { text: "đã thanh toán tiền phòng trọ tháng 9!", link: null },
-      ],
-    },
-    {
-      id: 3,
-      iconClass: "fa-brands fa-flickr",
-      title: "Chuyển ra",
-      type: "out",
-      readed: false,
-      valueLinks: [
-        { text: "Hải", link: "#" },
-        { text: "Phòng 03", link: "#" },
-        { text: "đang yêu cầu chuyển ra", link: null },
-      ],
-    },
-  ]);
+  history.pushState(null, "", window.location.href);
+  // [
+  //   {
+  //     id: 1,
+  //     iconClass: "fa-solid fa-bell fa-shake",
+  //     title: "Thần tài đến!!",
+  //     type: "normal",
+  //     readed: false,
+  //     valueLinks: [
+  //       { text: "Bạn có +1 người xin vào ở trọ của bạn!", link: null },
+  //     ],
+  //   },
+  //   {
+  //     id: 2,
+  //     iconClass: "fa-brands fa-envira fa-shake",
+  //     title: "Lúa về +1.536.000!!",
+  //     type: "dongtien",
+  //     readed: false,
+  //     valueLinks: [
+  //       { text: "Hải", link: "#" },
+  //       { text: "Phòng 03", link: "#" },
+  //       { text: "đã thanh toán tiền phòng trọ tháng 9!", link: null },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     iconClass: "fa-brands fa-flickr",
+  //     title: "Chuyển ra",
+  //     type: "out",
+  //     readed: false,
+  //     valueLinks: [
+  //       { text: "Hải", link: "#" },
+  //       { text: "Phòng 03", link: "#" },
+  //       { text: "đang yêu cầu chuyển ra", link: null },
+  //     ],
+  //   },
+  // ]
+  const [alerts, setAlerts] = useState([]);
   const nhatro_style = {
     backgroundImage: `url(${wallpp})`,
   };

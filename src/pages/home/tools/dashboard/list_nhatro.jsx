@@ -154,6 +154,7 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
         ) : (
           <div className={`slider fade-in-5 ${slideDanhsach}`}>
             <List_nhatro
+              onClose={handleClose}
               user={user}
               handleThemnhatro={handleThemnhatro}
               handleViewnhatro={handleViewnhatro}

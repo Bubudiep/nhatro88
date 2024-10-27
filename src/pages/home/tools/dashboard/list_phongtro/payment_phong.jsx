@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../../../components/api";
 
-const Payment_phong = ({
-  phong,
-  onUserUpdate,
-  token,
-  handleBack2,
-  handleTaophieu,
-}) => {
+const Payment_phong = ({ phong, onUserUpdate, token, handleBack }) => {
   const [Isloading, setIsloading] = useState(false);
   const [ngaybatdau, setngaybatdau] = useState(0);
   const [sodien, setsodien] = useState(phong?.sodien ?? 0);
@@ -40,7 +34,7 @@ const Payment_phong = ({
       }
     });
     setngaybatdau(dbatdau.toISOString().split("T")[0]);
-    setsongay(Math.floor((new Date() - dbatdau) / (24 * 3600000)));
+    setsongay(Math.floor((new Date() - dbatdau) / (24 * 3600000)) + 1);
   }, []);
   const handleXuathoadon = () => {
     setIsloading(true);
@@ -49,53 +43,44 @@ const Payment_phong = ({
         `/t-thanhtoan/`,
         {
           phong: phong.id,
-          soTienPhong: Math.round(
+          soTienPhong:
             songay *
-              (phong.giaPhong /
-                new Date(
-                  new Date().getFullYear(),
-                  new Date().getMonth() + 1,
-                  0
-                ).getDate())
-          ),
+            (phong.giaPhong /
+              new Date(
+                new Date().getFullYear(),
+                new Date().getMonth() + 1,
+                0
+              ).getDate()),
           soDien: sodien,
           soNuoc: sonuoc,
           soTienDien: tiendien * (sodien - phong.sodien),
           soTienNuoc: tiennuoc * (sonuoc - phong.sonuoc),
           soTienWifi: 0,
           soTienRac:
-            songay *
-            Math.round(
-              tienrac /
-                new Date(
-                  new Date().getFullYear(),
-                  new Date().getMonth() + 1,
-                  0
-                ).getDate()
-            ),
+            (songay * tienrac) /
+            new Date(
+              new Date().getFullYear(),
+              new Date().getMonth() + 1,
+              0
+            ).getDate(),
           soTienKhac: tienkhac,
           tongTien:
             tienkhac +
             tiennuoc * (sonuoc - phong.sonuoc) +
             tiendien * (sodien - phong.sodien) +
-            Math.round(
-              songay *
-                (phong.giaPhong /
-                  new Date(
-                    new Date().getFullYear(),
-                    new Date().getMonth() + 1,
-                    0
-                  ).getDate())
-            ) +
             songay *
-              Math.round(
-                tienrac /
-                  new Date(
-                    new Date().getFullYear(),
-                    new Date().getMonth() + 1,
-                    0
-                  ).getDate()
-              ),
+              (phong.giaPhong /
+                new Date(
+                  new Date().getFullYear(),
+                  new Date().getMonth() + 1,
+                  0
+                ).getDate()) +
+            (songay * tienrac) /
+              new Date(
+                new Date().getFullYear(),
+                new Date().getMonth() + 1,
+                0
+              ).getDate(),
           ngayBatdau: ngaybatdau,
           ngayKetthuc: new Date().toISOString().split("T")[0],
         },
@@ -103,7 +88,13 @@ const Payment_phong = ({
       )
       .then((response) => {
         onUserUpdate(response);
-        handleTaophieu();
+        response.forEach((tro) => {
+          tro.Thongtin.forEach((tang) => {
+            tang.Chitiet.forEach((nphong) => {
+              nphong.id == phong.id && handleBack(nphong);
+            });
+          });
+        });
       })
       .catch((error) => {
         setErrorMes("Lỗi khi cập nhật, vui lòng thử lại sau!");
@@ -124,7 +115,7 @@ const Payment_phong = ({
           <table>
             <tbody>
               <tr>
-                <td>Điện (số cũ {sodien})</td>
+                <td>Điện (số cũ {phong.sodien})</td>
                 <td>
                   <input
                     type="number"
@@ -137,7 +128,7 @@ const Payment_phong = ({
                 </td>
               </tr>
               <tr>
-                <td>Nước (số cũ {sonuoc})</td>
+                <td>Nước (số cũ {phong.sonuoc})</td>
                 <td>
                   <input
                     type="number"
@@ -185,14 +176,16 @@ const Payment_phong = ({
                   <td>Tiền phòng</td>
                   <td>{songay} ngày</td>
                   <td>
-                    {Math.round(
-                      songay *
+                    {parseInt(
+                      (
+                        songay *
                         (phong.giaPhong /
                           new Date(
                             new Date().getFullYear(),
                             new Date().getMonth() + 1,
                             0
                           ).getDate())
+                      ).toFixed(0)
                     ).toLocaleString("vi-VN")}{" "}
                     vnđ
                   </td>
@@ -221,16 +214,15 @@ const Payment_phong = ({
                   <td>Tiền rác</td>
                   <td>{songay} ngày</td>
                   <td>
-                    {(
-                      songay *
-                      Math.round(
-                        tienrac /
-                          new Date(
-                            new Date().getFullYear(),
-                            new Date().getMonth() + 1,
-                            0
-                          ).getDate()
-                      )
+                    {parseInt(
+                      (
+                        (songay * tienrac) /
+                        new Date(
+                          new Date().getFullYear(),
+                          new Date().getMonth() + 1,
+                          0
+                        ).getDate()
+                      ).toFixed(0)
                     ).toLocaleString("vi-VN")}{" "}
                     vnđ
                   </td>
@@ -245,28 +237,25 @@ const Payment_phong = ({
                     <div className="font-medium text-base pt-1 pb-1">Tổng</div>
                   </td>
                   <td className="font-medium text-base text-[#dd7d00]">
-                    {(
-                      tienkhac +
-                      tiennuoc * (sonuoc - phong.sonuoc) +
-                      tiendien * (sodien - phong.sodien) +
-                      Math.round(
+                    {parseInt(
+                      (
+                        tienkhac +
+                        tiennuoc * (sonuoc - phong.sonuoc) +
+                        tiendien * (sodien - phong.sodien) +
                         songay *
                           (phong.giaPhong /
                             new Date(
                               new Date().getFullYear(),
                               new Date().getMonth() + 1,
                               0
-                            ).getDate())
-                      ) +
-                      songay *
-                        Math.round(
-                          tienrac /
-                            new Date(
-                              new Date().getFullYear(),
-                              new Date().getMonth() + 1,
-                              0
-                            ).getDate()
-                        )
+                            ).getDate()) +
+                        (songay * tienrac) /
+                          new Date(
+                            new Date().getFullYear(),
+                            new Date().getMonth() + 1,
+                            0
+                          ).getDate()
+                      ).toFixed(0)
                     ).toLocaleString("vi-VN")}{" "}
                     vnđ
                   </td>
@@ -279,7 +268,7 @@ const Payment_phong = ({
         <div className="pt-3 tools-container flex">
           <button
             className="no-bg flex gap-2 items-center"
-            onClick={handleBack2}
+            onClick={handleBack}
           >
             <i className="fa-solid fa-arrow-left"></i>
             Quay lại

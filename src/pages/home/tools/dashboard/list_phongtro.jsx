@@ -4,6 +4,7 @@ import Update_phong from "./list_phongtro/update_phong";
 import Payment_phong from "./list_phongtro/payment_phong";
 import Details_phong from "./list_phongtro/details_phong";
 import ChitietHoadon from "./list_phongtro/chitietHoadon";
+import Add_nguoi from "./list_phongtro/add_nguoi";
 
 const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
   const [Hoadon, setHoadon] = useState(false);
@@ -107,9 +108,6 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
       setIsThanhtoan(true);
     }, 200);
   };
-  const handleTaophieu = () => {
-    console.log(editNhatro.id);
-  };
   const handleCapnhap = () => {
     setformupdates((prevState) => ({
       ...prevState,
@@ -143,7 +141,26 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
           <div className="bar"></div>
         </div>
         {editNhatro ? (
-          IsCapnhap ? (
+          option == "off" ? (
+            <div
+              className={`slider message-box fade-in-5 gap-2 flex flex-col ${slide2}`}
+            >
+              <Add_nguoi
+                user={user}
+                phong={editNhatro}
+                handleBack={(e) => {
+                  if (e) {
+                    onUserUpdate(e);
+                  }
+                  setSlide2("slideOut2");
+                  setTimeout(() => {
+                    setSlideMain("slideIn2");
+                    setEditNhatro(false);
+                  }, 200);
+                }}
+              />
+            </div>
+          ) : IsCapnhap ? (
             <div
               className={`slider message-box fade-in-5 gap-2 flex flex-col ${slideMain}`}
             >
@@ -171,15 +188,38 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
                 phong={editNhatro}
                 onUserUpdate={onUserUpdate}
                 token={user?.app?.access_token}
-                handleBack2={handleBack2}
-                handleTaophieu={handleTaophieu}
+                handleBack={(e) => {
+                  if (e.id) {
+                    setEditNhatro(e);
+                  }
+                  setSlideMain("slideOut2");
+                  setTimeout(() => {
+                    setSlide2("slideIn2");
+                    setIsThanhtoan(false);
+                  }, 200);
+                }}
               />
             </div>
           ) : Hoadon ? (
             <div
               className={`slider overflow-hidden flex-1 message-box fade-in-5 gap-2 flex flex-col ${slideMain}`}
             >
-              <ChitietHoadon hoadon={Hoadon} phong={editNhatro} />
+              <ChitietHoadon
+                hoadon={Hoadon}
+                phong={editNhatro}
+                onUserUpdate={onUserUpdate}
+                handleBack={(e) => {
+                  if (e.id) {
+                    setEditNhatro(e);
+                  }
+                  setSlideMain("slideOut2");
+                  setTimeout(() => {
+                    setSlide2("slideIn2");
+                    setHoadon(null);
+                  }, 200);
+                }}
+                token={user?.app?.access_token}
+              />
             </div>
           ) : (
             <div

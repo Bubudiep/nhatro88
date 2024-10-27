@@ -864,7 +864,7 @@ body {
     align-items: center;
     overflow: hidden;
     border-radius: 20px 20px 0px 0px;
-    max-height: 90vh;
+    max-height: 85vh;
     min-height: 50vh;
     animation: slideup 0.3s ease-in-out forwards;
     transition: height 0.3s ease-in-out; /* Thêm transition cho height */
@@ -875,6 +875,27 @@ body {
       display: flex;
       flex-direction: column;
       gap: 8px;
+      .tooling {
+        display: flex;
+        margin-left: auto;
+        .payment {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 20px;
+          color: #dd6300;
+          font-weight: 500;
+          .input {
+            outline: none;
+          }
+        }
+        button {
+          display: flex;
+          gap: 10px;
+          margin-left: 10px;
+          padding: 8px 20px;
+        }
+      }
       .h2 {
         font-size: 0.8rem;
         font-weight: 500;
@@ -1783,14 +1804,7 @@ button {
     border: hidden;
     color: #0072ff;
     i {
-      height: 25px;
-      display: flex;
-      align-items: center;
-      background-color: #0072ff;
-      color: #fff;
-      width: 25px;
-      justify-content: center;
-      border-radius: 6px;
+      color: #0072ff !important;
     }
   }
   &.back {

@@ -29,6 +29,16 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
         updatedFields[key] = newData[key];
       }
     }
+    useEffect(() => {
+      const handlePopState = (event) => {
+        console.log("Back");
+        handleBack();
+      };
+      window.addEventListener("popstate", handlePopState);
+      return () => {
+        window.removeEventListener("popstate", handlePopState);
+      };
+    });
     if (Object.keys(updatedFields).length > 0) {
       setIsloading(true);
       api
