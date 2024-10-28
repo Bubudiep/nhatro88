@@ -1,9 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import api from "zmp-sdk";
 import localApi from "../../../../../components/api";
 
 const Add_nguoi = ({ user, phong, handleBack }) => {
   console.log(phong);
+  useEffect(() => {
+    const handlePopState = (event) => {
+      console.log("Đóng");
+      handleBack();
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      history.pushState(null, "", window.location.href);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
   const [Isloading, setIsloading] = useState(false);
   const [errorMes, seterrorMes] = useState(false);
   const [formData, setFormData] = useState({
@@ -95,8 +106,10 @@ const Add_nguoi = ({ user, phong, handleBack }) => {
             <div className="h3">
               <div className="actions">
                 <button className="scan" onClick={handleScanQR}>
-                  <i className="fa-solid fa-qrcode"></i>Quét mã căn cước công
-                  dân
+                  <div className="icon">
+                    <i className="fa-solid fa-qrcode"></i>
+                  </div>
+                  Quét mã căn cước công dân
                 </button>
               </div>
             </div>

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import api from "../../../../components/api";
 import Update_phong from "./list_phongtro/update_phong";
 import Payment_phong from "./list_phongtro/payment_phong";
 import Details_phong from "./list_phongtro/details_phong";
 import ChitietHoadon from "./list_phongtro/chitietHoadon";
 import Add_nguoi from "./list_phongtro/add_nguoi";
+import All_phong from "./list_phongtro/all_phong";
+import Off_phong from "./list_phongtro/off_phong";
 
 const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
   const [Hoadon, setHoadon] = useState(false);
@@ -14,8 +16,6 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
   const [editNhatro, setEditNhatro] = useState(false);
   const [IsThanhtoan, setIsThanhtoan] = useState(false);
   const [IsCapnhap, setIsCapnhap] = useState(false);
-  const [selectedNhatro, setSelectedNhatro] = useState(user.nhatro[0].id);
-  const [selectedTang, setSelectedTang] = useState("");
   const [formUpdates, setformupdates] = useState({
     phong: null,
     giaphong: 0,
@@ -30,67 +30,6 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
     setTimeout(() => {
       onClose();
     }, 300);
-  };
-  const filterPhongtro2 = (nhatro) => {
-    if (option == "off") {
-      const tro = nhatro.reduce((acc, tro) => {
-        if (tro.id == selectedNhatro) {
-          acc.push(tro.Thongtin);
-        }
-        return acc;
-      }, []);
-      console.log(tro[0]);
-      return tro[0];
-    }
-    return [];
-  };
-  const filterPhongtro = (nhatro) => {
-    if (option == "off") {
-      if (selectedNhatro === "all") {
-        return nhatro.reduce((acc, tro) => {
-          tro.Thongtin.forEach((tang) => {
-            acc.push(
-              ...tang.Chitiet.filter((chitiet) => chitiet.Nguoitro.length == 0)
-            );
-          });
-          return acc;
-        }, []);
-      }
-
-      return nhatro.reduce((acc, tro) => {
-        if (tro.id == selectedNhatro) {
-          tro.Thongtin.forEach((tang) => {
-            if (!selectedTang || tang.id == selectedTang) {
-              acc.push(
-                ...tang.Chitiet.filter(
-                  (chitiet) => chitiet.Nguoitro.length == 0
-                )
-              );
-            }
-          });
-        }
-        return acc;
-      }, []);
-    }
-    if (selectedNhatro === "all") {
-      return nhatro.reduce((acc, tro) => {
-        tro.Thongtin.forEach((tang) => {
-          acc.push(...tang.Chitiet);
-        });
-        return acc;
-      }, []);
-    }
-
-    return nhatro.reduce((acc, tro) => {
-      if (tro.id == selectedNhatro) {
-        tro.Thongtin.forEach((tang) => {
-          if (!selectedTang || tang.id == selectedTang) {
-            acc.push(...tang.Chitiet);
-          }
-        });
-      }
-      return acc;
-    }, []);
   };
   const handleEditTro = (phong) => {
     setSlideMain("slideOut");
@@ -138,19 +77,97 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
       setIsCapnhap(true);
     }, 200);
   };
-  const getTangOptions = () => {
-    if (selectedNhatro === "all") return [];
-    const nhatroSelected = user.nhatro.find(
-      (item) => item.id === parseInt(selectedNhatro)
-    );
-    return nhatroSelected ? nhatroSelected.Thongtin : [];
+
+  // vuốt chạm
+
+  const [startY, setStartY] = useState(null);
+  const [bottomPos, setBottomPos] = useState(0); // Giá trị bottom
+  const [velocity, setVelocity] = useState(0); // Tốc độ kéo
+  const isTouchingRef = useRef(false); // Sử dụng useRef để theo dõi isTouching
+  let animationFrame;
+
+  const handleTouchStart = (e) => {
+    setStartY(e.touches[0].clientY);
+    isTouchingRef.current = true; // Cập nhật giá trị tham chiếu
+    cancelAnimationFrame(animationFrame); // Hủy bỏ bất kỳ animation nào đang chạy
   };
 
+  const handleTouchMove = (e) => {
+    if (startY !== null) {
+      const touchY = e.touches[0].clientY;
+      const diffY = startY - touchY; // Sự khác biệt giữa vị trí bắt đầu và hiện tại
+      let newBottomPos = bottomPos + diffY; // Cập nhật vị trí bottom mới dựa trên sự kéo lên/xuống
+      if (newBottomPos > 0) newBottomPos = 0; // Đảm bảo không vượt quá giới hạn
+      setBottomPos(newBottomPos); // Cập nhật vị trí bottom
+      setStartY(touchY); // Cập nhật startY để liên tục tính từ điểm hiện tại
+
+      // Tính toán velocity (tốc độ) dựa trên sự thay đổi vị trí
+      setVelocity(diffY);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setStartY(null);
+    isTouchingRef.current = false; // Cập nhật giá trị tham chiếu
+    const stopScroll = () => {
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame); // Dừng animation nếu cần
+      }
+    };
+    const continueScroll = () => {
+      if (!isTouchingRef.current && Math.abs(velocity) > 0.1) {
+        setVelocity((prevVelocity) => {
+          const newVelocity = prevVelocity * 0.95; // Giảm tốc
+          setBottomPos((prevBottomPos) => {
+            let newBottomPos = prevBottomPos + newVelocity;
+            if (newBottomPos > 0) newBottomPos = 0; // Không vượt quá vị trí giới hạn
+            if (Math.abs(newVelocity) <= 0.1) {
+              stopScroll(); // Dừng animation nếu tốc độ quá nhỏ
+            }
+            const bottomBox = document.querySelector(".bottom-box-white");
+            const bottomBoxHeight = bottomBox?.offsetHeight || 0;
+            const computedStyle = window.getComputedStyle(bottomBox);
+            const bottomCssValue = parseFloat(computedStyle.bottom) || 0;
+
+            // Kiểm tra chiều cao của bottom-box-white
+            const increment = 4; // Bước tăng dần
+            if (bottomBoxHeight - bottomCssValue * -1 <= 200) {
+              handleClose();
+            } else if (bottomCssValue > -150) {
+              newBottomPos = Math.min(newBottomPos + increment, 0); // Cập nhật newBottomPos, đảm bảo không vượt quá 0
+            } else {
+              newBottomPos = Math.max(newBottomPos - increment, -1000);
+            }
+            return newBottomPos;
+          });
+          return newVelocity;
+        });
+        animationFrame = requestAnimationFrame(continueScroll);
+      }
+    };
+
+    // Bắt đầu hiệu ứng trôi sau khi thả tay
+    animationFrame = requestAnimationFrame(continueScroll);
+  };
   return (
     <div className={`bottom-box-white-bg ${isClosing ? "hide-out" : ""}`}>
-      <div className="detectOut" onClick={handleClose} />
-      <div className={`bottom-box-white ${isClosing ? "hide-down" : ""}`}>
-        <div className="top-bar">
+      <div
+        className="detectOut"
+        onClick={handleClose}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      />
+      <div
+        className={`bottom-box-white ${isClosing ? "hide-down" : ""}`}
+        style={{ bottom: `${bottomPos}px` }}
+      >
+        <div
+          className="top-bar"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <div className="bar"></div>
         </div>
         {editNhatro ? (
@@ -261,190 +278,17 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
             className={`slider message-box fade-in-5 gap-2 flex flex-col ${slideMain}`}
           >
             {option == "off" ? (
-              <>
-                <div className="title2">
-                  Danh sách phòng (
-                  {user?.nhatro.length == 1 ? user?.nhatro[0].tenTro : ""})
-                </div>
-                <div className="flex justify-center text-[13px] mt-[-5px]">
-                  - Chọn một phòng để thêm người vào ở -
-                </div>
-                <div className="body-container">
-                  {user?.nhatro.length > 1 ? (
-                    <div className="filter-container">
-                      <select
-                        value={selectedNhatro}
-                        onChange={(e) => {
-                          setSelectedNhatro(e.target.value);
-                        }}
-                      >
-                        {user?.nhatro.map((item) => (
-                          <option key={item.id} value={item.id}>
-                            {item.tenTro}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                  <div className="list_item_big">
-                    {filterPhongtro2(user?.nhatro).map((item) => (
-                      <div key={item.id} className="nhatro-item layout">
-                        <div className="tang_name">{item.tenTang}</div>
-                        <div className="list_phong">
-                          {item.Chitiet.map((phong) => (
-                            <div
-                              key={phong.id}
-                              className={`items ${
-                                phong.Nguoitro.length > 0 ? "online" : "offline"
-                              }`}
-                              onClick={() => {
-                                handleEditTro(phong);
-                              }}
-                            >
-                              <div className="status">
-                                {phong.Nguoitro.length == 0 ? (
-                                  <i className="fa-solid fa-door-open"></i>
-                                ) : (
-                                  <i className="fa-solid fa-door-closed"></i>
-                                )}
-                              </div>
-                              <div className="name">
-                                {phong.soPhong
-                                  .replaceAll("Phòng", "P")
-                                  .replaceAll(" ", "") + " "}
-                                <div className="sub">
-                                  {phong.Nguoitro.length == 0 ? (
-                                    "Trống"
-                                  ) : phong.Nguoitro.length >= 2 ? (
-                                    "Đầy"
-                                  ) : (
-                                    <>
-                                      {phong.Nguoitro.length}{" "}
-                                      <i className="fa-regular fa-user"></i>
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </>
+              <Off_phong
+                user={user}
+                handleClose={handleClose}
+                handleEditTro={handleEditTro}
+              />
             ) : (
-              <>
-                <div className="title2">Danh sách phòng</div>
-                <div className="body-container">
-                  <div className="filter-container">
-                    <select
-                      value={selectedNhatro}
-                      onChange={(e) => {
-                        setSelectedNhatro(e.target.value);
-                        setSelectedTang("");
-                      }}
-                    >
-                      <option value="all">Tất cả nhà trọ</option>
-                      {user?.nhatro.map((item) => (
-                        <option key={item.id} value={item.id}>
-                          {item.tenTro}
-                        </option>
-                      ))}
-                    </select>
-                    {/* Select để chọn tầng, chỉ hiển thị khi đã chọn 1 nhà trọ */}
-                    {selectedNhatro !== "all" && (
-                      <select
-                        value={selectedTang}
-                        onChange={(e) => setSelectedTang(e.target.value)}
-                      >
-                        <option value="">Tất cả tầng</option>
-                        {getTangOptions().map((tang, index) => (
-                          <option key={index} value={tang.id}>
-                            {tang.tenTang}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  </div>
-                  <div className="list_item_big">
-                    {filterPhongtro(user?.nhatro).map((item) => (
-                      <div
-                        key={item.id}
-                        className={`nhatro-item ${
-                          item.Nguoitro.length > 0 ? "money" : "no-human"
-                        }`}
-                      >
-                        <div
-                          className={`details ${
-                            item.isActive ? "active" : "stop"
-                          }`}
-                          onClick={() => {
-                            handleEditTro(item);
-                          }}
-                        >
-                          <div className="i-info">
-                            <div className="name i-title">
-                              {item.soPhong}
-                              <div className="tang">{item.tenTang}</div>
-                            </div>
-                            <div className="value giaphong">
-                              {item.giaPhong.toLocaleString("vi-VN")} VNĐ
-                            </div>
-                          </div>
-                          {item.Nguoitro.length === 0 ? (
-                            <div className="i-null">
-                              <div className="logo">
-                                <i className="fa-solid fa-door-closed"></i>
-                              </div>
-                              <div className="message">Chưa có ai ở!</div>
-                            </div>
-                          ) : (
-                            <>
-                              <div className="i-info">
-                                <div className="name">Đang ở</div>
-                                <div className="value">
-                                  {item.Nguoitro.length} người
-                                </div>
-                              </div>
-                              <div className="i-info">
-                                <div className="name">Ngày bắt đầu</div>
-                                <div className="value">
-                                  {item.Ngaybatdau ?? item.created_at}
-                                </div>
-                              </div>
-                            </>
-                          )}
-                          <div className="i-details mt-1">
-                            <div
-                              className={`items ${item.wifi ? "on" : "off"}`}
-                            >
-                              {item.wifi ? "Có" : "Không"} Wifi
-                            </div>
-                            <div
-                              className={`items ${item.dieuhoa ? "on" : "off"}`}
-                            >
-                              {item.dieuhoa ? "Có" : "Không"} Điều hòa
-                            </div>
-                            <div
-                              className={`items ${
-                                item.nonglanh ? "on" : "off"
-                              }`}
-                            >
-                              {item.nonglanh ? "Có" : "Không"} Nóng lạnh
-                            </div>
-                          </div>
-                        </div>
-                        <div className="view">
-                          <i className="fa-solid fa-chevron-right"></i>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </>
+              <All_phong
+                user={user}
+                handleEditTro={handleEditTro}
+                handleClose={handleClose}
+              />
             )}
           </div>
         )}

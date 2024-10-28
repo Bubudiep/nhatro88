@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import api from "../../../../../components/api";
 
 const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
@@ -29,16 +29,6 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
         updatedFields[key] = newData[key];
       }
     }
-    useEffect(() => {
-      const handlePopState = (event) => {
-        console.log("Back");
-        handleBack();
-      };
-      window.addEventListener("popstate", handlePopState);
-      return () => {
-        window.removeEventListener("popstate", handlePopState);
-      };
-    });
     if (Object.keys(updatedFields).length > 0) {
       setIsloading(true);
       api
@@ -65,6 +55,16 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
       console.log("Không có sự thay đổi nào để cập nhật.");
     }
   };
+  useEffect(() => {
+    const handlePopState = (event) => {
+      handleBack();
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      history.pushState(null, "", window.location.href);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
   return (
     <>
       <div className="title2">{nhatro.tenTro}</div>

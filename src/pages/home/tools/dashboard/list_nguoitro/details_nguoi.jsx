@@ -1,14 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import api from "../../../../../components/api";
 
 const Details_nguoi = ({ nguoitro, handleBack, token, onUserUpdate }) => {
   const [errorMes, seterrorMes] = useState(false);
   const [Isloading, setIsloading] = useState(false);
   const [nguoi, setnguoi] = useState(nguoitro);
-  console.log(nguoi);
-  window.addEventListener("popstate", (event) => {
-    handleBack();
-  });
+  useEffect(() => {
+    const handlePopState = (event) => {
+      console.log("Đóng");
+      handleBack();
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      history.pushState(null, "", window.location.href);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
   const handleTamtru = () => {
     setIsloading(true);
     const update = api
