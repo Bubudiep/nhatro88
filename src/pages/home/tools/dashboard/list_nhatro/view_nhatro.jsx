@@ -3,19 +3,26 @@ import React, { useEffect, useState } from "react";
 const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
   const [longPressTimer, setLongPressTimer] = useState(null);
   const [isMultiSelect, setIsMultiSelect] = useState(false);
+  const [isSelectAll, setIsSelectAll] = useState(false);
+  const [beforeSelectAll, setBeforeIsSelectAll] = useState(false);
   const [longPressRooms, setLongPressRooms] = useState([]); // State chứa danh sách phòng đang long press
   const handleLongPress = (phong) => {
     console.log(phong);
   };
+  const handleDeSelectAll = () => {
+    setLongPressRooms(beforeSelectAll);
+    setIsSelectAll(false);
+  };
   const handleSelectAll = () => {
+    setBeforeIsSelectAll(longPressRooms);
     const phong = nhatro.Thongtin.flatMap((tt) => tt.Chitiet);
     setLongPressRooms((prevRooms) => {
       const newRoomIds = phong
         .filter((phong) => !prevRooms.includes(phong.id)) // Lọc ra các phòng chưa có trong prevRooms
         .map((phong) => phong.id); // Lấy danh sách các id
-      console.log(newRoomIds);
       return [...prevRooms, ...newRoomIds];
     });
+    setIsSelectAll(true);
   };
   const startLongPress = (phong) => {
     const timer = setTimeout(() => {
@@ -53,12 +60,21 @@ const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
       <div className="text-[13px] h-[35px] flex items-center justify-center">
         {isMultiSelect ? (
           <div className="flex gap-2 pl-3 pr-3">
-            <button className="edit mt-2" onClick={handleSelectAll}>
-              <div className="icon">
-                <i className="fa-solid fa-check"></i>
-              </div>
-              Chọn toàn bộ
-            </button>
+            {isSelectAll ? (
+              <button className="edit mt-2" onClick={handleDeSelectAll}>
+                <div className="icon">
+                  <i className="fa-solid fa-xmark"></i>
+                </div>
+                Bỏ chọn
+              </button>
+            ) : (
+              <button className="edit mt-2" onClick={handleSelectAll}>
+                <div className="icon">
+                  <i className="fa-solid fa-check"></i>
+                </div>
+                Chọn toàn bộ
+              </button>
+            )}
             <button className="edit mt-2">
               <div className="icon">
                 <i className="fa-solid fa-marker"></i>

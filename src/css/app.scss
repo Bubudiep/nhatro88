@@ -1582,22 +1582,16 @@ body {
       .tang_name {
         color: #999;
         font-weight: 500;
+        padding-top: 3px;
       }
       .list_phong {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
         gap: 4px;
-        padding: 10px 0px;
+        padding: 8px 0px;
         direction: rtl; /* Đảo ngược cột */
-        .long-press-class {
-          border-radius: 6px;
-          border: 1px solid #7ab3ff !important;
-          background-color: #e4f0ff !important;
-          user-select: none;
-        }
         .items {
-          padding: 4px;
-          width: 100%;
+          width: 95%;
           text-align: center;
           display: flex;
           flex-direction: column;
@@ -1605,6 +1599,16 @@ body {
           justify-content: center;
           gap: 5px;
           border: 1px solid transparent;
+          transition: all 0.3s;
+          padding: 0px;
+          &.long-press-class {
+            padding: 4px;
+            width: 100%;
+            border-radius: 6px;
+            border: 1px solid #7ab3ff !important;
+            background-color: #e4f0ff !important;
+            user-select: none;
+          }
           .status {
             width: 40px;
             height: 40px;
