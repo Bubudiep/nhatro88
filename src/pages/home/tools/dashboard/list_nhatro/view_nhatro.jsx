@@ -42,7 +42,7 @@ const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
                     <div className="name">
                       {phong.soPhong
                         .replaceAll("Phòng", "P")
-                        .replaceAll(" ", "")}
+                        .replaceAll(" ", "")}{" "}
                     </div>
                   </div>
                 ))}

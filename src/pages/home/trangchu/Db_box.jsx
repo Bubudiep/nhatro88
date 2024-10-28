@@ -14,7 +14,7 @@ const dashboardItems = [
     img: house,
   },
   {
-    title: "Kiểm kê Phòng",
+    title: "Danh sách Phòng",
     name: "phongtro",
     value: (user) =>
       user?.nhatro.reduce((total, item) => {
@@ -29,7 +29,7 @@ const dashboardItems = [
     img: bedroom,
   },
   {
-    title: "Đang ở",
+    title: "Người đang trọ",
     name: "nguoitro",
     value: (user) =>
       user?.nhatro.reduce((total, item) => {

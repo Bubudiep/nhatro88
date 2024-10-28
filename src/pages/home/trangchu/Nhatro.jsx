@@ -26,8 +26,7 @@ function setCookie(name, value, days) {
 const Nhatro = ({ user }) => {
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [alertData, setAlertData] = useState(null); // Trạng thái để lưu thông tin alert
-  history.pushState(null, "", window.location.href);
+  const [alertData, setAlertData] = useState(null);
   // [
   //   {
   //     id: 1,
@@ -183,8 +182,8 @@ const Nhatro = ({ user }) => {
       console.log(`Tốc độ kết nối: ${duration} ms`);
     });
   }
+  history.pushState(null, "", window.location.href);
   useEffect(() => {
-    setCookie("user_name", "JohnDoe", 7);
     const io_socket = async () => {
       window.socket = await io(SOCKET_SERVER_URL, {
         transports: ["websocket"],
@@ -218,9 +217,7 @@ const Nhatro = ({ user }) => {
       // Gọi hàm ping mỗi 5 giây
       setInterval(measureConnectionSpeed, 5000);
     };
-
     io_socket();
-
     return () => {
       if (window.socket) {
         window.socket.disconnect();

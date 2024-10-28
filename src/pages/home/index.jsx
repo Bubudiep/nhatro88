@@ -6,6 +6,7 @@ import Nhatromoi from "./trangchu/nhatromoi";
 import Nhatro from "./trangchu/Nhatro";
 import { UserContext } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import { getSetting, getUserInfo } from "zmp-sdk/apis";
 
 const Home = () => {
   const { user, setUser } = useContext(UserContext); // Lấy context
@@ -33,11 +34,27 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (user == null) {
-      navigate("/start");
-    } else {
-      updateNhatro(); // Lấy thông tin nhà trọ khi component được render
-    }
+    getSetting({
+      success: (data) => {
+        console.log(data);
+        const auth = data.authSetting;
+        console.log(auth["scope.userInfo"], auth["scope.userPhonenumber"]);
+        if (auth["scope.userInfo"] === false) {
+          navigate("/start");
+        }
+        if (auth["scope.userPhonenumber"] === false) {
+          navigate("/start");
+        }
+        if (user == null) {
+          navigate("/start");
+        } else {
+          updateNhatro(); // Lấy thông tin nhà trọ khi component được render
+        }
+      },
+      fail: (error) => {
+        navigate("/start");
+      },
+    });
   }, [user]);
 
   return (

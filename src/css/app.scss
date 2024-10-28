@@ -768,14 +768,14 @@ body {
   }
   .box-details {
     display: flex;
-    margin-top: 10px;
-    padding: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
     animation: fadeInDelay 1s;
     animation-timing-function: ease-in-out;
     ul {
       list-style-type: circle;
       background-color: #fff;
-      box-shadow: 0px 0px 3px #0003;
+      box-shadow: 1px 2px 3px #0003;
       padding: 20px;
       gap: 10px;
       display: flex;
@@ -1608,6 +1608,13 @@ body {
           .name {
             font-weight: 500;
             font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            .sub {
+              font-size: 11px;
+              color: #999;
+              font-weight: 400;
+            }
           }
           &.online {
             .status {
@@ -1783,6 +1790,9 @@ button {
     letter-spacing: 0.1cap;
     animation: fadeInDelay 1s;
     animation-timing-function: ease-in-out;
+    &:disabled {
+      border: 1px solid #9c9c9c;
+    }
   }
   &.add {
     background-color: #2390fd;
@@ -2169,6 +2179,24 @@ button {
     }
     &:not(:first-child) {
       border-top: 1px solid #d1d1d1;
+    }
+  }
+}
+.hint-login {
+  margin-top: 10px;
+  padding: 10px 20px;
+  animation: fadeInDelay 1s;
+  animation-timing-function: ease-in-out;
+  .mes {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    font-size: 14px;
+    border: 1px solid #999;
+    border-radius: 10px;
+    .checkbox {
+      padding: 15px 15px;
+      border-right: 1px solid #999;
     }
   }
 }
