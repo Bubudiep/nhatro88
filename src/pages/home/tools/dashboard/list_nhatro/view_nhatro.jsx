@@ -43,6 +43,18 @@ const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
                       {phong.soPhong
                         .replaceAll("Phòng", "P")
                         .replaceAll(" ", "")}{" "}
+                      <div className="sub">
+                        {phong.Nguoitro.length == 0 ? (
+                          "Trống"
+                        ) : phong.Nguoitro.length >= 2 ? (
+                          "Đầy"
+                        ) : (
+                          <>
+                            {phong.Nguoitro.length}{" "}
+                            <i className="fa-regular fa-user"></i>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
