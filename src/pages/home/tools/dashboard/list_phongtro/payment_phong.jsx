@@ -104,6 +104,17 @@ const Payment_phong = ({ phong, onUserUpdate, token, handleBack }) => {
         setIsloading(false);
       });
   };
+  useEffect(() => {
+    const handlePopState = (event) => {
+      console.log("Đóng");
+      handleBack();
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      history.pushState(null, "", window.location.href);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
   return (
     <>
       <div className="title2">

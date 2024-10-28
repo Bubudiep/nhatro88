@@ -219,7 +219,7 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
                 onUserUpdate={onUserUpdate}
                 token={user?.app?.access_token}
                 handleBack={(e) => {
-                  if (e.id) {
+                  if (e?.id) {
                     setEditNhatro(e);
                   }
                   setSlideMain("slideOut2");
@@ -239,7 +239,7 @@ const ListPhongtro = ({ option, onClose, user, onUserUpdate }) => {
                 phong={editNhatro}
                 onUserUpdate={onUserUpdate}
                 handleBack={(e) => {
-                  if (e.id) {
+                  if (e?.id) {
                     setEditNhatro(e);
                   }
                   setSlideMain("slideOut2");

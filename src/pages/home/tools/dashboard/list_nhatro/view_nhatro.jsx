@@ -1,6 +1,31 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
+  const [longPressTimer, setLongPressTimer] = useState(null);
+  const [isMultiSelect, setIsMultiSelect] = useState(false);
+  const [longPressRooms, setLongPressRooms] = useState([]); // State chứa danh sách phòng đang long press
+  const handleLongPress = (phong) => {
+    console.log(phong);
+  };
+  const startLongPress = (phong) => {
+    const timer = setTimeout(() => {
+      setLongPressRooms((prevRooms) => {
+        if (!prevRooms.includes(phong.id)) {
+          return [...prevRooms, phong.id];
+        }
+        return prevRooms;
+      });
+      handleLongPress(phong);
+      setIsMultiSelect(true);
+    }, 500);
+    setLongPressTimer(timer);
+  };
+  const cancelLongPress = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+  };
   useEffect(() => {
     const handlePopState = (event) => {
       console.log("Back");
@@ -15,7 +40,20 @@ const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
   return (
     <>
       <div className="title2">{nhatro.tenTro}</div>
-      <div className="text-[12px] text-center">Chọn một phòng để cài đặt</div>
+      <div className="text-[12px] text-center transition-all">
+        {isMultiSelect ? (
+          <div className="flex justify-center">
+            <button className="edit mt-2">
+              <div className="icon">
+                <i className="fa-solid fa-marker"></i>
+              </div>
+              Sửa hàng loạt
+            </button>
+          </div>
+        ) : (
+          "Chọn một phòng hoặc bấm giữ để cài đặt"
+        )}
+      </div>
       <div className="body-container">
         <div className="list_item_big">
           {nhatro.Thongtin.map((item) => (
@@ -31,9 +69,39 @@ const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
                           ? "full"
                           : "online"
                         : "offline"
-                    }`}
+                    } ${
+                      longPressRooms.includes(phong.id)
+                        ? "long-press-class"
+                        : ""
+                    }`} // Thêm class nếu phòng đang long press
+                    onTouchStart={() => startLongPress(phong)} // Sự kiện long press trên thiết bị di động
+                    onTouchEnd={() => cancelLongPress(phong)} // Hủy nếu người dùng nhả tay
                     onClick={() => {
-                      handlePhongtro(phong);
+                      if (isMultiSelect) {
+                        if (!longPressRooms.includes(phong.id)) {
+                          // Nếu phòng chưa có trong danh sách, thêm vào
+                          setLongPressRooms((prevRooms) => {
+                            if (!prevRooms.includes(phong.id)) {
+                              return [...prevRooms, phong.id];
+                            }
+                            return prevRooms;
+                          });
+                          console.log("added");
+                        } else {
+                          // Nếu phòng đã có trong danh sách, xóa ra
+                          console.log(longPressRooms.length);
+                          setLongPressRooms((prevRooms) =>
+                            prevRooms.filter((roomId) => roomId !== phong.id)
+                          );
+                          if (longPressRooms.length == 1) {
+                            console.log("last room removed");
+                            setIsMultiSelect(false); // Có thể kích hoạt lại nếu cần
+                          }
+                        }
+                      } else {
+                        console.log("single click");
+                        handlePhongtro(phong); // Thực hiện hành động mặc định
+                      }
                     }}
                   >
                     <div className="status">

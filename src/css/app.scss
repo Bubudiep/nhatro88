@@ -1589,7 +1589,14 @@ body {
         gap: 4px;
         padding: 10px 0px;
         direction: rtl; /* Đảo ngược cột */
+        .long-press-class {
+          border-radius: 6px;
+          border: 1px solid #7ab3ff !important;
+          background-color: #e4f0ff !important;
+          user-select: none;
+        }
         .items {
+          padding: 4px;
           width: 100%;
           text-align: center;
           display: flex;
@@ -1597,6 +1604,7 @@ body {
           align-items: center;
           justify-content: center;
           gap: 5px;
+          border: 1px solid transparent;
           .status {
             width: 40px;
             height: 40px;
@@ -1790,6 +1798,21 @@ button {
   border-radius: 8px;
   transition: all 0.3s;
   white-space: nowrap;
+  &.edit {
+    display: flex;
+    background-color: #2390fd;
+    border: hidden;
+    color: #fff;
+    padding: 0px;
+    align-items: center;
+    font-weight: 500;
+    padding-right: 10px;
+    .icon {
+      padding: 10px 14px;
+      margin-right: 8px;
+      border-right: 1px solid #fff;
+    }
+  }
   &.start-btn {
     background-color: #2390fd;
     border: 1px solid #2390fd;
@@ -2035,6 +2058,11 @@ button {
   gap: 5px;
   color: #999;
   padding: 6px;
+  .icon {
+    font-size: 30px;
+    opacity: 0.4;
+    padding: 12px;
+  }
   .logo {
     font-size: 30px;
     padding: 10px 6px 6px 6px;
