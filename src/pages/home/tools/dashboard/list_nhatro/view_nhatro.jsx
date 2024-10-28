@@ -7,6 +7,16 @@ const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
   const handleLongPress = (phong) => {
     console.log(phong);
   };
+  const handleSelectAll = () => {
+    const phong = nhatro.Thongtin.flatMap((tt) => tt.Chitiet);
+    setLongPressRooms((prevRooms) => {
+      const newRoomIds = phong
+        .filter((phong) => !prevRooms.includes(phong.id)) // Lọc ra các phòng chưa có trong prevRooms
+        .map((phong) => phong.id); // Lấy danh sách các id
+      console.log(newRoomIds);
+      return [...prevRooms, ...newRoomIds];
+    });
+  };
   const startLongPress = (phong) => {
     const timer = setTimeout(() => {
       setLongPressRooms((prevRooms) => {
@@ -40,9 +50,15 @@ const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
   return (
     <>
       <div className="title2">{nhatro.tenTro}</div>
-      <div className="text-[12px] text-center transition-all">
+      <div className="text-[13px] h-[35px] flex items-center justify-center">
         {isMultiSelect ? (
-          <div className="flex justify-center">
+          <div className="flex gap-2 pl-3 pr-3">
+            <button className="edit mt-2" onClick={handleSelectAll}>
+              <div className="icon">
+                <i className="fa-solid fa-check"></i>
+              </div>
+              Chọn toàn bộ
+            </button>
             <button className="edit mt-2">
               <div className="icon">
                 <i className="fa-solid fa-marker"></i>
