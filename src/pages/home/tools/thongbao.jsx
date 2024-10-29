@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const Thongbao = ({ onClose }) => {
   const [isClosing, setIsClosing] = useState(false);
@@ -76,6 +76,17 @@ const Thongbao = ({ onClose }) => {
     // Bắt đầu hiệu ứng trôi sau khi thả tay
     animationFrame = requestAnimationFrame(continueScroll);
   };
+  useEffect(() => {
+    const handlePopState = (event) => {
+      console.log("Đóng");
+      handleClose();
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      history.pushState(null, "", window.location.href);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
   return (
     <div className={`bottom-box-white-bg ${isClosing ? "hide-out" : ""}`}>
       <div

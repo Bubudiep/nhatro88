@@ -36,7 +36,6 @@ const Home = () => {
   useEffect(() => {
     getSetting({
       success: (data) => {
-        console.log(data);
         const auth = data.authSetting;
         console.log(auth["scope.userInfo"], auth["scope.userPhonenumber"]);
         if (auth["scope.userInfo"] === false) {

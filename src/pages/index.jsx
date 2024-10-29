@@ -29,11 +29,65 @@ const HomePage = () => {
       scopes: ["scope.userInfo", "scope.userPhonenumber"],
       success: (data) => {
         if (Object.keys(data).length == 0) {
+          getUserInfo({
+            success: (data) => {
+              api
+                .post("/zlogin/", {
+                  zalo_id: data.userInfo.id,
+                })
+                .then((response) => {
+                  setUser({
+                    zalo: data.userInfo,
+                    app: response, // Cập nhật user.app
+                  });
+                  navigate("/", {
+                    replace: true,
+                    animate: true,
+                    direction: "forward",
+                  });
+                  setLoading(false);
+                })
+                .catch((error) => {
+                  api
+                    .post("/register/", {
+                      zalo_id: data.userInfo.id,
+                      username: data.userInfo.id,
+                      password: app.random(10),
+                      email: data.userInfo.id + "@gmail.com",
+                    })
+                    .then((response) => {
+                      console.log(response);
+                      setUser({
+                        zalo: data.userInfo,
+                        app: response, // Cập nhật user.app
+                      });
+                      navigate("/", {
+                        replace: true,
+                        animate: true,
+                        direction: "forward",
+                      });
+                    })
+                    .catch((error) => {
+                      setLoading(false);
+                      setMassage("Lỗi kết nối máy chủ! Vui lòng thử lại sau!");
+                      console.error("Error fetching data:", error);
+                    });
+                });
+            },
+            fail: (error) => {
+              setLoading(false);
+              setMassage("Lỗi kết nối máy chủ! Vui lòng thử lại sau!");
+              console.error("Error fetching data:", error);
+            },
+          });
           navigate("/", {
             replace: true,
             animate: true,
             direction: "forward",
           });
+          setMassage(null);
+          setLoading(false);
+          return;
         }
         getAccessToken({
           success: (accessToken) => {
