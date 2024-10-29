@@ -46,6 +46,18 @@ const get = async (url, token) => {
     throw error;
   }
 };
+// Hàm GET kèm theo token
+const gets = async (url, headers) => {
+  try {
+    const response = await api.get(url, {
+      headers: headers,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data", error);
+    throw error;
+  }
+};
 
 // Hàm POST kèm theo token
 const post = async (url, data, token) => {
@@ -95,6 +107,7 @@ const deleteRequest = async (url, token) => {
 // Xuất các phương thức
 export default {
   get,
+  gets,
   post,
   patch,
   delete: deleteRequest,

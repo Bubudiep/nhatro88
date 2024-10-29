@@ -4,7 +4,12 @@ import Logo from "../img/logo.png";
 import Background_ct from "../img/bg_city.jpg";
 import api from "../components/api";
 import app from "../components/all";
-import { authorize, getUserInfo } from "zmp-sdk/apis";
+import {
+  authorize,
+  getAccessToken,
+  getPhoneNumber,
+  getUserInfo,
+} from "zmp-sdk/apis";
 import { UserContext } from "../context/UserContext";
 
 const HomePage = () => {
@@ -16,60 +21,126 @@ const HomePage = () => {
   const pageStyle = {
     backgroundImage: `url(${Background_ct})`,
   };
+  const app_key = import.meta.env.VITE_ZALO_KEY;
   console.log("Start");
   const handleStart = () => {
     setLoading(true);
     authorize({
       scopes: ["scope.userInfo", "scope.userPhonenumber"],
       success: (data) => {
-        getUserInfo({
-          success: (data) => {
-            api
-              .post("/zlogin/", {
-                zalo_id: data.userInfo.id,
-              })
-              .then((response) => {
-                setUser({
-                  zalo: data.userInfo,
-                  app: response, // Cập nhật user.app
-                });
-                navigate("/", {
-                  replace: true,
-                  animate: true,
-                  direction: "forward",
-                });
-                setLoading(false);
-              })
-              .catch((error) => {
-                api
-                  .post("/register/", {
-                    zalo_id: data.userInfo.id,
-                    username: data.userInfo.id,
-                    password: app.random(10),
-                    zalo_name: data.userInfo.name,
-                    email: data.userInfo.id + "@gmail.com",
-                  })
-                  .then((response) => {
-                    console.log(response);
-                    setUser({
-                      zalo: data.userInfo,
-                      app: response, // Cập nhật user.app
+        if (Object.keys(data).length == 0) {
+          navigate("/", {
+            replace: true,
+            animate: true,
+            direction: "forward",
+          });
+        }
+        getAccessToken({
+          success: (accessToken) => {
+            console.log(accessToken);
+            if (accessToken) {
+              getPhoneNumber({
+                success: async (data) => {
+                  let { token } = data;
+                  api
+                    .gets("https://graph.zalo.me/v2.0/me/info", {
+                      access_token: accessToken,
+                      code: token,
+                      secret_key: app_key,
+                    })
+                    .then((response) => {
+                      const phone_number = response?.data?.number;
+                      if (phone_number) {
+                        getUserInfo({
+                          success: (data) => {
+                            api
+                              .post("/zlogin/", {
+                                zalo_id: data.userInfo.id,
+                                zalo_phone: phone_number,
+                                zalo_name: data.userInfo.name,
+                                zalo_avatar: data.userInfo.avatar,
+                              })
+                              .then((response) => {
+                                setUser({
+                                  zalo: data.userInfo,
+                                  app: response, // Cập nhật user.app
+                                });
+                                navigate("/", {
+                                  replace: true,
+                                  animate: true,
+                                  direction: "forward",
+                                });
+                                setLoading(false);
+                              })
+                              .catch((error) => {
+                                api
+                                  .post("/register/", {
+                                    zalo_id: data.userInfo.id,
+                                    username: data.userInfo.id,
+                                    password: app.random(10),
+                                    zalo_name: data.userInfo.name,
+                                    zalo_avatar: data.userInfo.avatar,
+                                    email: data.userInfo.id + "@gmail.com",
+                                    zalo_phone: phone_number,
+                                  })
+                                  .then((response) => {
+                                    console.log(response);
+                                    setUser({
+                                      zalo: data.userInfo,
+                                      app: response, // Cập nhật user.app
+                                    });
+                                    navigate("/", {
+                                      replace: true,
+                                      animate: true,
+                                      direction: "forward",
+                                    });
+                                  })
+                                  .catch((error) => {
+                                    setLoading(false);
+                                    setMassage(
+                                      "Lỗi kết nối máy chủ! Vui lòng thử lại sau!"
+                                    );
+                                    console.error(
+                                      "Error fetching data:",
+                                      error
+                                    );
+                                  });
+                              });
+                          },
+                          fail: (error) => {
+                            setLoading(false);
+                            setMassage(
+                              "Lỗi kết nối máy chủ! Vui lòng thử lại sau!"
+                            );
+                            console.error("Error fetching data:", error);
+                          },
+                        });
+                      }
+                    })
+                    .catch((error) => {
+                      console.error("Lỗi:", error);
+                      setMassage("Lỗi kết nối máy chủ! Vui lòng thử lại sau!");
+                    })
+                    .finally(() => {
+                      setLoading(false);
                     });
-                    navigate("/", {
-                      replace: true,
-                      animate: true,
-                      direction: "forward",
-                    });
-                  })
-                  .catch((error) => {
-                    setLoading(false);
-                    setMassage("Lỗi kết nối máy chủ! Vui lòng thử lại sau!");
-                    console.error("Error fetching data:", error);
-                  });
+                },
+                fail: (error) => {
+                  setLoading(false);
+                  setMassage("Lỗi kết nối máy chủ! Vui lòng thử lại sau!");
+                  console.error("Error fetching data:", error);
+                },
               });
+            } else {
+              setLoading(false);
+              setMassage("Ứng dụng chưa được cấp phép, vui lòng thử lại sau!");
+              console.error("Error fetching data:", error);
+            }
           },
           fail: (error) => {
-            console.log(error);
+            setLoading(false);
+            setMassage("Lỗi kết nối máy chủ! Vui lòng thử lại sau!");
+            console.error("Error fetching data:", error);
           },
         });
       },

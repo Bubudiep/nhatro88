@@ -1,48 +1,59 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import api from "../../../../../components/api";
 
 const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
   const [isLoading, setIsloading] = useState(false);
   const [errorMes, setErrorMes] = useState("");
-  const [chungchu, setChungchu] = useState(nhatro.chungchu ? "Có" : "Không");
-  const [dieuhoa, setDieuhoa] = useState(nhatro?.dieuhoa ? "Có" : "Không");
-  const [nonglanh, setNonglanh] = useState(nhatro?.nonglanh ? "Có" : "Không");
+  const [tienPhong, setTienPhong] = useState(
+    nhatro.tienphong.toLocaleString("vi-VN").replace(/\./g, ",") ?? 0
+  );
+  const [tienrac, settienrac] = useState(
+    nhatro.tienrac.toLocaleString("vi-VN").replace(/\./g, ",") ?? 0
+  );
+  const [tiennuoc, settiennuoc] = useState(
+    nhatro.tiennuoc.toLocaleString("vi-VN").replace(/\./g, ",") ?? 0
+  );
+  const [tiendien, settiendien] = useState(
+    nhatro.tiendien.toLocaleString("vi-VN").replace(/\./g, ",") ?? 0
+  );
+  const [tienkhac, settienkhac] = useState(
+    nhatro.tienkhac.toLocaleString("vi-VN").replace(/\./g, ",") ?? 0
+  );
+  const [chungchu, setChungchu] = useState(
+    nhatro.chungchu.toLocaleString("vi-VN").replace(/\./g, ",") ? "Có" : "Không"
+  );
+  const [dieuhoa, setDieuhoa] = useState(
+    nhatro?.dieuhoa.toLocaleString("vi-VN").replace(/\./g, ",") ? "Có" : "Không"
+  );
+  const [nonglanh, setNonglanh] = useState(
+    nhatro?.nonglanh.toLocaleString("vi-VN").replace(/\./g, ",")
+      ? "Có"
+      : "Không"
+  );
   const [wifi, setWifi] = useState(nhatro?.wifi ? "Có" : "Không");
+  console.log(nhatro);
   const handleSave = () => {
     if (!nhatro) {
       return;
     }
     const newData = {
       tenTro: nhatro.tenTro,
-      tienphong: document.querySelector('input[name="tienphong"]').value,
-      tienrac: document.querySelector('input[name="tienrac"]').value,
-      tiennuoc: document.querySelector('input[name="tiennuoc"]').value,
-      tiendien: document.querySelector('input[name="tiendien"]').value,
+      tienphong: parseInt(tienPhong?.replaceAll(",", "")),
+      tienrac: parseInt(tienrac?.replaceAll(",", "")),
+      tiennuoc: parseInt(tiennuoc?.replaceAll(",", "")),
+      tiendien: parseInt(tiendien?.replaceAll(",", "")),
+      tienkhac: parseInt(tienkhac?.replaceAll(",", "")),
       chungchu: chungchu === "Có",
       dieuhoa: dieuhoa === "Có",
       nonglanh: nonglanh === "Có",
       wifi: wifi === "Có",
     };
-    const updatedFields = {};
-    for (let key in newData) {
-      if (newData[key] !== nhatro[key]) {
-        updatedFields[key] = newData[key];
-      }
-    }
-    useEffect(() => {
-      const handlePopState = (event) => {
-        console.log("Back");
-        handleBack();
-      };
-      window.addEventListener("popstate", handlePopState);
-      return () => {
-        window.removeEventListener("popstate", handlePopState);
-      };
-    });
-    if (Object.keys(updatedFields).length > 0) {
+    // console.log(newData);
+    // return;
+    if (Object.keys(newData).length > 0) {
       setIsloading(true);
       api
-        .patch(`/nhatro/${nhatro.id}/`, updatedFields, token)
+        .patch(`/nhatro/${nhatro.id}/`, newData, token)
         .then((response1) => {
           console.log("Cập nhật thành công", response1);
           api
@@ -65,6 +76,16 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
       console.log("Không có sự thay đổi nào để cập nhật.");
     }
   };
+  useEffect(() => {
+    const handlePopState = (event) => {
+      console.log("Back");
+      handleBack();
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  });
   return (
     <>
       <div className="title2">{nhatro.tenTro}</div>
@@ -90,9 +111,23 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
                 <td>
                   <div className="flex relative justify-end items-center">
                     <input
-                      type="number"
+                      pattern="^[0-9]*$" // Only allow digits and commas
+                      inputMode="numeric" // Mobile devices show numeric keyboard
+                      type="tel" // Uses the telephone input for numeric values
                       name="tienphong"
-                      defaultValue={nhatro.tienphong ?? 0}
+                      value={tienPhong}
+                      placeholder="Enter a number"
+                      onChange={(e) => {
+                        let newValue = e.target.value;
+                        newValue = newValue.replace(/[^0-9]/g, "");
+                        if (newValue) {
+                          newValue = newValue.replace(
+                            /\B(?=(\d{3})+(?!\d))/g,
+                            ","
+                          );
+                        }
+                        setTienPhong(newValue);
+                      }}
                     />
                     <div className="unit">1 tháng</div>
                   </div>
@@ -103,9 +138,23 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
                 <td>
                   <div className="flex relative justify-end items-center">
                     <input
-                      type="number"
+                      pattern="^[0-9]*$" // Only allow digits and commas
+                      inputMode="numeric" // Mobile devices show numeric keyboard
+                      type="tel" // Uses the telephone input for numeric values
                       name="tienrac"
-                      defaultValue={nhatro.tienrac ?? 0}
+                      value={tienrac}
+                      placeholder="Enter a number"
+                      onChange={(e) => {
+                        let newValue = e.target.value;
+                        newValue = newValue.replace(/[^0-9]/g, "");
+                        if (newValue) {
+                          newValue = newValue.replace(
+                            /\B(?=(\d{3})+(?!\d))/g,
+                            ","
+                          );
+                        }
+                        settienrac(newValue);
+                      }}
                     />
                     <div className="unit">1 tháng</div>
                   </div>
@@ -116,9 +165,23 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
                 <td>
                   <div className="flex relative justify-end items-center">
                     <input
-                      type="number"
+                      pattern="^[0-9]*$" // Only allow digits and commas
+                      inputMode="numeric" // Mobile devices show numeric keyboard
+                      type="tel" // Uses the telephone input for numeric values
                       name="tiennuoc"
-                      defaultValue={nhatro.tiennuoc ?? 0}
+                      value={tiennuoc}
+                      placeholder="Enter a number"
+                      onChange={(e) => {
+                        let newValue = e.target.value;
+                        newValue = newValue.replace(/[^0-9]/g, "");
+                        if (newValue) {
+                          newValue = newValue.replace(
+                            /\B(?=(\d{3})+(?!\d))/g,
+                            ","
+                          );
+                        }
+                        settiennuoc(newValue);
+                      }}
                     />
                     <div className="unit">1 khối</div>
                   </div>
@@ -129,9 +192,50 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
                 <td>
                   <div className="flex relative justify-end items-center">
                     <input
-                      type="number"
+                      pattern="^[0-9]*$" // Only allow digits and commas
+                      inputMode="numeric" // Mobile devices show numeric keyboard
+                      type="tel" // Uses the telephone input for numeric values
                       name="tiendien"
-                      defaultValue={nhatro.tiendien ?? 0}
+                      value={tiendien}
+                      placeholder="Enter a number"
+                      onChange={(e) => {
+                        let newValue = e.target.value;
+                        newValue = newValue.replace(/[^0-9]/g, "");
+                        if (newValue) {
+                          newValue = newValue.replace(
+                            /\B(?=(\d{3})+(?!\d))/g,
+                            ","
+                          );
+                        }
+                        settiendien(newValue);
+                      }}
+                    />
+                    <div className="unit">1 số</div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Tiền khác</td>
+                <td>
+                  <div className="flex relative justify-end items-center">
+                    <input
+                      pattern="^[0-9]*$" // Only allow digits and commas
+                      inputMode="numeric" // Mobile devices show numeric keyboard
+                      type="tel" // Uses the telephone input for numeric values
+                      name="tienkhac"
+                      value={tienkhac}
+                      placeholder="Enter a number"
+                      onChange={(e) => {
+                        let newValue = e.target.value;
+                        newValue = newValue.replace(/[^0-9]/g, "");
+                        if (newValue) {
+                          newValue = newValue.replace(
+                            /\B(?=(\d{3})+(?!\d))/g,
+                            ","
+                          );
+                        }
+                        settienkhac(newValue);
+                      }}
                     />
                     <div className="unit">1 số</div>
                   </div>

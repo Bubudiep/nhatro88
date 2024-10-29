@@ -1,5 +1,6 @@
 // React core
 import React from "react";
+import dotenv from "dotenv";
 import { createRoot } from "react-dom/client";
 
 // Tailwind stylesheet
@@ -17,7 +18,6 @@ if (!window.APP_CONFIG) {
   window.APP_CONFIG = appConfig;
 }
 
-// Mount the app
 import App from "./components/app";
 const root = createRoot(document.getElementById("app"));
 root.render(React.createElement(App));
