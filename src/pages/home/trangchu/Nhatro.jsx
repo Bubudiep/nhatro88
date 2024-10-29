@@ -283,7 +283,7 @@ const Nhatro = ({ user }) => {
             <div className="icons">
               <i className="fa-solid fa-users-gear"></i>
             </div>
-            <div className="name">Tạm trú (3 người chưa đăng ký)</div>
+            <div className="name">Tình trạng đăng ký tạm trú</div>
           </div>
           <div
             className="items"

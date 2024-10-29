@@ -1233,6 +1233,8 @@ body {
     .top-bar {
       display: flex;
       padding: 12px;
+      width: -webkit-fill-available;
+      justify-content: center;
       .bar {
         width: 50px;
         height: 10px;
@@ -1559,7 +1561,7 @@ body {
 .list_item_big {
   display: flex;
   flex-direction: column;
-  max-height: 55vh;
+  max-height: 65vh;
   overflow: auto;
   .nhatro-item {
     display: flex;
@@ -1580,21 +1582,33 @@ body {
       .tang_name {
         color: #999;
         font-weight: 500;
+        padding-top: 3px;
       }
       .list_phong {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
         gap: 4px;
-        padding: 10px 0px;
+        padding: 8px 0px;
         direction: rtl; /* Đảo ngược cột */
         .items {
-          width: 100%;
+          width: 95%;
           text-align: center;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
           gap: 5px;
+          border: 1px solid transparent;
+          transition: all 0.3s;
+          padding: 0px;
+          &.long-press-class {
+            padding: 4px;
+            width: 100%;
+            border-radius: 6px;
+            border: 1px solid #7ab3ff !important;
+            background-color: #e4f0ff !important;
+            user-select: none;
+          }
           .status {
             width: 40px;
             height: 40px;
@@ -1614,6 +1628,15 @@ body {
               font-size: 11px;
               color: #999;
               font-weight: 400;
+            }
+          }
+          &.full {
+            .status {
+              background-color: #d1f7e4;
+              color: #e67105;
+            }
+            .name {
+              color: #ac5300;
             }
           }
           &.online {
@@ -1779,6 +1802,22 @@ button {
   border-radius: 8px;
   transition: all 0.3s;
   white-space: nowrap;
+  &.edit {
+    display: flex;
+    background-color: #2390fd;
+    border: hidden;
+    color: #fff;
+    padding: 0px;
+    align-items: center;
+    font-weight: 500;
+    padding-right: 10px;
+    height: 35px;
+    .icon {
+      padding: 8px 12px;
+      margin-right: 8px;
+      border-right: 1px solid #fff;
+    }
+  }
   &.start-btn {
     background-color: #2390fd;
     border: 1px solid #2390fd;
@@ -1810,11 +1849,16 @@ button {
     color: #000000;
     display: flex;
     gap: 10px;
+    border: 1px solid;
     align-items: center;
-    border: hidden;
     color: #0072ff;
-    i {
-      color: #0072ff !important;
+    padding-right: 10px;
+    .icon {
+      padding: 8px 10px;
+      border-right: 1px solid;
+      i {
+        color: #0072ff !important;
+      }
     }
   }
   &.back {
@@ -2019,6 +2063,11 @@ button {
   gap: 5px;
   color: #999;
   padding: 6px;
+  .icon {
+    font-size: 30px;
+    opacity: 0.4;
+    padding: 12px;
+  }
   .logo {
     font-size: 30px;
     padding: 10px 6px 6px 6px;

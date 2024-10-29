@@ -59,6 +59,15 @@ const Details_phong = ({
     setngaybatdau(dbatdau?.toISOString().split("T")[0]);
     settienno(countNo);
     settiencoc(tongcoc);
+    const handlePopState = (event) => {
+      console.log("Đóng");
+      handleBack();
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      history.pushState(null, "", window.location.href);
+      window.removeEventListener("popstate", handlePopState);
+    };
   }, []);
   const chitietHoadon = (e) => {
     handleHoadon(e);

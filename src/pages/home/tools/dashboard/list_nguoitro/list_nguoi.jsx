@@ -1,13 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const List_nguoi = ({ handleNguoitro, user, handleClose }) => {
   const [selectedNhatro, setSelectedNhatro] = useState("all");
   const [selectedTang, setSelectedTang] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  window.addEventListener("popstate", (event) => {
-    console.log("Đóng");
-    handleClose();
-  });
   const filterNguoitro = (nhatro) => {
     if (selectedNhatro === "all") {
       const allnguoitro = nhatro.reduce((acc, tro) => {
@@ -42,6 +38,17 @@ const List_nguoi = ({ handleNguoitro, user, handleClose }) => {
     );
     return nhatroSelected ? nhatroSelected.Thongtin : [];
   };
+  useEffect(() => {
+    const handlePopState = (event) => {
+      console.log("Đóng");
+      handleClose();
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      history.pushState(null, "", window.location.href);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
   return (
     <>
       <div className="title2">Danh sách người đang ở trọ</div>

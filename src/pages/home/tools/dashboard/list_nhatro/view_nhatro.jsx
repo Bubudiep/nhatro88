@@ -1,6 +1,48 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
+  const [longPressTimer, setLongPressTimer] = useState(null);
+  const [isMultiSelect, setIsMultiSelect] = useState(false);
+  const [isSelectAll, setIsSelectAll] = useState(false);
+  const [beforeSelectAll, setBeforeIsSelectAll] = useState(false);
+  const [longPressRooms, setLongPressRooms] = useState([]); // State chứa danh sách phòng đang long press
+  const handleLongPress = (phong) => {
+    console.log(phong);
+  };
+  const handleDeSelectAll = () => {
+    setLongPressRooms(beforeSelectAll);
+    setIsSelectAll(false);
+  };
+  const handleSelectAll = () => {
+    setBeforeIsSelectAll(longPressRooms);
+    const phong = nhatro.Thongtin.flatMap((tt) => tt.Chitiet);
+    setLongPressRooms((prevRooms) => {
+      const newRoomIds = phong
+        .filter((phong) => !prevRooms.includes(phong.id)) // Lọc ra các phòng chưa có trong prevRooms
+        .map((phong) => phong.id); // Lấy danh sách các id
+      return [...prevRooms, ...newRoomIds];
+    });
+    setIsSelectAll(true);
+  };
+  const startLongPress = (phong) => {
+    const timer = setTimeout(() => {
+      setLongPressRooms((prevRooms) => {
+        if (!prevRooms.includes(phong.id)) {
+          return [...prevRooms, phong.id];
+        }
+        return prevRooms;
+      });
+      handleLongPress(phong);
+      setIsMultiSelect(true);
+    }, 500);
+    setLongPressTimer(timer);
+  };
+  const cancelLongPress = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+  };
   useEffect(() => {
     const handlePopState = (event) => {
       console.log("Back");
@@ -15,7 +57,35 @@ const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
   return (
     <>
       <div className="title2">{nhatro.tenTro}</div>
-      <div className="text-[12px] text-center">Chọn một phòng để cài đặt</div>
+      <div className="text-[13px] h-[35px] flex items-center justify-center">
+        {isMultiSelect ? (
+          <div className="flex gap-2 pl-3 pr-3">
+            {isSelectAll ? (
+              <button className="edit mt-2" onClick={handleDeSelectAll}>
+                <div className="icon">
+                  <i className="fa-solid fa-xmark"></i>
+                </div>
+                Bỏ chọn
+              </button>
+            ) : (
+              <button className="edit mt-2" onClick={handleSelectAll}>
+                <div className="icon">
+                  <i className="fa-solid fa-check"></i>
+                </div>
+                Chọn toàn bộ
+              </button>
+            )}
+            <button className="edit mt-2">
+              <div className="icon">
+                <i className="fa-solid fa-marker"></i>
+              </div>
+              Sửa hàng loạt
+            </button>
+          </div>
+        ) : (
+          "Chọn một phòng hoặc bấm giữ để cài đặt"
+        )}
+      </div>
       <div className="body-container">
         <div className="list_item_big">
           {nhatro.Thongtin.map((item) => (
@@ -26,10 +96,44 @@ const View_nhatro = ({ nhatro, handleEdittro, handlePhongtro, handleBack }) => {
                   <div
                     key={phong.id}
                     className={`items ${
-                      phong.Nguoitro.length > 0 ? "online" : "offline"
-                    }`}
+                      phong.Nguoitro.length > 0
+                        ? phong.Nguoitro.length >= 2
+                          ? "full"
+                          : "online"
+                        : "offline"
+                    } ${
+                      longPressRooms.includes(phong.id)
+                        ? "long-press-class"
+                        : ""
+                    }`} // Thêm class nếu phòng đang long press
+                    onTouchStart={() => startLongPress(phong)} // Sự kiện long press trên thiết bị di động
+                    onTouchEnd={() => cancelLongPress(phong)} // Hủy nếu người dùng nhả tay
                     onClick={() => {
-                      handlePhongtro(phong);
+                      if (isMultiSelect) {
+                        if (!longPressRooms.includes(phong.id)) {
+                          // Nếu phòng chưa có trong danh sách, thêm vào
+                          setLongPressRooms((prevRooms) => {
+                            if (!prevRooms.includes(phong.id)) {
+                              return [...prevRooms, phong.id];
+                            }
+                            return prevRooms;
+                          });
+                          console.log("added");
+                        } else {
+                          // Nếu phòng đã có trong danh sách, xóa ra
+                          console.log(longPressRooms.length);
+                          setLongPressRooms((prevRooms) =>
+                            prevRooms.filter((roomId) => roomId !== phong.id)
+                          );
+                          if (longPressRooms.length == 1) {
+                            console.log("last room removed");
+                            setIsMultiSelect(false); // Có thể kích hoạt lại nếu cần
+                          }
+                        }
+                      } else {
+                        console.log("single click");
+                        handlePhongtro(phong); // Thực hiện hành động mặc định
+                      }
                     }}
                   >
                     <div className="status">
