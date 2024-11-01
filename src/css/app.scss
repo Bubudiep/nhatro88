@@ -1822,7 +1822,7 @@ button {
     background-color: #2390fd;
     border: 1px solid #2390fd;
     color: #fff;
-    width: 80vw;
+    width: calc(100% - 40px);
     padding: 16px 18px;
     text-transform: uppercase;
     font-weight: 500;

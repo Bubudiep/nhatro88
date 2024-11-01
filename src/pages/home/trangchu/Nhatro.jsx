@@ -27,6 +27,7 @@ const Nhatro = ({ user }) => {
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [alertData, setAlertData] = useState(null);
+  console.log(user);
   // [
   //   {
   //     id: 1,
@@ -63,6 +64,7 @@ const Nhatro = ({ user }) => {
   //     ],
   //   },
   // ]
+  history.pushState(null, "", window.location.href);
   const [alerts, setAlerts] = useState([]);
   const nhatro_style = {
     backgroundImage: `url(${wallpp})`,
@@ -182,10 +184,9 @@ const Nhatro = ({ user }) => {
       console.log(`Tốc độ kết nối: ${duration} ms`);
     });
   }
-  history.pushState(null, "", window.location.href);
   useEffect(() => {
     const io_socket = async () => {
-      window.socket = await io(SOCKET_SERVER_URL, {
+      window.socket = io(SOCKET_SERVER_URL, {
         transports: ["websocket"],
       });
       window.socket.on("room_data", (data) => {

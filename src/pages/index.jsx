@@ -29,13 +29,54 @@ const HomePage = () => {
       scopes: ["scope.userInfo", "scope.userPhonenumber"],
       success: (data) => {
         if (Object.keys(data).length == 0) {
-          navigate("/", {
-            replace: true,
-            animate: true,
-            direction: "forward",
+          getUserInfo({
+            success: (data) => {
+              api
+                .post("/zlogin/", {
+                  zalo_id: data.userInfo.id,
+                })
+                .then((response) => {
+                  console.log(response);
+                  setUser({
+                    zalo: data.userInfo,
+                    app: response, // Cập nhật user.app
+                  });
+                  navigate("/", {
+                    replace: true,
+                    animate: true,
+                    direction: "forward",
+                  });
+                  setLoading(false);
+                })
+                .catch((error) => {
+                  api
+                    .post("/register/", {
+                      zalo_id: data.userInfo.id,
+                      username: data.userInfo.id,
+                      password: app.random(10),
+                      email: data.userInfo.id + "@gmail.com",
+                    })
+                    .then((response) => {
+                      console.log(response);
+                      setUser({
+                        zalo: data.userInfo,
+                        app: response, // Cập nhật user.app
+                      });
+                      navigate("/", {
+                        replace: true,
+                        animate: true,
+                        direction: "forward",
+                      });
+                    })
+                    .catch((error) => {
+                      setLoading(false);
+                      setMassage("Lỗi kết nối máy chủ! Vui lòng thử lại sau!");
+                      console.error("Error fetching data:", error);
+                    });
+                });
+            },
           });
-          setMassage(null);
-          setLoading(false);
+          return;
         }
         getAccessToken({
           success: (accessToken) => {
@@ -189,11 +230,13 @@ const HomePage = () => {
         </div>
       </div>
       {loading ? (
-        <div className="loading-spinner"></div>
+        <div className="p-3">
+          <div className="loading-spinner"></div>
+        </div>
       ) : (
-        message && <div className="error-message">{message}</div>
+        message && <div className="error-message p-3">{message}</div>
       )}
-      <div className="flex mt-3">
+      <div className="flex mt-3 w-full justify-center">
         <button
           className="start-btn"
           disabled={!isAccept}

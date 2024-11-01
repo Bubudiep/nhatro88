@@ -7,6 +7,7 @@ import leave from "../../../img/leave.png";
 import money from "../../../img/banknotes_12748234.png";
 
 const Db_box = ({ user, handleShow }) => {
+  history.pushState(null, "", window.location.href);
   const dashboardItems = [
     {
       title: "Danh sách Nhà",

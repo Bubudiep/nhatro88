@@ -15,6 +15,7 @@ const Home = () => {
   const navigate = useNavigate();
   const updateNhatro = () => {
     setLoading(true); // Bắt đầu loading
+    if (!user?.app?.user) navigate("/start");
     api
       .get("/my_nhatro/", user.app.access_token)
       .then((response) => {
