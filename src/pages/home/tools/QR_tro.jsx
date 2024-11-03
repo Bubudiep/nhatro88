@@ -2,13 +2,18 @@ import React, { useEffect, useRef, useState } from "react";
 import { QRCode } from "react-qrcode-logo";
 import logo from "../../../img/logo.png";
 import { Link, useNavigate } from "react-router-dom";
+import { saveImageToGallery } from "zmp-sdk/apis";
+import html2canvas from "html2canvas";
+
 const QR_tro = ({ onClose, user }) => {
   const [copied, setCopied] = useState(false);
+  const [saved, setsaved] = useState(false);
   const [nhatro, setnhatro] = useState(user?.nhatro[0]);
   const [isClosing, setIsClosing] = useState(false);
   const [logo_show, setlogo_show] = useState(true);
   const [fgColor, setFgColor] = useState("#004fa3"); // Default to black
   const [eyeColor, setEyeColor] = useState("#0e3177"); // Default color for QR code eyes
+  const qrRef = useRef(null);
   const handleClose = () => {
     setIsClosing(true);
     setTimeout(() => {
@@ -96,6 +101,31 @@ const QR_tro = ({ onClose, user }) => {
   const handleLink = () => {
     navigate("/nhatro?KEY=" + user?.nhatro[0].QRKey);
   };
+  const saveImage = async () => {
+    const canvas = await html2canvas(qrRef.current);
+    const image = canvas.toDataURL("image/png");
+    try {
+      await saveImageToGallery({
+        imageBase64Data: image,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleSave = async () => {
+    const canvas = await html2canvas(qrRef.current);
+    const image = canvas.toDataURL("image/png");
+    try {
+      await saveImageToGallery({
+        imageBase64Data: image,
+      }).then(() => {
+        setsaved(true); // Cập nhật trạng thái để hiển thị thông báo
+        setTimeout(() => setsaved(false), 2000); // Ẩn thông báo sau 2 giây
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleCopy = () => {
     navigator.clipboard
       .writeText(link) // Sao chép nội dung vào clipboard
@@ -127,27 +157,39 @@ const QR_tro = ({ onClose, user }) => {
           <div className="bar"></div>
         </div>
         <div className="slider fade-in-5">
-          <div className="title2">QR nhà trọ</div>
           <div className="body-container">
             <div className="QRcode_config">
-              <div className="QRcode">
-                <QRCode
-                  value={link} // Data to encode
-                  size={150} // Size of the QR code
-                  logoImage={logo_show && logo} // URL of the logo image
-                  logoWidth={30} // Width of the logo
-                  logoHeight={30} // Height of the logo
-                  logoOpacity={0.8} // Adjust logo opacity
-                  qrStyle="dots" // Set dot style
-                  eyeRadius={10} // Set roundness of the "eye" (corner squares)
-                  fgColor={fgColor} // Foreground color
-                  bgColor="#ffffff" // Background color
-                  ecLevel="M" // Error correction level
-                  eyeColor={eyeColor} // Color for the eyes of the QR code
-                  removeQrCodeBehindLogo={true}
-                  logoPadding={3} // Simulates padding around the logo
-                  logoPaddingStyle="circle"
-                />
+              <div className="QRCode_preview" ref={qrRef}>
+                <div className="title2">QR nhà trọ</div>
+                <div className="QRcode">
+                  <QRCode
+                    value={link} // Data to encode
+                    size={150} // Size of the QR code
+                    logoImage={logo_show && logo} // URL of the logo image
+                    logoWidth={30} // Width of the logo
+                    logoHeight={30} // Height of the logo
+                    logoOpacity={0.8} // Adjust logo opacity
+                    qrStyle="dots" // Set dot style
+                    eyeRadius={10} // Set roundness of the "eye" (corner squares)
+                    fgColor={fgColor} // Foreground color
+                    bgColor="#ffffff" // Background color
+                    ecLevel="M" // Error correction level
+                    eyeColor={eyeColor} // Color for the eyes of the QR code
+                    removeQrCodeBehindLogo={true}
+                    logoPadding={3} // Simulates padding around the logo
+                  />
+                  <div className="guide">
+                    <div className="step">1. Mở Zalo chọn quét mã QR</div>
+                    <div className="step">2. Quét mã QR code phía trên</div>
+                  </div>
+                </div>
+              </div>
+              <div className="save-img" onClick={handleSave}>
+                {saved ? (
+                  <div className="value on">Đã lưu ảnh</div>
+                ) : (
+                  <div className="value">Lưu ảnh</div>
+                )}
               </div>
               <div className="link" onClick={handleCopy}>
                 <div className="value">{link}</div>
@@ -159,13 +201,13 @@ const QR_tro = ({ onClose, user }) => {
                   </div>
                 ) : (
                   <div className="openlink" onClick={handleLink}>
-                    Mở link
+                    <i className="fa-solid fa-link"></i> Mở link
                   </div>
                 )}
               </div>
               <div className="config">
                 <div className="items">
-                  <div className="name">Logo nhà trọ</div>
+                  <div className="name">Hiển thị logo nhà trọ</div>
                   <div className="value checkbox">
                     <label className={`container ${logo_show && "active"}`}>
                       <input
@@ -195,7 +237,7 @@ const QR_tro = ({ onClose, user }) => {
                   </div>
                 </div>
                 <div className="items">
-                  <div className="name">Màu chấm nhỏ</div>
+                  <div className="name">Chọ màu cho chấm nhỏ</div>
                   <div className="value">
                     <input
                       type="color"
@@ -206,7 +248,7 @@ const QR_tro = ({ onClose, user }) => {
                   </div>
                 </div>
                 <div className="items">
-                  <div className="name">Màu chấm lớn</div>
+                  <div className="name">Chọn màu cho chấm lớn</div>
                   <div className="value">
                     <input
                       type="color"

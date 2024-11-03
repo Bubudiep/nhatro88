@@ -8,6 +8,7 @@ import {
   authorize,
   getAccessToken,
   getPhoneNumber,
+  getSetting,
   getUserInfo,
 } from "zmp-sdk/apis";
 import { UserContext } from "../context/UserContext";
@@ -21,197 +22,366 @@ const HomePage = () => {
   const pageStyle = {
     backgroundImage: `url(${Background_ct})`,
   };
+  const params = new URLSearchParams(location.search);
   const app_key = import.meta.env.VITE_ZALO_KEY;
   console.log("Start");
   const handleStart = () => {
     setLoading(true);
-    authorize({
-      scopes: ["scope.userInfo", "scope.userPhonenumber"],
+    let scope = [];
+    getSetting({
       success: (data) => {
-        if (Object.keys(data).length == 0) {
-          getUserInfo({
-            success: (data) => {
-              api
-                .post("/zlogin/", {
-                  zalo_id: data.userInfo.id,
-                })
-                .then((response) => {
-                  console.log(response);
-                  setUser({
-                    zalo: data.userInfo,
-                    app: response, // Cập nhật user.app
-                  });
-                  const params = new URLSearchParams(location.search);
-                  const from = params.get("from");
-                  const key = params.get("KEY");
-                  if (from && key) {
-                    navigate("/" + from + "?KEY=" + key, {
-                      replace: true,
-                      animate: true,
-                      direction: "forward",
-                    });
-                  } else {
-                    navigate("/", {
-                      replace: true,
-                      animate: true,
-                      direction: "forward",
-                    });
-                  }
-                  setLoading(false);
-                })
-                .catch((error) => {
-                  api
-                    .post("/register/", {
-                      zalo_id: data.userInfo.id,
-                      username: data.userInfo.id,
-                      password: app.random(10),
-                      email: data.userInfo.id + "@gmail.com",
-                    })
-                    .then((response) => {
-                      console.log(response);
-                      setUser({
-                        zalo: data.userInfo,
-                        app: response, // Cập nhật user.app
+        if (
+          data.authSetting["scope.userInfo"] == true &&
+          data.authSetting["scope.userPhonenumber"] == true
+        ) {
+          getAccessToken({
+            success: (accessToken) => {
+              console.log(accessToken);
+              if (accessToken) {
+                getPhoneNumber({
+                  success: async (data) => {
+                    let { token } = data;
+                    api
+                      .gets("https://graph.zalo.me/v2.0/me/info", {
+                        access_token: accessToken,
+                        code: token,
+                        secret_key: app_key,
+                      })
+                      .then((response) => {
+                        const phone_number = response?.data?.number;
+                        if (phone_number) {
+                          getUserInfo({
+                            success: (data) => {
+                              api
+                                .post("/zlogin/", {
+                                  zalo_id: data.userInfo.id,
+                                  zalo_phone: phone_number,
+                                  zalo_name: data.userInfo.name,
+                                  zalo_avatar: data.userInfo.avatar,
+                                })
+                                .then((response) => {
+                                  setUser({
+                                    zalo: data.userInfo,
+                                    app: response, // Cập nhật user.app
+                                  });
+                                  const from = params.get("from");
+                                  const key = params.get("KEY");
+                                  if (from && key) {
+                                    navigate("/" + from + "?KEY=" + key, {
+                                      replace: true,
+                                      animate: true,
+                                      direction: "forward",
+                                    });
+                                  } else {
+                                    navigate("/", {
+                                      replace: true,
+                                      animate: true,
+                                      direction: "forward",
+                                    });
+                                  }
+                                  setLoading(false);
+                                })
+                                .catch((error) => {
+                                  console.log(error);
+                                  api
+                                    .post("/register/", {
+                                      zalo_id: data.userInfo.id,
+                                      username: data.userInfo.id,
+                                      password: app.random(10),
+                                      zalo_name: data.userInfo.name,
+                                      zalo_avatar: data.userInfo.avatar,
+                                      email: data.userInfo.id + "@gmail.com",
+                                      zalo_phone: phone_number,
+                                    })
+                                    .then((response) => {
+                                      console.log(response);
+                                      setUser({
+                                        zalo: data.userInfo,
+                                        app: response, // Cập nhật user.app
+                                      });
+                                      const params = new URLSearchParams(
+                                        location.search
+                                      );
+                                      const from = params.get("from");
+                                      const key = params.get("KEY");
+                                      if (from && key) {
+                                        navigate("/" + from + "?KEY=" + key, {
+                                          replace: true,
+                                          animate: true,
+                                          direction: "forward",
+                                        });
+                                      } else {
+                                        navigate("/", {
+                                          replace: true,
+                                          animate: true,
+                                          direction: "forward",
+                                        });
+                                      }
+                                    })
+                                    .catch((error) => {
+                                      setLoading(false);
+                                      setMassage(
+                                        "Lỗi kết nối máy chủ! Vui lòng thử lại sau!"
+                                      );
+                                      console.error(
+                                        "Error fetching data:",
+                                        error
+                                      );
+                                    });
+                                });
+                            },
+                            fail: (error) => {
+                              setLoading(false);
+                              setMassage(
+                                "Lỗi kết nối máy chủ! Vui lòng thử lại sau!"
+                              );
+                              console.error("Error fetching data:", error);
+                            },
+                          });
+                        }
+                      })
+                      .catch((error) => {
+                        console.error("Lỗi:", error);
+                        setMassage(
+                          "Lỗi kết nối máy chủ! Vui lòng thử lại sau!"
+                        );
+                      })
+                      .finally(() => {
+                        setLoading(false);
                       });
-                      const params = new URLSearchParams(location.search);
-                      const from = params.get("from");
-                      const key = params.get("KEY");
-                      if (from && key) {
-                        navigate("/" + from + "?KEY=" + key, {
-                          replace: true,
-                          animate: true,
-                          direction: "forward",
-                        });
-                      } else {
-                        navigate("/", {
-                          replace: true,
-                          animate: true,
-                          direction: "forward",
-                        });
-                      }
-                    })
-                    .catch((error) => {
-                      setLoading(false);
-                      setMassage("Lỗi kết nối máy chủ! Vui lòng thử lại sau!");
-                      console.error("Error fetching data:", error);
-                    });
+                  },
+                  fail: (error) => {
+                    setLoading(false);
+                    setMassage("Lỗi kết nối máy chủ! Vui lòng thử lại sau!");
+                    console.error("Error fetching data:", error);
+                  },
                 });
+              } else {
+                setLoading(false);
+                setMassage(
+                  "Ứng dụng chưa được cấp phép, vui lòng thử lại sau!"
+                );
+                console.error("Error fetching data:", error);
+              }
+            },
+            fail: (error) => {
+              setLoading(false);
+              setMassage("Lỗi kết nối máy chủ! Vui lòng thử lại sau!");
+              console.error("Error fetching data:", error);
             },
           });
-          return;
-        }
-        getAccessToken({
-          success: (accessToken) => {
-            console.log(accessToken);
-            if (accessToken) {
-              getPhoneNumber({
-                success: async (data) => {
-                  let { token } = data;
-                  api
-                    .gets("https://graph.zalo.me/v2.0/me/info", {
-                      access_token: accessToken,
-                      code: token,
-                      secret_key: app_key,
-                    })
-                    .then((response) => {
-                      const phone_number = response?.data?.number;
-                      if (phone_number) {
-                        getUserInfo({
-                          success: (data) => {
-                            api
-                              .post("/zlogin/", {
-                                zalo_id: data.userInfo.id,
-                                zalo_phone: phone_number,
-                                zalo_name: data.userInfo.name,
-                                zalo_avatar: data.userInfo.avatar,
-                              })
-                              .then((response) => {
-                                setUser({
-                                  zalo: data.userInfo,
-                                  app: response, // Cập nhật user.app
-                                });
-                                const from = params.get("from");
-                                const key = params.get("KEY");
-                                if (from && key) {
-                                  navigate("/", {
-                                    replace: true,
-                                    animate: true,
-                                    direction: "forward",
-                                  });
-                                } else {
-                                  navigate("/" + from + "?KEY=" + key, {
-                                    replace: true,
-                                    animate: true,
-                                    direction: "forward",
-                                  });
-                                }
-                                setLoading(false);
-                              })
-                              .catch((error) => {
-                                api
-                                  .post("/register/", {
-                                    zalo_id: data.userInfo.id,
-                                    username: data.userInfo.id,
-                                    password: app.random(10),
-                                    zalo_name: data.userInfo.name,
-                                    zalo_avatar: data.userInfo.avatar,
-                                    email: data.userInfo.id + "@gmail.com",
-                                    zalo_phone: phone_number,
-                                  })
-                                  .then((response) => {
-                                    console.log(response);
-                                    setUser({
-                                      zalo: data.userInfo,
-                                      app: response, // Cập nhật user.app
-                                    });
-                                    const params = new URLSearchParams(
-                                      location.search
-                                    );
-                                    const from = params.get("from");
-                                    const key = params.get("KEY");
-                                    if (from && key) {
-                                      navigate("/" + from + "?KEY=" + key, {
-                                        replace: true,
-                                        animate: true,
-                                        direction: "forward",
-                                      });
-                                    } else {
-                                      navigate("/", {
-                                        replace: true,
-                                        animate: true,
-                                        direction: "forward",
-                                      });
-                                    }
-                                  })
-                                  .catch((error) => {
-                                    setLoading(false);
-                                    setMassage(
-                                      "Lỗi kết nối máy chủ! Vui lòng thử lại sau!"
-                                    );
-                                    console.error(
-                                      "Error fetching data:",
-                                      error
-                                    );
-                                  });
+        } else {
+          authorize({
+            scopes: ["scope.userInfo", "scope.userPhonenumber"],
+            success: (data) => {
+              if (Object.keys(data).length == 0) {
+                getUserInfo({
+                  success: (data) => {
+                    api
+                      .post("/zlogin/", {
+                        zalo_id: data.userInfo.id,
+                      })
+                      .then((response) => {
+                        console.log(response);
+                        setUser({
+                          zalo: data.userInfo,
+                          app: response, // Cập nhật user.app
+                        });
+                        const from = params.get("from");
+                        const key = params.get("KEY");
+                        if (from && key) {
+                          navigate("/" + from + "?KEY=" + key, {
+                            replace: true,
+                            animate: true,
+                            direction: "forward",
+                          });
+                        } else {
+                          navigate("/", {
+                            replace: true,
+                            animate: true,
+                            direction: "forward",
+                          });
+                        }
+                        setLoading(false);
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                        api
+                          .post("/register/", {
+                            zalo_id: data.userInfo.id,
+                            username: data.userInfo.id,
+                            password: app.random(10),
+                            email: data.userInfo.id + "@gmail.com",
+                          })
+                          .then((response) => {
+                            console.log(response);
+                            setUser({
+                              zalo: data.userInfo,
+                              app: response, // Cập nhật user.app
+                            });
+                            const from = params.get("from");
+                            const key = params.get("KEY");
+                            if (from && key) {
+                              navigate("/" + from + "?KEY=" + key, {
+                                replace: true,
+                                animate: true,
+                                direction: "forward",
                               });
-                          },
-                          fail: (error) => {
+                            } else {
+                              navigate("/", {
+                                replace: true,
+                                animate: true,
+                                direction: "forward",
+                              });
+                            }
+                          })
+                          .catch((error) => {
                             setLoading(false);
                             setMassage(
                               "Lỗi kết nối máy chủ! Vui lòng thử lại sau!"
                             );
                             console.error("Error fetching data:", error);
-                          },
-                        });
-                      }
-                    })
-                    .catch((error) => {
-                      console.error("Lỗi:", error);
-                      setMassage("Lỗi kết nối máy chủ! Vui lòng thử lại sau!");
-                    })
-                    .finally(() => {
-                      setLoading(false);
+                          });
+                      });
+                  },
+                });
+                return;
+              }
+              getAccessToken({
+                success: (accessToken) => {
+                  console.log(accessToken);
+                  if (accessToken) {
+                    getPhoneNumber({
+                      success: async (data) => {
+                        let { token } = data;
+                        api
+                          .gets("https://graph.zalo.me/v2.0/me/info", {
+                            access_token: accessToken,
+                            code: token,
+                            secret_key: app_key,
+                          })
+                          .then((response) => {
+                            const phone_number = response?.data?.number;
+                            if (phone_number) {
+                              getUserInfo({
+                                success: (data) => {
+                                  api
+                                    .post("/zlogin/", {
+                                      zalo_id: data.userInfo.id,
+                                      zalo_phone: phone_number,
+                                      zalo_name: data.userInfo.name,
+                                      zalo_avatar: data.userInfo.avatar,
+                                    })
+                                    .then((response) => {
+                                      setUser({
+                                        zalo: data.userInfo,
+                                        app: response, // Cập nhật user.app
+                                      });
+                                      const from = params.get("from");
+                                      const key = params.get("KEY");
+                                      if (from && key) {
+                                        navigate("/" + from + "?KEY=" + key, {
+                                          replace: true,
+                                          animate: true,
+                                          direction: "forward",
+                                        });
+                                      } else {
+                                        navigate("/", {
+                                          replace: true,
+                                          animate: true,
+                                          direction: "forward",
+                                        });
+                                      }
+                                      setLoading(false);
+                                    })
+                                    .catch((error) => {
+                                      console.log(error);
+                                      api
+                                        .post("/register/", {
+                                          zalo_id: data.userInfo.id,
+                                          username: data.userInfo.id,
+                                          password: app.random(10),
+                                          zalo_name: data.userInfo.name,
+                                          zalo_avatar: data.userInfo.avatar,
+                                          email:
+                                            data.userInfo.id + "@gmail.com",
+                                          zalo_phone: phone_number,
+                                        })
+                                        .then((response) => {
+                                          console.log(response);
+                                          setUser({
+                                            zalo: data.userInfo,
+                                            app: response, // Cập nhật user.app
+                                          });
+                                          const params = new URLSearchParams(
+                                            location.search
+                                          );
+                                          const from = params.get("from");
+                                          const key = params.get("KEY");
+                                          if (from && key) {
+                                            navigate(
+                                              "/" + from + "?KEY=" + key,
+                                              {
+                                                replace: true,
+                                                animate: true,
+                                                direction: "forward",
+                                              }
+                                            );
+                                          } else {
+                                            navigate("/", {
+                                              replace: true,
+                                              animate: true,
+                                              direction: "forward",
+                                            });
+                                          }
+                                        })
+                                        .catch((error) => {
+                                          setLoading(false);
+                                          setMassage(
+                                            "Lỗi kết nối máy chủ! Vui lòng thử lại sau!"
+                                          );
+                                          console.error(
+                                            "Error fetching data:",
+                                            error
+                                          );
+                                        });
+                                    });
+                                },
+                                fail: (error) => {
+                                  setLoading(false);
+                                  setMassage(
+                                    "Lỗi kết nối máy chủ! Vui lòng thử lại sau!"
+                                  );
+                                  console.error("Error fetching data:", error);
+                                },
+                              });
+                            }
+                          })
+                          .catch((error) => {
+                            console.error("Lỗi:", error);
+                            setMassage(
+                              "Lỗi kết nối máy chủ! Vui lòng thử lại sau!"
+                            );
+                          })
+                          .finally(() => {
+                            setLoading(false);
+                          });
+                      },
+                      fail: (error) => {
+                        setLoading(false);
+                        setMassage(
+                          "Lỗi kết nối máy chủ! Vui lòng thử lại sau!"
+                        );
+                        console.error("Error fetching data:", error);
+                      },
                     });
+                  } else {
+                    setLoading(false);
+                    setMassage(
+                      "Ứng dụng chưa được cấp phép, vui lòng thử lại sau!"
+                    );
+                    console.error("Error fetching data:", error);
+                  }
                 },
                 fail: (error) => {
                   setLoading(false);
@@ -219,23 +389,18 @@ const HomePage = () => {
                   console.error("Error fetching data:", error);
                 },
               });
-            } else {
+            },
+            fail: (error) => {
+              console.log(error);
               setLoading(false);
-              setMassage("Ứng dụng chưa được cấp phép, vui lòng thử lại sau!");
-              console.error("Error fetching data:", error);
-            }
-          },
-          fail: (error) => {
-            setLoading(false);
-            setMassage("Lỗi kết nối máy chủ! Vui lòng thử lại sau!");
-            console.error("Error fetching data:", error);
-          },
-        });
+              setMassage("Chưa có dữ liệu cấp quyền Zalo!");
+            },
+          });
+        }
       },
       fail: (error) => {
+        // xử lý khi gọi api thất bại
         console.log(error);
-        setLoading(false);
-        setMassage("Chưa có dữ liệu cấp quyền Zalo!");
       },
     });
   };

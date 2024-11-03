@@ -5,6 +5,7 @@ import api from "../../../components/api";
 import { getSetting } from "zmp-sdk/apis";
 import { UserContext } from "../../../context/UserContext";
 import logo from "../../../img/logo.png";
+import { openPhone } from "zmp-sdk/apis";
 
 const NhatroHome = () => {
   const [isLoading, setIsloading] = useState(false);
@@ -57,6 +58,16 @@ const NhatroHome = () => {
       },
     });
   }, []);
+  const handleCall = async () => {
+    console.log(nhatro?.hotline);
+    try {
+      await openPhone({
+        phoneNumber: nhatro?.hotline,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="nhatroHome-container">
       {isLoading ? (
@@ -74,9 +85,10 @@ const NhatroHome = () => {
               <div className="nhatro">{nhatro?.tenTro}</div>
               <div className="hotline">
                 {nhatro?.hotline ? (
-                  <>
-                    <i class="fa-solid fa-phone-volume"></i> {nhatro?.hotline}
-                  </>
+                  <div className="phone" onClick={handleCall}>
+                    <i class="fa-solid fa-phone-volume"></i> Gọi ngay:{" "}
+                    {nhatro?.hotline}
+                  </div>
                 ) : (
                   "Chưa cài hotline"
                 )}
