@@ -115,7 +115,7 @@ const NhatroHome = () => {
               <div className="tab last">
                 <div className="items">
                   <div className="name">
-                    {nhatro?.tiendien?.toLocaleString("vi-VN")}đ/số điện
+                    {"Điện " + nhatro?.tiendien?.toLocaleString("vi-VN")}đ/số
                   </div>
                   <div className="logo">
                     <i className="fa-solid fa-bolt"></i>
@@ -123,7 +123,7 @@ const NhatroHome = () => {
                 </div>
                 <div className="items">
                   <div className="name">
-                    {nhatro?.tiennuoc?.toLocaleString("vi-VN")}đ/khối nước
+                    {"Nước " + nhatro?.tiennuoc?.toLocaleString("vi-VN")}đ/khối
                   </div>
                   <div className="logo">
                     <i className="fa-solid fa-droplet"></i>
@@ -131,7 +131,7 @@ const NhatroHome = () => {
                 </div>
                 <div className="items">
                   <div className="name">
-                    {nhatro?.tienrac?.toLocaleString("vi-VN")}đ/tháng rác
+                    {"Rác " + nhatro?.tienrac?.toLocaleString("vi-VN")}đ/tháng
                   </div>
                   <div className="logo">
                     <i className="fa-solid fa-recycle"></i>
@@ -176,7 +176,7 @@ const NhatroHome = () => {
                 <div key={tang.id}>
                   <div className="tang">{tang.tenTang}</div>
                   <div className="layout">
-                    {tang?.Phong?.reverse().map((phong, index) => (
+                    {tang?.Phong?.map((phong, index) => (
                       <div
                         className={`items ${phong.nguoitro > 0 && "off"}`}
                         key={`${phong.id}-${index}`}

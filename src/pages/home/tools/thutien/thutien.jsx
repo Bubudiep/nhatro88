@@ -32,7 +32,7 @@ const Thutien = ({ phong, handleClose, onUserUpdate, token }) => {
     tronthang = true;
   }
   const handleThutienphong = () => {
-    if (sotienthu > 10000) {
+    if (parseInt(sotienthu.replaceAll(",", "")) > 10000) {
       setIsloading(true);
       api
         .post(

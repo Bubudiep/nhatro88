@@ -170,7 +170,9 @@ const Nhatro = ({ user }) => {
       case "noiQuy":
         return <NoiQuyComponent onClose={() => setSelectedComponent(null)} />;
       case "QRtro":
-        return <QR_tro onClose={() => setSelectedComponent(null)} />;
+        return (
+          <QR_tro onClose={() => setSelectedComponent(null)} user={user} />
+        );
       case "tamTru":
         return <TamTruComponent onClose={() => setSelectedComponent(null)} />;
       case "thongbao":
@@ -310,7 +312,7 @@ const Nhatro = ({ user }) => {
           </div> */}
           <div className="items" onClick={() => handleComponentSelect("QRtro")}>
             <div className="icons">
-              <i className="fa-solid fa-bell"></i>
+              <i className="fa-solid fa-qrcode"></i>
             </div>
             QR nhà trọ
           </div>

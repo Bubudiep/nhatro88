@@ -4,6 +4,7 @@ import api from "../../../../../components/api";
 const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
   const [isLoading, setIsloading] = useState(false);
   const [errorMes, setErrorMes] = useState("");
+  const [hotline, sethotline] = useState(nhatro.hotline);
   const [ngaychot, setngaychot] = useState(nhatro.ngay_thu_tien ?? 15);
   const [tienPhong, setTienPhong] = useState(
     nhatro.tienphong.toLocaleString("vi-VN").replace(/\./g, ",") ?? 0
@@ -48,7 +49,8 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
       dieuhoa: dieuhoa === "Có",
       nonglanh: nonglanh === "Có",
       wifi: wifi === "Có",
-      ngay_thu_tien: setngaychot,
+      ngay_thu_tien: ngaychot,
+      hotline: hotline,
     };
     // console.log(newData);
     // return;
@@ -119,6 +121,22 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
                       max={31}
                       onChange={(e) => {
                         setngaychot(e.target.value);
+                      }}
+                    />
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Hotline</td>
+                <td>
+                  <div className="flex relative justify-end items-center">
+                    <input
+                      type="number" // Uses the telephone input for numeric values
+                      name="hotline"
+                      value={hotline}
+                      max={31}
+                      onChange={(e) => {
+                        sethotline(e.target.value);
                       }}
                     />
                   </div>

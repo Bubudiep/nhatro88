@@ -1,9 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { QRCode } from "react-qrcode-logo";
 import logo from "../../../img/logo.png";
-const QR_tro = ({ onClose }) => {
+import { Link, useNavigate } from "react-router-dom";
+const QR_tro = ({ onClose, user }) => {
+  const [copied, setCopied] = useState(false);
+  const [nhatro, setnhatro] = useState(user?.nhatro[0]);
   const [isClosing, setIsClosing] = useState(false);
-  const [logo_show, setlogo_show] = useState(false);
+  const [logo_show, setlogo_show] = useState(true);
   const [fgColor, setFgColor] = useState("#004fa3"); // Default to black
   const [eyeColor, setEyeColor] = useState("#0e3177"); // Default color for QR code eyes
   const handleClose = () => {
@@ -18,7 +21,17 @@ const QR_tro = ({ onClose }) => {
   const [velocity, setVelocity] = useState(0); // Tốc độ kéo
   const isTouchingRef = useRef(false); // Sử dụng useRef để theo dõi isTouching
   let animationFrame;
-  console.log(window.location);
+  const navigate = useNavigate();
+  const [link, setlink] = useState(
+    `https://zalo.me/s/` +
+      window.location.pathname.split("/")[
+        window.location.pathname.split("/").length - 2
+      ] +
+      "/nhatro" +
+      window.location.search +
+      "&KEY=" +
+      nhatro?.QRKey
+  );
   const handleTouchStart = (e) => {
     setStartY(e.touches[0].clientY);
     isTouchingRef.current = true; // Cập nhật giá trị tham chiếu
@@ -80,17 +93,18 @@ const QR_tro = ({ onClose }) => {
     // Bắt đầu hiệu ứng trôi sau khi thả tay
     animationFrame = requestAnimationFrame(continueScroll);
   };
-  useEffect(() => {
-    const handlePopState = (event) => {
-      console.log("Đóng");
-      handleClose();
-    };
-    window.addEventListener("popstate", handlePopState);
-    return () => {
-      history.pushState(null, "", window.location.href);
-      window.removeEventListener("popstate", handlePopState);
-    };
-  }, []);
+  const handleLink = () => {
+    navigate("/nhatro?KEY=" + user?.nhatro[0].QRKey);
+  };
+  const handleCopy = () => {
+    navigator.clipboard
+      .writeText(link) // Sao chép nội dung vào clipboard
+      .then(() => {
+        setCopied(true); // Cập nhật trạng thái để hiển thị thông báo
+        setTimeout(() => setCopied(false), 2000); // Ẩn thông báo sau 2 giây
+      })
+      .catch((err) => console.error("Failed to copy:", err));
+  };
   return (
     <div className={`bottom-box-white-bg ${isClosing ? "hide-out" : ""}`}>
       <div
@@ -118,7 +132,7 @@ const QR_tro = ({ onClose }) => {
             <div className="QRcode_config">
               <div className="QRcode">
                 <QRCode
-                  value="https://fontawesome.com/icons/face-meh-blank?f=classic&s=regular" // Data to encode
+                  value={link} // Data to encode
                   size={150} // Size of the QR code
                   logoImage={logo_show && logo} // URL of the logo image
                   logoWidth={30} // Width of the logo
@@ -135,11 +149,25 @@ const QR_tro = ({ onClose }) => {
                   logoPaddingStyle="circle"
                 />
               </div>
+              <div className="link" onClick={handleCopy}>
+                <div className="value">{link}</div>
+              </div>
+              <div className="flex justify-center text-[#2d61d3] text-[13px] font-[500]  pt-2">
+                {copied ? (
+                  <div className="openlink" onClick={handleLink}>
+                    Đã coppy
+                  </div>
+                ) : (
+                  <div className="openlink" onClick={handleLink}>
+                    Mở link
+                  </div>
+                )}
+              </div>
               <div className="config">
                 <div className="items">
                   <div className="name">Logo nhà trọ</div>
                   <div className="value checkbox">
-                    <label class={`container ${logo_show && "active"}`}>
+                    <label className={`container ${logo_show && "active"}`}>
                       <input
                         type="checkbox"
                         checked={logo_show}
@@ -151,7 +179,7 @@ const QR_tro = ({ onClose }) => {
                         viewBox="0 0 512 512"
                         height="1em"
                         xmlns="http://www.w3.org/2000/svg"
-                        class="check-regular"
+                        className="check-regular"
                       >
                         <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"></path>
                       </svg>
@@ -159,7 +187,7 @@ const QR_tro = ({ onClose }) => {
                         viewBox="0 0 512 512"
                         height="1em"
                         xmlns="http://www.w3.org/2000/svg"
-                        class="check-solid"
+                        className="check-solid"
                       >
                         <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path>
                       </svg>

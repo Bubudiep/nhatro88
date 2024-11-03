@@ -2483,6 +2483,20 @@ button.bt-r {
     display: flex;
     justify-content: center;
   }
+  .link {
+    color: #999;
+    display: flex;
+    justify-content: center;
+    .value {
+      white-space: nowrap;
+      padding: 4px;
+      border-radius: 6px;
+      text-overflow: ellipsis;
+      width: 80vw;
+      overflow: hidden;
+      border: 1px solid #c4c4c4;
+    }
+  }
   .config {
     margin-top: 5px;
     display: flex;
@@ -2493,7 +2507,7 @@ button.bt-r {
       align-items: center;
       padding: 0px 20px;
       .name {
-        font-size: 13px;
+        font-size: 15px;
         color: #0009;
         font-weight: 500;
       }
@@ -2744,11 +2758,16 @@ button.bt-r {
     flex-direction: column;
     gap: 4px;
     .hotline {
+      align-items: center;
+      gap: 5px;
       font-size: 13px;
       color: #0a4899;
       font-weight: 500;
       display: flex;
       justify-content: flex-end;
+      i {
+        font-size: 10px;
+      }
     }
     .logo {
       display: flex;
