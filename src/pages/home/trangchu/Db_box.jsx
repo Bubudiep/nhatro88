@@ -16,7 +16,7 @@ const Db_box = ({ user, handleShow }) => {
       img: house,
     },
     {
-      title: "Danh sách Phòng",
+      title: "Tình trạng Phòng",
       name: "phongtro",
       value: (user) =>
         user?.nhatro.reduce((total, item) => {

@@ -15,17 +15,6 @@ const Chitiet_phong = ({ phong, handleBack, token, onUserUpdate }) => {
   const [nonglanh, setnonglanh] = useState(phong.nonglanh ? "Có" : "Không");
   const [dieuhoa, setdieuhoa] = useState(phong.dieuhoa ? "Có" : "Không");
   const [wifi, setwifi] = useState(phong.wifi ? "Có" : "Không");
-  useEffect(() => {
-    const handlePopState = (event) => {
-      console.log("Back");
-      handleBack();
-    };
-    window.addEventListener("popstate", handlePopState);
-    return () => {
-      history.pushState(null, "", window.location.href);
-      window.removeEventListener("popstate", handlePopState);
-    };
-  });
   const handleSave = () => {
     if (!phong) {
       return;
@@ -83,6 +72,17 @@ const Chitiet_phong = ({ phong, handleBack, token, onUserUpdate }) => {
     selection.removeAllRanges();
     selection.addRange(range);
   };
+  useEffect(() => {
+    const handlePopState = (event) => {
+      console.log("Back");
+      handleBack();
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      history.pushState(null, "", window.location.href);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  });
   return (
     <>
       <div className="title2">

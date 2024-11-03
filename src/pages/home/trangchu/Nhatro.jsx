@@ -16,6 +16,7 @@ import ListNguoitro from "../tools/dashboard/list_nguoitro";
 import Thongbao from "../tools/thongbao";
 import Lienhe from "../tools/lienhe";
 import { io } from "socket.io-client";
+import QR_tro from "../tools/QR_tro";
 const SOCKET_SERVER_URL = "http://ipays.vn:3000"; // Thay đổi URL nếu cần
 function setCookie(name, value, days) {
   const d = new Date();
@@ -27,7 +28,6 @@ const Nhatro = ({ user }) => {
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [alertData, setAlertData] = useState(null);
-  console.log(user);
   // [
   //   {
   //     id: 1,
@@ -64,7 +64,6 @@ const Nhatro = ({ user }) => {
   //     ],
   //   },
   // ]
-  history.pushState(null, "", window.location.href);
   const [alerts, setAlerts] = useState([]);
   const nhatro_style = {
     backgroundImage: `url(${wallpp})`,
@@ -153,11 +152,25 @@ const Nhatro = ({ user }) => {
           />
         );
       case "chuyenRa":
-        return <ChuyenRaComponent onClose={() => setSelectedComponent(null)} />;
+        return (
+          <ChuyenRaComponent
+            user={user}
+            onClose={() => setSelectedComponent(null)}
+            onUserUpdate={handleUserUpdate}
+          />
+        );
       case "thuTien":
-        return <ThuTienComponent onClose={() => setSelectedComponent(null)} />;
+        return (
+          <ThuTienComponent
+            user={user}
+            onClose={() => setSelectedComponent(null)}
+            onUserUpdate={handleUserUpdate}
+          />
+        );
       case "noiQuy":
         return <NoiQuyComponent onClose={() => setSelectedComponent(null)} />;
+      case "QRtro":
+        return <QR_tro onClose={() => setSelectedComponent(null)} />;
       case "tamTru":
         return <TamTruComponent onClose={() => setSelectedComponent(null)} />;
       case "thongbao":
@@ -284,9 +297,9 @@ const Nhatro = ({ user }) => {
             <div className="icons">
               <i className="fa-solid fa-users-gear"></i>
             </div>
-            <div className="name">Tình trạng đăng ký tạm trú</div>
+            <div className="name">Tình trạng tạm trú</div>
           </div>
-          <div
+          {/* <div
             className="items"
             onClick={() => handleComponentSelect("thongbao")}
           >
@@ -294,6 +307,12 @@ const Nhatro = ({ user }) => {
               <i className="fa-solid fa-bell"></i>
             </div>
             Thông báo ({alerts.filter((alert) => !alert.readed).length})
+          </div> */}
+          <div className="items" onClick={() => handleComponentSelect("QRtro")}>
+            <div className="icons">
+              <i className="fa-solid fa-bell"></i>
+            </div>
+            QR nhà trọ
           </div>
           <div
             className="items"

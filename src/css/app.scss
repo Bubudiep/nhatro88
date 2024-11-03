@@ -825,6 +825,19 @@ body {
   background-color: #00000046;
   animation: hideIn 0.3s ease-in-out forwards;
   transition: height 0.3s ease-in-out; /* Thêm transition cho height */
+  &::before {
+    position: absolute;
+    content: "Chạm hoặc kéo xuống để đóng";
+    z-index: 0;
+    width: 100%;
+    height: 200px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    opacity: 0.8;
+  }
   .loading-message {
     display: flex;
     align-items: center;
@@ -852,6 +865,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: 1;
+    position: absolute;
   }
   .bottom-box-white {
     z-index: 2;
@@ -1126,6 +1140,7 @@ body {
       .h3 {
         display: flex;
         font-weight: 500;
+        font-size: 13px;
         justify-content: space-between;
         i {
           font-size: 12px;
@@ -1166,14 +1181,14 @@ body {
               }
               select {
                 background-color: #fff;
-                padding: 8px 4px;
+                padding: 2px 4px;
                 border: 1px solid #999;
                 border-radius: 6px;
                 width: 40vw;
               }
               input {
                 background-color: #fff;
-                padding: 8px 4px;
+                padding: 4px;
                 border: 1px solid #999;
                 border-radius: 6px;
                 width: 40vw;
@@ -1185,6 +1200,18 @@ body {
                 &.small {
                   width: 100px;
                 }
+                &.money {
+                  color: #616161;
+                  border: hidden;
+                  border-bottom: 1px solid #dddddd;
+                  border-radius: 0px;
+                  outline: none;
+                  transition: all 0.3s;
+                  &:focus {
+                    color: #1d1d1d;
+                    border-bottom: 1px solid #333333;
+                  }
+                }
               }
             }
           }
@@ -1193,14 +1220,12 @@ body {
       .no-width {
         select,
         input {
-          height: 45px;
+          height: 35px;
+          padding: 0px 8px;
           border-radius: 8px;
           width: auto;
           border: 1px solid #ccc;
           max-width: 120px;
-        }
-        select {
-          padding: 6px 4px;
         }
       }
       .start-btn {
@@ -1646,11 +1671,30 @@ body {
             }
             .name {
               color: #007206;
+              .down {
+                color: #dd5c00;
+              }
+              .noo {
+                i {
+                  color: #02b62f;
+                }
+              }
             }
           }
           &.offline {
             .status {
               color: #c2c2c2;
+            }
+            .name {
+              color: #bebebe;
+              .down {
+                color: #929292;
+              }
+              .noo {
+                i {
+                  color: #e7e7e7;
+                }
+              }
             }
           }
         }
@@ -1722,7 +1766,9 @@ body {
       .i-info {
         display: flex;
         justify-content: space-between;
-        padding: 2px;
+        padding: 1px 2px;
+        font-size: 13px;
+        align-items: center;
         .i-title {
           color: #0082ec;
           font-size: 14px;
@@ -1754,8 +1800,13 @@ body {
           gap: 5px;
           &.giaphong {
             color: #63b734;
-            font-size: 14px;
             font-weight: 500;
+            .ispaid {
+              color: #08b416 !important;
+            }
+            .unpaid {
+              color: #b44d08 !important;
+            }
           }
           .status {
             font-weight: 500;
@@ -1991,8 +2042,7 @@ button {
   padding: 10px;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  color: red;
+  color: #830f0f;
 }
 .form-phongtro {
   display: flex;
@@ -2210,8 +2260,9 @@ button {
         }
       }
       .it-2 {
-        padding: 0px 6px;
+        padding: 1px 6px;
         display: flex;
+        font-size: 13px;
         justify-content: space-between;
         color: #999;
         .name {
@@ -2260,5 +2311,459 @@ button {
     width: 80vw;
     height: 80vh;
     background-color: #fff;
+  }
+}
+.input-r {
+  border: 1px solid #999;
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+button.bt-r {
+  background-color: #006eff;
+  border: 1px solid #006eff;
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 13px;
+  &.thutien {
+    background-color: #da8507;
+    border: 1px solid #da8507;
+  }
+}
+.center_popup {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  .detectOut {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 0;
+    background-color: rgba(0, 0, 0, 0.418);
+  }
+  .whitebox {
+    z-index: 1;
+    background-color: #fff;
+    width: 90vw;
+    min-height: 20vh;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-size: 13px;
+    .title {
+      display: flex;
+      justify-content: center;
+      font-size: 13px;
+      padding: 8px 4px;
+      font-weight: 500;
+      color: #999;
+      box-shadow: 1px 2px 3px #0003;
+    }
+    .body {
+      padding: 8px;
+      flex-direction: column;
+      display: flex;
+      gap: 2px;
+      .info-row {
+        display: flex;
+        font-size: 12px;
+        justify-content: space-between;
+        padding: 0px 5px;
+        .value {
+          font-weight: 500;
+        }
+      }
+      .split {
+        border-bottom: 1px solid #999;
+        margin: 5px;
+      }
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0px;
+        font-size: 12px;
+        tfoot {
+          th {
+            text-align: left;
+          }
+        }
+        thead {
+          color: #999;
+          th {
+            padding: 3px;
+            font-weight: 500;
+          }
+        }
+        tr {
+          td {
+            padding: 3px;
+            border: 1px solid #999;
+            border-bottom: hidden;
+            border-right: hidden;
+            &:last-child {
+              border-right: 1px solid #999;
+            }
+          }
+          &:first-child {
+            td {
+              &:first-child {
+                border-top-left-radius: 5px;
+              }
+              &:last-child {
+                border-top-right-radius: 5px;
+              }
+            }
+          }
+          &:last-child {
+            td {
+              border-bottom: 1px solid #999;
+              &:first-child {
+                border-bottom-left-radius: 5px;
+              }
+              &:last-child {
+                border-bottom-right-radius: 5px;
+              }
+            }
+          }
+        }
+      }
+    }
+    .tools {
+      margin-top: auto;
+      display: flex;
+      padding: 8px;
+      font-size: 13px;
+      justify-content: flex-end;
+      input {
+        border: hidden;
+        border-bottom: 1px solid #0003;
+      }
+      .loading-spinner {
+        width: 20px;
+        border: 4px solid #00000047;
+        height: 20px;
+        border-left-color: #fff;
+      }
+      .confirm {
+        display: flex;
+        align-items: center;
+        border-radius: 8px;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        padding: 5px 10px;
+        min-width: 80px;
+        background-color: #006eff;
+        i {
+          margin-right: 10px;
+        }
+      }
+      .close {
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        min-width: 60px;
+        padding: 8px 10px;
+      }
+    }
+  }
+}
+.QRcode_config {
+  display: flex;
+  flex-direction: column;
+  .QRcode {
+    display: flex;
+    justify-content: center;
+  }
+  .config {
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    .items {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0px 20px;
+      .name {
+        font-size: 13px;
+        color: #0009;
+        font-weight: 500;
+      }
+      .value {
+        input[type="color"] {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          width: 20px; /* Set width to create a circle */
+          height: 20px; /* Set height to create a circle */
+          border-radius: 50%; /* Make it circular */
+          border: none; /* Remove border for a clean look */
+          padding: 0;
+          cursor: pointer;
+          overflow: hidden;
+          /* Styling for WebKit browsers to remove inner border */
+          &::-webkit-color-swatch-wrapper {
+            padding: 0;
+          }
+
+          &::-webkit-color-swatch {
+            border: none;
+          }
+        }
+      }
+    }
+  }
+}
+.checkbox {
+  padding: 18px 0px;
+  .container {
+    padding: 0px 10px;
+    --color: #a5a5b0;
+    --size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    font-size: var(--size);
+    user-select: none;
+    fill: var(--color);
+    &.active {
+      --color: #059918;
+      fill: var(--color);
+    }
+  }
+
+  .container .check-regular {
+    position: absolute;
+    animation: keyframes-fill 0.5s;
+  }
+
+  .container .check-solid {
+    position: absolute;
+    display: none;
+    animation: keyframes-fill 0.5s;
+  }
+
+  /* ------ On check event ------ */
+  .container input:checked ~ .check-regular {
+    display: none;
+  }
+
+  .container input:checked ~ .check-solid {
+    display: block;
+  }
+
+  /* ------ Hide the default checkbox ------ */
+  .container input {
+    position: absolute;
+    opacity: 0;
+    height: 0;
+    width: 0;
+  }
+}
+/* ------ Animation ------ */
+@keyframes keyframes-fill {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.2) rotate(15deg);
+  }
+}
+.nhatroHome-container {
+  display: flex;
+  flex-direction: column;
+  .fullLoad {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+  }
+  .top-menu {
+    height: 40px;
+    border-radius: 0px 0px 8px 8px;
+    background: linear-gradient(176deg, #4294ff, #033e8c);
+  }
+  .body_view {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 10px;
+  }
+  .diachi {
+    display: flex;
+    gap: 10px;
+    font-size: 13px;
+    color: #999;
+    .logo {
+      font-size: 10px;
+      color: #999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 1px 2px 3px #0003;
+      width: 20px;
+      height: 20px;
+      background-color: #fff;
+      border-radius: 6px;
+    }
+  }
+  .nhatro-option {
+    display: flex;
+    gap: 4px;
+    justify-content: space-between;
+    .tab {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      .items {
+        display: flex;
+        gap: 10px;
+        font-size: 13px;
+        color: #999;
+        .logo {
+          font-size: 10px;
+          color: #999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 1px 2px 3px #0003;
+          width: 20px;
+          height: 20px;
+          background-color: #fff;
+          border-radius: 6px;
+        }
+        &.on {
+          font-weight: 500;
+          color: #1c79cf;
+          .logo {
+            color: #ffffff;
+            background-color: #1c79cf;
+          }
+        }
+      }
+      &.last {
+        .items {
+          display: flex;
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
+  .h3 {
+    display: flex;
+    font-size: 13px;
+    background-color: #fff;
+    padding: 8px;
+    color: #150e55;
+    box-shadow: 1px 2px 3px #0003;
+    font-weight: 500;
+    .logo {
+      width: 25px;
+      color: #999;
+    }
+  }
+  .layout-tang {
+    .tang {
+      font-weight: 500;
+      font-size: 13px;
+      color: #999;
+      padding: 2px;
+      border-bottom: 1px solid rgba(211, 211, 211, 0.986);
+      margin-bottom: 6px;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 8px;
+      .items {
+        font-size: 13px;
+        background-color: #fff;
+        border-radius: 8px; /* Bo góc */
+        padding: 6px; /* Padding cho nội dung */
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ cho box */
+        &.off {
+          opacity: 0.5;
+          background-color: #d8d8d8;
+        }
+        .name {
+          font-weight: 500;
+          color: #202450;
+        }
+        .status {
+          color: rgb(70, 70, 70); /* Màu chữ cho trạng thái phòng */
+        }
+        .giaphong {
+          color: #007206;
+        }
+        .options {
+          display: flex; /* Đặt các tùy chọn thành hàng */
+          gap: 6px; /* Khoảng cách giữa các tùy chọn */
+          padding: 2px 0px;
+        }
+        .opt-t {
+          cursor: pointer; /* Con trỏ chuột khi hover */
+          border-radius: 4px; /* Bo góc cho icon */
+          width: 18px;
+          height: 18px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 11px;
+          color: #e6e6e6;
+          background-color: #c4c4c4;
+          &.on {
+            color: #fff;
+            background-color: #5599d1; /* Màu nền khi bật */
+          }
+        }
+      }
+    }
+  }
+  .thongtin-nhatro {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 1px 2px 3px #0003;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    .hotline {
+      font-size: 13px;
+      color: #0a4899;
+      font-weight: 500;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .logo {
+      display: flex;
+      justify-content: center;
+      border-radius: 12px;
+      img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    .nhatro {
+      display: flex;
+      color: #0a4899;
+      font-weight: 500;
+      justify-content: center;
+    }
   }
 }

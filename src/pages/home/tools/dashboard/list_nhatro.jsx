@@ -137,8 +137,6 @@ const ListNhatro = ({ option, onClose, user, onUserUpdate }) => {
         animationFrame = requestAnimationFrame(continueScroll);
       }
     };
-
-    // Bắt đầu hiệu ứng trôi sau khi thả tay
     animationFrame = requestAnimationFrame(continueScroll);
   };
   return (

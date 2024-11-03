@@ -54,30 +54,34 @@ const List_nguoi = ({ handleNguoitro, user, handleClose }) => {
       <div className="title2">Danh sách người đang ở trọ</div>
       <div className="body-container">
         <div className="filter-container">
-          <select
-            value={selectedNhatro}
-            onChange={(e) => {
-              setSelectedNhatro(e.target.value);
-              setSelectedTang("");
-            }}
-          >
-            <option value="all">Tất cả nhà trọ</option>
-            {user?.nhatro.map((item) => {
-              // Tính tổng số người trọ trong nhà trọ này
-              const totalNguoitro = item.Thongtin.reduce((acc, tang) => {
-                tang.Chitiet.forEach((phong) => {
-                  acc += phong.Nguoitro.length; // Cộng số người trọ trong từng phòng
-                });
-                return acc;
-              }, 0);
+          {user?.nhatro.length > 1 ? (
+            <select
+              value={selectedNhatro}
+              onChange={(e) => {
+                setSelectedNhatro(e.target.value);
+                setSelectedTang("");
+              }}
+            >
+              <option value="all">Tất cả nhà trọ</option>
+              {user?.nhatro.map((item) => {
+                // Tính tổng số người trọ trong nhà trọ này
+                const totalNguoitro = item.Thongtin.reduce((acc, tang) => {
+                  tang.Chitiet.forEach((phong) => {
+                    acc += phong.Nguoitro.length; // Cộng số người trọ trong từng phòng
+                  });
+                  return acc;
+                }, 0);
 
-              return (
-                <option key={item.id} value={item.id}>
-                  {item.tenTro} ({totalNguoitro} người)
-                </option>
-              );
-            })}
-          </select>
+                return (
+                  <option key={item.id} value={item.id}>
+                    {item.tenTro} ({totalNguoitro} người)
+                  </option>
+                );
+              })}
+            </select>
+          ) : (
+            ``
+          )}
           {selectedNhatro !== "all" && (
             <select
               value={selectedTang}
@@ -113,14 +117,20 @@ const List_nguoi = ({ handleNguoitro, user, handleClose }) => {
                     <div className="name i-title">
                       {item?.ThongtinNguoiTro?.hoTen}
                     </div>
-                    <div className="value giaphong">400,000 VNĐ</div>
+                    <div className="value giaphong">
+                      {new Date().getFullYear() -
+                        new Date(
+                          item?.ThongtinNguoiTro?.ngaysinh
+                        ).getFullYear()}{" "}
+                      tuổi
+                    </div>
                   </div>
                   <div className="i-info">
-                    <div className="name font-medium text-[14px]">
+                    <div className="name text-[13px]">
                       <i className="fa-solid fa-house-user"></i>
                       {item.SoPhong} - {item.SoTang}
                     </div>
-                    <div className="value">
+                    <div className="value text-[13px]">
                       {Math.floor(
                         (new Date() - new Date(item.ngayBatdauO)) /
                           (24 * 3600 * 1000)
@@ -129,11 +139,11 @@ const List_nguoi = ({ handleNguoitro, user, handleClose }) => {
                     </div>
                   </div>
                   <div className="i-info">
-                    <div className="name font-medium text-[14px]">
+                    <div className="name text-[13px]">
                       <i className="fa-solid fa-mobile-screen"></i>
                       Liên hệ
                     </div>
-                    <div className="flex gap-2 items-center value font-medium text-[14px] text-[#8f9fb4]">
+                    <div className="flex gap-2 items-center value text-[13px] text-[#8f9fb4]">
                       {item.ThongtinNguoiTro.sdt}
                     </div>
                   </div>
@@ -149,6 +159,13 @@ const List_nguoi = ({ handleNguoitro, user, handleClose }) => {
                     </div>
                     <div className={`items  ${item.tiencoc ? "on" : "off"}`}>
                       Đã cọc {item.tiencoc.toLocaleString("vi-VN")}đ
+                    </div>
+                    <div className="items on">
+                      {
+                        item.ThongtinNguoiTro.quequan.split("-")[
+                          item.ThongtinNguoiTro.quequan.split("-").length - 1
+                        ]
+                      }
                     </div>
                   </div>
                 </div>

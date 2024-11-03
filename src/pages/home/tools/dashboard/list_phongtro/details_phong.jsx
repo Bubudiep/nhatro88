@@ -48,10 +48,14 @@ const Details_phong = ({
       }
       if (dbatdau) {
         if (new Date(hoadon.ngayKetthuc) > new Date(dbatdau)) {
-          dbatdau = new Date(hoadon.ngayKetthuc);
+          const ngayKetthuc = new Date(hoadon.ngayKetthuc);
+          ngayKetthuc.setDate(ngayKetthuc.getDate() + 1);
+          dbatdau = ngayKetthuc;
         }
       } else {
-        dbatdau = new Date(hoadon.ngayKetthuc);
+        const ngayKetthuc = new Date(hoadon.ngayKetthuc);
+        ngayKetthuc.setDate(ngayKetthuc.getDate() + 1);
+        dbatdau = ngayKetthuc;
       }
     });
     setIsPayed(countPayed);
@@ -113,7 +117,7 @@ const Details_phong = ({
                   {phong.Nguoitro.length > 0 ? (
                     <>
                       <tr>
-                        <td>Số người đang ở hiện tại</td>
+                        <td>Số người đang ở</td>
                         <td>
                           {
                             phong.Nguoitro.filter(
@@ -121,23 +125,6 @@ const Details_phong = ({
                             ).length
                           }{" "}
                           người
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Số ngày chưa xuất phiếu</td>
-                        <td>
-                          {Math.floor(
-                            (new Date() - new Date(ngaybatdau)) /
-                              (1000 * 3600 * 24)
-                          )}{" "}
-                          ngày
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Nợ những tháng trước</td>
-                        <td>
-                          {parseInt(tienno.toFixed(0)).toLocaleString("vi-VN")}{" "}
-                          đ
                         </td>
                       </tr>
                       <tr>
@@ -149,7 +136,22 @@ const Details_phong = ({
                         <td>{phong.sonuoc} khối</td>
                       </tr>
                       <tr>
-                        <td>Tạm tính</td>
+                        <td>
+                          Tạm tính từ ngày{" "}
+                          {
+                            ngaybatdau
+                              .toString()
+                              .replace("2024-", "")
+                              .split("-")[1]
+                          }
+                          /
+                          {
+                            ngaybatdau
+                              .toString()
+                              .replace("2024-", "")
+                              .split("-")[0]
+                          }
+                        </td>
                         <td className="font-medium">
                           {(
                             Math.round(
@@ -246,7 +248,7 @@ const Details_phong = ({
             <>
               <div className="h3 pt-1 pb-1">
                 <div className="name">
-                  <i className="fa-solid fa-user-group"></i> Phiếu tồn (
+                  <i className="fa-solid fa-user-group"></i> Chưa thanh toán (
                   {isPaying})
                 </div>
               </div>
@@ -263,7 +265,15 @@ const Details_phong = ({
                           <div className="it-1">
                             <div className="name key">{hd.Key}</div>
                             <div className="value money">
-                              Đã đóng{" "}
+                              {parseInt(hd.tongTien.toFixed(0)).toLocaleString(
+                                "vi-VN"
+                              )}
+                              {" đ"}
+                            </div>
+                          </div>
+                          <div className="it-2">
+                            <div className="name">Đã đóng</div>
+                            <div className="value">
                               {hd.Chitiet.reduce((sum, chitiet) => {
                                 return sum + chitiet.so_tien;
                               }, 0).toLocaleString("vi-VN")}{" "}
@@ -271,21 +281,12 @@ const Details_phong = ({
                             </div>
                           </div>
                           <div className="it-2">
-                            <div className="name">Phải đóng</div>
+                            <div className="name">Ngày tạm trú</div>
                             <div className="value">
-                              {parseInt(hd.tongTien.toFixed(0)).toLocaleString(
-                                "vi-VN"
-                              )}{" "}
-                              vnđ
-                            </div>
-                          </div>
-                          <div className="it-2">
-                            <div className="name">Ngày ở</div>
-                            <div className="value">
-                              {hd.ngayBatdau.split("-")[2]}/
+                              {hd.ngayBatdau.split("-")[2]}-
                               {hd.ngayBatdau.split("-")[1]}
-                              {" đến "}
-                              {hd.ngayKetthuc.split("-")[2]}/
+                              {" đến hết ngày "}
+                              {hd.ngayKetthuc.split("-")[2]}-
                               {hd.ngayKetthuc.split("-")[1]}
                             </div>
                           </div>
@@ -415,7 +416,7 @@ const Details_phong = ({
               className="done flex gap-2 items-center"
               onClick={handleThanhtoan}
             >
-              <i className="fa-solid fa-coins"></i> Thanh toán
+              <i className="fa-solid fa-coins"></i> Thu tiền
             </button>
           )}
         </div>

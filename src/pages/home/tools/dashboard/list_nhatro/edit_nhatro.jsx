@@ -4,6 +4,7 @@ import api from "../../../../../components/api";
 const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
   const [isLoading, setIsloading] = useState(false);
   const [errorMes, setErrorMes] = useState("");
+  const [ngaychot, setngaychot] = useState(nhatro.ngay_thu_tien ?? 15);
   const [tienPhong, setTienPhong] = useState(
     nhatro.tienphong.toLocaleString("vi-VN").replace(/\./g, ",") ?? 0
   );
@@ -47,6 +48,7 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
       dieuhoa: dieuhoa === "Có",
       nonglanh: nonglanh === "Có",
       wifi: wifi === "Có",
+      ngay_thu_tien: setngaychot,
     };
     // console.log(newData);
     // return;
@@ -100,9 +102,25 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
                 <td>Kiểu thanh toán</td>
                 <td>
                   <div className="flex relative justify-end items-center">
-                    <select>
+                    <select disabled>
                       <option>Thanh toán sau</option>
                     </select>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Ngày chốt hàng tháng</td>
+                <td>
+                  <div className="flex relative justify-end items-center">
+                    <input
+                      type="number" // Uses the telephone input for numeric values
+                      name="ngaychot"
+                      value={ngaychot}
+                      max={31}
+                      onChange={(e) => {
+                        setngaychot(e.target.value);
+                      }}
+                    />
                   </div>
                 </td>
               </tr>
@@ -116,6 +134,7 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
                       type="tel" // Uses the telephone input for numeric values
                       name="tienphong"
                       value={tienPhong}
+                      className="money"
                       placeholder="Enter a number"
                       onChange={(e) => {
                         let newValue = e.target.value;
@@ -143,6 +162,7 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
                       type="tel" // Uses the telephone input for numeric values
                       name="tienrac"
                       value={tienrac}
+                      className="money"
                       placeholder="Enter a number"
                       onChange={(e) => {
                         let newValue = e.target.value;
@@ -171,6 +191,7 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
                       name="tiennuoc"
                       value={tiennuoc}
                       placeholder="Enter a number"
+                      className="money"
                       onChange={(e) => {
                         let newValue = e.target.value;
                         newValue = newValue.replace(/[^0-9]/g, "");
@@ -197,6 +218,7 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
                       type="tel" // Uses the telephone input for numeric values
                       name="tiendien"
                       value={tiendien}
+                      className="money"
                       placeholder="Enter a number"
                       onChange={(e) => {
                         let newValue = e.target.value;
@@ -223,6 +245,7 @@ const Edit_nhatro = ({ nhatro, handleBack, onUserUpdate, token }) => {
                       inputMode="numeric" // Mobile devices show numeric keyboard
                       type="tel" // Uses the telephone input for numeric values
                       name="tienkhac"
+                      className="money"
                       value={tienkhac}
                       placeholder="Enter a number"
                       onChange={(e) => {

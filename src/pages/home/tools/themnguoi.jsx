@@ -285,7 +285,7 @@ const ThemNguoiComponent = ({ user, onClose, onUserUpdate }) => {
             </div>
             {isAdded ? (
               <>
-                <div className="success-message flex-1 items-center justify-center text-[#999] text-lg">
+                <div className="success-message flex-1 items-center justify-center text-[#999]">
                   <div className="logo">
                     <i className="fa-solid fa-check"></i>
                   </div>
@@ -434,7 +434,7 @@ const ThemNguoiComponent = ({ user, onClose, onUserUpdate }) => {
                 </div>
               </>
             ) : (
-              <div className="flex flex-1 items-center justify-center text-[#999] text-lg">
+              <div className="flex flex-1 items-center justify-center text-[#999].">
                 Chọn một phòng trọ để thêm người mới vào
               </div>
             )}

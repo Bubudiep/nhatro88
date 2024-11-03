@@ -27,10 +27,14 @@ const Payment_phong = ({ phong, onUserUpdate, token, handleBack }) => {
     phong.hoadon.forEach((hoadon) => {
       if (dbatdau) {
         if (new Date(hoadon.ngayKetthuc) > new Date(dbatdau)) {
-          dbatdau = new Date(hoadon.ngayKetthuc);
+          const ngayKetthuc = new Date(hoadon.ngayKetthuc);
+          ngayKetthuc.setDate(ngayKetthuc.getDate() + 1);
+          dbatdau = ngayKetthuc;
         }
       } else {
-        dbatdau = new Date(hoadon.ngayKetthuc);
+        const ngayKetthuc = new Date(hoadon.ngayKetthuc);
+        ngayKetthuc.setDate(ngayKetthuc.getDate() + 1);
+        dbatdau = ngayKetthuc;
       }
     });
     setngaybatdau(dbatdau.toISOString().split("T")[0]);
@@ -121,160 +125,173 @@ const Payment_phong = ({ phong, onUserUpdate, token, handleBack }) => {
         {phong.soPhong} ({phong.tenTang}) - thanh toán
       </div>
       <div className="body-container">
-        <div className="chitiet-phongtro">
-          <div className="h2">Tiêu thụ</div>
-          <table>
-            <tbody>
-              <tr>
-                <td>Điện (số cũ {phong.sodien})</td>
-                <td>
-                  <input
-                    type="number"
-                    value={sodien}
-                    onChange={(e) => {
-                      setsodien(e.target.value);
-                    }}
-                    placeholder="0"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Nước (số cũ {phong.sonuoc})</td>
-                <td>
-                  <input
-                    type="number"
-                    value={sonuoc}
-                    onChange={(e) => {
-                      setsonuoc(e.target.value);
-                    }}
-                    placeholder="0"
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div className="h2 flex">
-            Chi tiết sử dụng
-            <div className="ml-auto">
-              {ngaybatdau.toString().substring(5, 10).split("-")[1] +
-                "/" +
-                ngaybatdau.toString().substring(5, 10).split("-")[0]}{" "}
-              đến{" "}
-              {new Date()
-                .toISOString()
-                .split("T")[0]
-                .substring(5, 10)
-                .split("-")[1] +
-                "/" +
-                new Date()
-                  .toISOString()
-                  .split("T")[0]
-                  .substring(5, 10)
-                  .split("-")[0]}
-            </div>
-          </div>
-          <div className="thongtin">
-            <table>
-              <thead>
-                <tr>
-                  <th>Hạng mục</th>
-                  <th>Chi tiết</th>
-                  <th>Thành tiền</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Tiền phòng</td>
-                  <td>{songay} ngày</td>
-                  <td>
-                    {parseInt(
-                      (
-                        songay *
-                        (phong.giaPhong /
-                          new Date(
-                            new Date().getFullYear(),
-                            new Date().getMonth() + 1,
-                            0
-                          ).getDate())
-                      ).toFixed(0)
-                    ).toLocaleString("vi-VN")}{" "}
-                    vnđ
-                  </td>
-                </tr>
-                <tr>
-                  <td>Tiền điện</td>
-                  <td>{sodien - phong.sodien} số</td>
-                  <td>
-                    {(tiendien * (sodien - phong.sodien)).toLocaleString(
-                      "vi-VN"
-                    )}{" "}
-                    vnđ
-                  </td>
-                </tr>
-                <tr>
-                  <td>Tiền nước</td>
-                  <td>{sonuoc - phong.sonuoc} khối</td>
-                  <td>
-                    {(tiennuoc * (sonuoc - phong.sonuoc)).toLocaleString(
-                      "vi-VN"
-                    )}{" "}
-                    vnđ
-                  </td>
-                </tr>
-                <tr>
-                  <td>Tiền rác</td>
-                  <td>{songay} ngày</td>
-                  <td>
-                    {parseInt(
-                      (
-                        (songay * tienrac) /
-                        new Date(
-                          new Date().getFullYear(),
-                          new Date().getMonth() + 1,
-                          0
-                        ).getDate()
-                      ).toFixed(0)
-                    ).toLocaleString("vi-VN")}{" "}
-                    vnđ
-                  </td>
-                </tr>
-                <tr>
-                  <td>Tiền khác</td>
-                  <td></td>
-                  <td>{tienkhac.toLocaleString("vi-VN")} vnđ</td>
-                </tr>
-                <tr>
-                  <td colSpan={2}>
-                    <div className="font-medium text-base pt-1 pb-1">Tổng</div>
-                  </td>
-                  <td className="font-medium text-base text-[#dd7d00]">
-                    {parseInt(
-                      (
-                        tienkhac +
-                        tiennuoc * (sonuoc - phong.sonuoc) +
-                        tiendien * (sodien - phong.sodien) +
-                        songay *
-                          (phong.giaPhong /
+        {ngaybatdau > new Date() ? (
+          <>
+            <div className="chitiet-phongtro">
+              <div className="h2">Tiêu thụ</div>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>Điện (số cũ {phong.sodien})</td>
+                    <td>
+                      <input
+                        type="number"
+                        value={sodien}
+                        onChange={(e) => {
+                          setsodien(e.target.value);
+                        }}
+                        placeholder="0"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Nước (số cũ {phong.sonuoc})</td>
+                    <td>
+                      <input
+                        type="number"
+                        value={sonuoc}
+                        onChange={(e) => {
+                          setsonuoc(e.target.value);
+                        }}
+                        placeholder="0"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div className="h2 flex">
+                Chi tiết sử dụng
+                <div className="ml-auto">
+                  {ngaybatdau.toString().substring(5, 10).split("-")[1] +
+                    "/" +
+                    ngaybatdau.toString().substring(5, 10).split("-")[0]}{" "}
+                  đến{" "}
+                  {new Date()
+                    .toISOString()
+                    .split("T")[0]
+                    .substring(5, 10)
+                    .split("-")[1] +
+                    "/" +
+                    new Date()
+                      .toISOString()
+                      .split("T")[0]
+                      .substring(5, 10)
+                      .split("-")[0]}
+                </div>
+              </div>
+              <div className="thongtin">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Hạng mục</th>
+                      <th>Chi tiết</th>
+                      <th>Thành tiền</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Tiền phòng</td>
+                      <td>{songay} ngày</td>
+                      <td>
+                        {parseInt(
+                          (
+                            songay *
+                            (phong.giaPhong /
+                              new Date(
+                                new Date().getFullYear(),
+                                new Date().getMonth() + 1,
+                                0
+                              ).getDate())
+                          ).toFixed(0)
+                        ).toLocaleString("vi-VN")}{" "}
+                        vnđ
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Tiền điện</td>
+                      <td>{sodien - phong.sodien} số</td>
+                      <td>
+                        {(tiendien * (sodien - phong.sodien)).toLocaleString(
+                          "vi-VN"
+                        )}{" "}
+                        vnđ
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Tiền nước</td>
+                      <td>{sonuoc - phong.sonuoc} khối</td>
+                      <td>
+                        {(tiennuoc * (sonuoc - phong.sonuoc)).toLocaleString(
+                          "vi-VN"
+                        )}{" "}
+                        vnđ
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Tiền rác</td>
+                      <td>{songay} ngày</td>
+                      <td>
+                        {parseInt(
+                          (
+                            (songay * tienrac) /
                             new Date(
                               new Date().getFullYear(),
                               new Date().getMonth() + 1,
                               0
-                            ).getDate()) +
-                        (songay * tienrac) /
-                          new Date(
-                            new Date().getFullYear(),
-                            new Date().getMonth() + 1,
-                            0
-                          ).getDate()
-                      ).toFixed(0)
-                    ).toLocaleString("vi-VN")}{" "}
-                    vnđ
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+                            ).getDate()
+                          ).toFixed(0)
+                        ).toLocaleString("vi-VN")}{" "}
+                        vnđ
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Tiền khác</td>
+                      <td></td>
+                      <td>{tienkhac.toLocaleString("vi-VN")} vnđ</td>
+                    </tr>
+                    <tr>
+                      <td colSpan={2}>
+                        <div className="font-medium text-base pt-1 pb-1">
+                          Tổng
+                        </div>
+                      </td>
+                      <td className="font-medium text-base text-[#dd7d00]">
+                        {parseInt(
+                          (
+                            tienkhac +
+                            tiennuoc * (sonuoc - phong.sonuoc) +
+                            tiendien * (sodien - phong.sodien) +
+                            songay *
+                              (phong.giaPhong /
+                                new Date(
+                                  new Date().getFullYear(),
+                                  new Date().getMonth() + 1,
+                                  0
+                                ).getDate()) +
+                            (songay * tienrac) /
+                              new Date(
+                                new Date().getFullYear(),
+                                new Date().getMonth() + 1,
+                                0
+                              ).getDate()
+                          ).toFixed(0)
+                        ).toLocaleString("vi-VN")}{" "}
+                        vnđ
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="null">
+              <div className="icon"></div>
+              <div className="value">Chưa ở đủ số ngày để mà tạo phiếu</div>
+            </div>
+          </>
+        )}
         {errorMes && <div className="error-message">{errorMes}</div>}
         <div className="pt-3 tools-container flex">
           <button
@@ -284,17 +301,21 @@ const Payment_phong = ({ phong, onUserUpdate, token, handleBack }) => {
             <i className="fa-solid fa-arrow-left"></i>
             Quay lại
           </button>
-          <button
-            className="add flex gap-2 items-center"
-            onClick={handleXuathoadon}
-          >
-            {Isloading ? (
-              <div className="loading-spinner" />
-            ) : (
-              <i className="fa-solid fa-paper-plane"></i>
-            )}
-            Tạo phiếu
-          </button>
+          {ngaybatdau > new Date() ? (
+            <button
+              className="add flex gap-2 items-center"
+              onClick={handleXuathoadon}
+            >
+              {Isloading ? (
+                <div className="loading-spinner" />
+              ) : (
+                <i className="fa-solid fa-paper-plane"></i>
+              )}
+              Tạo phiếu
+            </button>
+          ) : (
+            ``
+          )}
         </div>
       </div>
     </>

@@ -19,6 +19,7 @@ const MyApp = () => {
               <AnimationRoutes>
                 <Route path="/" element={<Home />}></Route>
                 <Route path="/start" element={<HomePage />}></Route>
+                <Route path="/nhatro" element={<NhatroHome />}></Route>
               </AnimationRoutes>
             </UserProvider>
           </ZMPRouter>

@@ -41,11 +41,22 @@ const HomePage = () => {
                     zalo: data.userInfo,
                     app: response, // Cập nhật user.app
                   });
-                  navigate("/", {
-                    replace: true,
-                    animate: true,
-                    direction: "forward",
-                  });
+                  const params = new URLSearchParams(location.search);
+                  const from = params.get("from");
+                  const key = params.get("KEY");
+                  if (from && key) {
+                    navigate("/" + from + "?KEY=" + key, {
+                      replace: true,
+                      animate: true,
+                      direction: "forward",
+                    });
+                  } else {
+                    navigate("/", {
+                      replace: true,
+                      animate: true,
+                      direction: "forward",
+                    });
+                  }
                   setLoading(false);
                 })
                 .catch((error) => {
@@ -62,11 +73,22 @@ const HomePage = () => {
                         zalo: data.userInfo,
                         app: response, // Cập nhật user.app
                       });
-                      navigate("/", {
-                        replace: true,
-                        animate: true,
-                        direction: "forward",
-                      });
+                      const params = new URLSearchParams(location.search);
+                      const from = params.get("from");
+                      const key = params.get("KEY");
+                      if (from && key) {
+                        navigate("/" + from + "?KEY=" + key, {
+                          replace: true,
+                          animate: true,
+                          direction: "forward",
+                        });
+                      } else {
+                        navigate("/", {
+                          replace: true,
+                          animate: true,
+                          direction: "forward",
+                        });
+                      }
                     })
                     .catch((error) => {
                       setLoading(false);
@@ -108,11 +130,21 @@ const HomePage = () => {
                                   zalo: data.userInfo,
                                   app: response, // Cập nhật user.app
                                 });
-                                navigate("/", {
-                                  replace: true,
-                                  animate: true,
-                                  direction: "forward",
-                                });
+                                const from = params.get("from");
+                                const key = params.get("KEY");
+                                if (from && key) {
+                                  navigate("/", {
+                                    replace: true,
+                                    animate: true,
+                                    direction: "forward",
+                                  });
+                                } else {
+                                  navigate("/" + from + "?KEY=" + key, {
+                                    replace: true,
+                                    animate: true,
+                                    direction: "forward",
+                                  });
+                                }
                                 setLoading(false);
                               })
                               .catch((error) => {
@@ -132,11 +164,24 @@ const HomePage = () => {
                                       zalo: data.userInfo,
                                       app: response, // Cập nhật user.app
                                     });
-                                    navigate("/", {
-                                      replace: true,
-                                      animate: true,
-                                      direction: "forward",
-                                    });
+                                    const params = new URLSearchParams(
+                                      location.search
+                                    );
+                                    const from = params.get("from");
+                                    const key = params.get("KEY");
+                                    if (from && key) {
+                                      navigate("/" + from + "?KEY=" + key, {
+                                        replace: true,
+                                        animate: true,
+                                        direction: "forward",
+                                      });
+                                    } else {
+                                      navigate("/", {
+                                        replace: true,
+                                        animate: true,
+                                        direction: "forward",
+                                      });
+                                    }
                                   })
                                   .catch((error) => {
                                     setLoading(false);

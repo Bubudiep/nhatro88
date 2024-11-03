@@ -1,7 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
+import Thutiennhanh from "./thutien/thutiennhanh";
+import Thutien_chitiet from "./thutien/thutien_chitiet";
+import Dathanhtoan from "./thutien/dathanhtoan";
+import Chuathanhtoan from "./thutien/chuathanhtoan";
+import Thutien from "./thutien/thutien";
 
-const ThuTienComponent = ({ onClose }) => {
+const ThuTienComponent = ({ onClose, user, onUserUpdate }) => {
   const [isClosing, setIsClosing] = useState(false);
+  const [isChitiet, setIsChitiet] = useState(false);
+  const [isThutien, setIsThutien] = useState(false);
 
   const handleClose = () => {
     setIsClosing(true);
@@ -87,6 +94,15 @@ const ThuTienComponent = ({ onClose }) => {
       window.removeEventListener("popstate", handlePopState);
     };
   }, []);
+  const handleThutien = (e) => {
+    setIsThutien(e);
+  };
+  const handleDetails = (e) => {
+    setIsChitiet(e);
+  };
+  const phong = user.nhatro
+    .flatMap((nhatro) => nhatro.Thongtin)
+    .flatMap((tt) => tt.Chitiet);
   return (
     <div className={`bottom-box-white-bg ${isClosing ? "hide-out" : ""}`}>
       <div
@@ -96,6 +112,26 @@ const ThuTienComponent = ({ onClose }) => {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       />
+      {isThutien && (
+        <Thutien
+          phong={isThutien}
+          onUserUpdate={onUserUpdate}
+          token={user?.app?.access_token}
+          handleClose={() => {
+            setIsThutien(false);
+          }}
+        />
+      )}
+      {isChitiet && (
+        <Thutien_chitiet
+          phong={isChitiet}
+          onUserUpdate={onUserUpdate}
+          token={user?.app?.access_token}
+          handleClose={() => {
+            setIsChitiet(false);
+          }}
+        />
+      )}
       <div
         className={`bottom-box-white ${isClosing ? "hide-down" : ""}`}
         style={{ bottom: `${bottomPos}px` }}
@@ -109,8 +145,65 @@ const ThuTienComponent = ({ onClose }) => {
           <div className="bar"></div>
         </div>
         <div className="slider fade-in-5">
-          <div className="title2">Thu tiền định kỳ</div>
-          <div className="body-container"></div>
+          <div className="title2">
+            Thu tiền định kỳ ({user?.nhatro[0].ngay_thu_tien ?? 15} hàng tháng)
+          </div>
+          <div className="body-container">
+            {phong.length == 0 ? (
+              <>
+                <div className="null">
+                  <div className="icon">
+                    <i className="fa-regular fa-face-laugh-beam"></i>
+                  </div>
+                  <div className="value">Không có phòng nào!</div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="list_item_big">
+                  {phong.map((phong) => (
+                    <div className="nhatro-item" key={phong.id}>
+                      <div className="details active">
+                        {phong.Nguoitro.length > 0 ? (
+                          <>
+                            {phong?.hoadon.length > 0 &&
+                            new Date(phong?.hoadon[0].ngayKetthuc).getMonth() ==
+                              new Date().getMonth() ? ( // đã có hóa đơn trong tháng này
+                              phong?.hoadon[0].isPaid ? (
+                                <Dathanhtoan phong={phong} />
+                              ) : (
+                                <Chuathanhtoan
+                                  phong={phong}
+                                  nhatro={user.nhatro[0]}
+                                  handleThutien={handleThutien}
+                                />
+                              )
+                            ) : (
+                              <Thutiennhanh
+                                phong={phong}
+                                nhatro={user.nhatro[0]}
+                                handleDetails={handleDetails}
+                              />
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <div className="i-info">
+                              <div className="name text-[#555] text-[14px]">
+                                {phong.soPhong} -{phong.tenTang}
+                              </div>
+                              <div className="value giaphong"></div>
+                            </div>
+                            <div className="flex text-[#aaa]">Trống</div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

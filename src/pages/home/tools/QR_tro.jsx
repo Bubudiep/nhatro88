@@ -1,19 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
-
-const ChuyenRaComponent = ({ onClose, onUserUpdate, user }) => {
+import { QRCode } from "react-qrcode-logo";
+import logo from "../../../img/logo.png";
+const QR_tro = ({ onClose }) => {
   const [isClosing, setIsClosing] = useState(false);
-  const [nhatro, setnhatro] = useState(user.nhatro[0]);
+  const [logo_show, setlogo_show] = useState(false);
+  const [fgColor, setFgColor] = useState("#004fa3"); // Default to black
+  const [eyeColor, setEyeColor] = useState("#0e3177"); // Default color for QR code eyes
   const handleClose = () => {
     setIsClosing(true);
     setTimeout(() => {
       onClose();
     }, 300); // Thời gian trễ phải tương ứng với thời gian của animation
   };
+  // vuốt chạm
   const [startY, setStartY] = useState(null);
   const [bottomPos, setBottomPos] = useState(0); // Giá trị bottom
   const [velocity, setVelocity] = useState(0); // Tốc độ kéo
   const isTouchingRef = useRef(false); // Sử dụng useRef để theo dõi isTouching
   let animationFrame;
+  console.log(window.location);
   const handleTouchStart = (e) => {
     setStartY(e.touches[0].clientY);
     isTouchingRef.current = true; // Cập nhật giá trị tham chiếu
@@ -75,17 +80,6 @@ const ChuyenRaComponent = ({ onClose, onUserUpdate, user }) => {
     // Bắt đầu hiệu ứng trôi sau khi thả tay
     animationFrame = requestAnimationFrame(continueScroll);
   };
-
-  const filterNguoitro = (nhatro) => {
-    return user.nhatro.reduce((acc, tro) => {
-      tro.Thongtin.forEach((tang) => {
-        tang.Chitiet.forEach((phong) => {
-          acc.push(...phong.Nguoitro);
-        });
-      });
-      return acc;
-    }, []);
-  };
   useEffect(() => {
     const handlePopState = (event) => {
       console.log("Đóng");
@@ -119,83 +113,87 @@ const ChuyenRaComponent = ({ onClose, onUserUpdate, user }) => {
           <div className="bar"></div>
         </div>
         <div className="slider fade-in-5">
-          <div className="title2">Chuyển ra và thanh toán</div>
+          <div className="title2">QR nhà trọ</div>
           <div className="body-container">
-            {/* <div className="h3">
-              <div className="name">Danh sách xin ra</div>
-            </div>
-            <div className="list-group">
-              <div className="null">
-                <div className="logo"></div>
-                <div className="message">Danh sách trống</div>
+            <div className="QRcode_config">
+              <div className="QRcode">
+                <QRCode
+                  value="https://fontawesome.com/icons/face-meh-blank?f=classic&s=regular" // Data to encode
+                  size={150} // Size of the QR code
+                  logoImage={logo_show && logo} // URL of the logo image
+                  logoWidth={30} // Width of the logo
+                  logoHeight={30} // Height of the logo
+                  logoOpacity={0.8} // Adjust logo opacity
+                  qrStyle="dots" // Set dot style
+                  eyeRadius={10} // Set roundness of the "eye" (corner squares)
+                  fgColor={fgColor} // Foreground color
+                  bgColor="#ffffff" // Background color
+                  ecLevel="M" // Error correction level
+                  eyeColor={eyeColor} // Color for the eyes of the QR code
+                  removeQrCodeBehindLogo={true}
+                  logoPadding={3} // Simulates padding around the logo
+                  logoPaddingStyle="circle"
+                />
               </div>
-            </div> */}
-            <div className="h3">Danh sách người ở</div>
-            {filterNguoitro(user?.nhatro).length > 0 ? (
-              <div className="list_item_big">
-                {filterNguoitro(user?.nhatro).map((item) => (
-                  <div
-                    key={item.id}
-                    className="nhatro-item"
-                    onClick={() => handleNguoitro(item)}
-                  >
-                    <div
-                      className={`details ${item.isOnline ? "active" : "stop"}`}
-                    >
-                      <div className="i-info">
-                        <div className="name i-title">
-                          {item?.ThongtinNguoiTro?.hoTen}
-                        </div>
-                        <div className="value giaphong">
-                          {new Date().getFullYear() -
-                            new Date(
-                              item?.ThongtinNguoiTro?.ngaysinh
-                            ).getFullYear()}{" "}
-                          tuổi
-                        </div>
-                      </div>
-                      <div className="i-info">
-                        <div className="name text-[13px]">
-                          <i className="fa-solid fa-house-user"></i>
-                          {item.SoPhong} - {item.SoTang}
-                        </div>
-                        <div className="value text-[13px]">
-                          {Math.floor(
-                            (new Date() - new Date(item.ngayBatdauO)) /
-                              (24 * 3600 * 1000)
-                          ) + 1}{" "}
-                          ngày
-                        </div>
-                      </div>
-                      <div className="i-info">
-                        <div className="name text-[13px]">
-                          <i className="fa-solid fa-mobile-screen"></i>
-                          Liên hệ
-                        </div>
-                        <div className="flex gap-2 items-center value text-[13px] text-[#8f9fb4]">
-                          {item.ThongtinNguoiTro.sdt}
-                        </div>
-                      </div>
-                      <div className="i-details mt-1"></div>
-                    </div>
+              <div className="config">
+                <div className="items">
+                  <div className="name">Logo nhà trọ</div>
+                  <div className="value checkbox">
+                    <label class={`container ${logo_show && "active"}`}>
+                      <input
+                        type="checkbox"
+                        checked={logo_show}
+                        onChange={(e) => {
+                          setlogo_show(e.target.checked);
+                        }}
+                      />
+                      <svg
+                        viewBox="0 0 512 512"
+                        height="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="check-regular"
+                      >
+                        <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"></path>
+                      </svg>
+                      <svg
+                        viewBox="0 0 512 512"
+                        height="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="check-solid"
+                      >
+                        <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path>
+                      </svg>
+                    </label>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="list-group">
-                <div className="null">
-                  <div className="logo">
-                    <i className="fa-solid fa-users-viewfinder"></i>
+                </div>
+                <div className="items">
+                  <div className="name">Màu chấm nhỏ</div>
+                  <div className="value">
+                    <input
+                      type="color"
+                      value={fgColor}
+                      onChange={(e) => setFgColor(e.target.value)}
+                      style={{ marginLeft: "10px", marginBottom: "10px" }}
+                    />
                   </div>
-                  <div className="message">Danh sách trống</div>
+                </div>
+                <div className="items">
+                  <div className="name">Màu chấm lớn</div>
+                  <div className="value">
+                    <input
+                      type="color"
+                      value={eyeColor}
+                      onChange={(e) => setEyeColor(e.target.value)}
+                      style={{ marginLeft: "10px", marginBottom: "10px" }}
+                    />
+                  </div>
                 </div>
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 };
-
-export default ChuyenRaComponent;
+export default QR_tro;
